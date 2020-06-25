@@ -17,7 +17,8 @@ module.exports = () => {
 
         /**
          * @absences
-         * - @returns [{},..] list of items
+         * @extends queryFilter
+         * @returns [{},..] list of items
          */
         async absences(query = null) {
             let data = []
@@ -28,16 +29,14 @@ module.exports = () => {
                 return Promise.reject('database empt')
             }
 
-            if (isObject(query) && !isFalsy(query)){
-                try{
-                    return this.queryFilter(data, query, ['userId', 'startDate', 'endDate'],'absences')
-                }catch(er){
-                    console.log('err?',er)
+            if (isObject(query) && !isFalsy(query)) {
+                try {
+                    return this.queryFilter(data, query, ['userId', 'startDate', 'endDate'], 'absences')
+                } catch (error) {
+                    notify({ error }, 1)
                     return []
                 }
-            }
-      
-           
+            }     
 
             // invalid query
             else if (query) {
@@ -50,15 +49,32 @@ module.exports = () => {
 
         /**
         * @members
-        * - @returns [{},..] list of items
+        * @extends queryFilter
+        * @returns [{},..] list of items
         */
-        members(query = null) {
+        async members(query = null) {
+            let data = []
             try {
-                return database.members()
+                data = await database.members()
             } catch (err) {
                 if (this.debug) notify(`[members] database empty`, 1)
                 return Promise.reject('database empt')
             }
+
+            if (isObject(query) && !isFalsy(query)) {
+                try {
+                    return this.queryFilter(data, query, ['userId'], 'members')
+                } catch (error) {
+                    notify({ error }, 1)
+                    return []
+                }
+            }
+            // invalid query
+            else if (query) {
+                if (this.debug) notify(`[absences] specified query must be an object`, 0)
+                return []
+            }
+            else return data
         }
 
 

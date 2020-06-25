@@ -51,7 +51,7 @@ module.exports = function (expressApp) {
             }
 
             if (routeName === 'members') {
-               return this.ics.members().then(response => res.status(200).json({ success: true, response, code: 200 }))
+               return this.ics.members(query).then(response => res.status(200).json({ success: true, response, code: 200 }))
                     // can debate regarding which code to throw
                     .catch(error => res.status(404).json({ error, response: null, code: 404 }))
             }
