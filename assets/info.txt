@@ -1,0 +1,12 @@
+job description: https://angel.co/company/crewmeister-1/jobs/724299-software-engineer-m-f-d
+
+project: https://github.com/crewmeister/coding-challenge
+
+assets:
+https://en.wikipedia.org/wiki/ICalendar
+https://www.npmjs.com/package/ics
+https://preview.npmjs.com/package/ics2.0
+https://www.npmjs.com/package/ical-generator
+
+
+about ics iCal file format: https://technewskb.com/complete-study-on-what-is-ics-file-format/
