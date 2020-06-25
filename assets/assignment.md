@@ -52,6 +52,6 @@ that I can import them into outlook.
 - I can see vacations of my employees as "#{member.name} is on vacation" 
 - I can see sickness of my employees as "#{member.name} is sick" 
 - (Bonus) I can go to http://localhost:3000 and download the iCal file
-- (Bonus) I can go to http://localhost:3000?userId=123 and only receive the absences of the given user
-- (Bonus) I can go to http://localhost:3000?startDate=2017-01-01&endDate=2017-02-01 and only receive the absences in the given date range
+- (DONE) I can go to http://localhost:3000?userId=123 and only receive the absences of the given user
+- (DONE) I can go to http://localhost:3000?startDate=2017-01-01&endDate=2017-02-01 and only receive the absences in the given date range
 - (Bonus) Build the first 4 acceptance criteria in the other language (for backend candidates in js and for frontend candidates in ruby)

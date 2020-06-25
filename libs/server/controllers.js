@@ -1,7 +1,7 @@
 `use strict`
 
 module.exports = function (expressApp) {
-    const { isNumber, notify, objectSize } = require('x-units')
+    const { isNumber, notify, objectSize, copy } = require('x-units')
     const querystring = require('querystring')
     const url = require('url')
     return class ServerController {
@@ -27,9 +27,12 @@ module.exports = function (expressApp) {
         calendar(req, res) {
             if (this.serverError) return res.status(500).json({ message: `ICS databse error`, code: 500 });
 
-            const id = Number(req.params.id)
-            if (!isNumber(id) || id < 0) return res.status(200).json({ error: 'wrong id provided', response: {}, code: 200 });
-            return res.status(200).json({ success: true, response: { id }, code: 200 });
+            const userId = Number(req.params.userId)    
+            if (!isNumber(userId) || userId < 0) return res.status(200).json({ error: 'wrong userId provided', response: {}, code: 200 });
+
+            this.ics.generateICS('vacation', userId, 'members')
+
+            return res.status(200).json({ success: true, response: { userId }, code: 200 });
         }
 
         /**

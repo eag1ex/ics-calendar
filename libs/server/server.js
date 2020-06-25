@@ -34,7 +34,7 @@ module.exports = (DEBUG = true) => {
 
     /////////////////////
     // set server routes
-    router.get('/calendar/:id', controllers.calendar.bind(controllers));
+    router.get('/calendar/:userId', controllers.calendar.bind(controllers));
     router.get('/database/:routeName', controllers.database.bind(controllers));
 
     // catch all other calls
