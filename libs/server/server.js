@@ -14,7 +14,6 @@ module.exports = (DEBUG = true) => {
     const ServerCtrs = require('./controllers')(app)
     const cors = require('cors');
     const ejs = require('ejs');
-    // const q = require('q')
 
     app.set('trust proxy', 1); // trust first proxy
     app.use(morgan('dev'));
@@ -35,17 +34,18 @@ module.exports = (DEBUG = true) => {
 
     /////////////////////
     // set server routes
-    router.get('/calander/:id', controllers.calander.bind(controllers));
+    router.get('/calendar/:id', controllers.calendar.bind(controllers));
+    router.get('/datebase/:routeName', controllers.database.bind(controllers));
 
     // catch all other calls
     router.all("*", function (req, res) {
-        return res.status(200).json({ success: true, message: 'welcome to ics-calendar', url: req.url, available_routes: listRoutes(router.stack), status: 200 });
+        return res.status(200).json({ message: 'welcome to ics-calendar', url: req.url, available_routes: listRoutes(router.stack), status: 200 });
     })
 
     /////////////////////
     // handle errors
     app.use(function (error, req, res, next) {
-        res.status(500).json({ error: error.toString(), message:'ups something went wrong'})
+        res.status(500).json({ error: error.toString(), message: 'ups something went wrong' })
     });
     app.use('/', router);
 
@@ -53,9 +53,9 @@ module.exports = (DEBUG = true) => {
     /////////////////////
     // Initialize server
 
-    var server = app.listen(config.port, function () {
-        var host = (server.address().address || "").replace(/::/, 'localhost')
-        var port = server.address().port;
+    const server = app.listen(config.port, function () {
+        const host = (server.address().address || "").replace(/::/, 'localhost')
+        const port = server.address().port;
         //defer.resolve(true)
         notify(`server runnign on http://${host}:${port}`)
     })

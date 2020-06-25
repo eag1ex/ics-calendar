@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start":"node ./libs/server/serverApp.js",
+    "start": "node ./libs/server/serverApp.js",
     "test": "mocha --compilers js:babel-register ./src/{*,**/*,**/**/*,**/**/**/*,**/**/**/**/*}.spec.js",
     "lint:install": "npm i babel-eslint eslint eslint-plugin-node eslint-plugin-standard",
     "lint": "./node_modules/.bin/eslint  --ext .js libs",
@@ -20,8 +20,15 @@
     "mocha": "^3.4.2"
   },
   "dependencies": {
+    "bash-color": "0.0.4",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
     "ics": "^2.22.1",
+    "lodash": "^4.17.15",
     "moment": "^2.27.0",
+    "morgan": "^1.10.0",
     "x-units": "git+https://bitbucket.org/eag1ex/x-utils.git"
   }
 }
