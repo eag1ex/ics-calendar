@@ -11,6 +11,11 @@ module.exports = function () {
         if ((new Date(str)).toDateString() === 'Invalid Date') return null
         return new Date(str)
     }
+
+    o.dataAsync = (data)=>{
+        return new Promise((resolve) => resolve(data))
+    }
+    
     o.listRoutes = (stack) => {
         return reduce(stack, (n, el, k) => {
             if (el.route) {

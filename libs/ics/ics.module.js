@@ -5,50 +5,18 @@
  * - calendar file handler class, used to generate `.ics, .ical` files for MS and Apple
  * - import `ics.api` database documents: `{absences,members}` both correlate with `crewId, userId` props.
  * - `new ICS({},debug)`
+ * - ical ref: `https://en.wikipedia.org/wiki/ICalendar`
+ * - ics ref: `https://www.npmjs.com/package/ics`
 */
 module.exports = () => {
-    const database = require('./api')()
-    const { notify, isObject, isFalsy,head,exectKeyMatch, someKeyMatch } = require('x-units')
-    const {reduce} = require('lodash')
+    const XDB = require('../xdb/xdb.api.module')()
+    const { notify, isObject, isFalsy, head, someKeyMatch } = require('x-units')
+    const { reduce } = require('lodash')
     const { date } = require('../utils')()
     return class ICS {
         constructor({ }, debug) {
             this.debug = debug
-        }
-
-        /**
-         * @absences
-         * @extends queryFilter
-         * @param {array} searchByLimit when selected will override `queryFilter`
-         * @returns [{},..] list of items
-         */
-        async absences(query = null, searchByLimit=[]) {
-            let data = []
-            try {
-                data = await database.absences()
-            } catch (err) {
-                if (this.debug) notify(`[absences] database empty`, 1)
-                return Promise.reject('database empt')
-            }
-
-            if (isObject(query) && !isFalsy(query)) {
-                try {
-                    let filter = ['userId', 'startDate', 'endDate'] // queryFilter
-                    if ((searchByLimit || []).length) filter = searchByLimit 
-                    return this.queryFilter(data, query, filter, 'absences')
-                } catch (error) {
-                    notify({ error }, 1)
-                    return []
-                }
-            }     
-
-            // invalid query
-            else if (query) {
-                if (this.debug) notify(`[absences] specified query must be an object`, 0)
-                return []
-            }
-            else return data
-
+            this.XDB = new XDB() // initiale database
         }
 
 
@@ -59,7 +27,7 @@ module.exports = () => {
          * @param {string} dbName defaults to `members`
          */
         async generateICS(type = 'vacation', uId = null, dbName = 'members') {
-                
+
             // "crewId": 352,
             // "id": 2245,
             // "image": "http://place-hoff.com/300/400",
@@ -67,8 +35,8 @@ module.exports = () => {
             // "userId": 2290
             const availableTypes = ['vacation', 'sickness']
 
-            if(!dbName) {
-                if(this.debug) notify(`[generateICS] no dbName selected`,1)
+            if (!dbName) {
+                if (this.debug) notify(`[generateICS] no dbName selected`, 1)
                 return {}
             }
 
@@ -77,29 +45,29 @@ module.exports = () => {
                 return {}
             }
 
-            if(availableTypes.indexOf(type||'')===-1){
-                if(this.debug) notify(`[generateICS] wrong type selected`,1)
+            if (availableTypes.indexOf(type || '') === -1) {
+                if (this.debug) notify(`[generateICS] wrong type selected`, 1)
                 return {}
             }
 
-           
+
             switch (dbName) {
                 case 'members': {
-                   
+
                     try {
-                        const memberData = await this.members({ userId:uId })
-                        if(!memberData.length) throw(`no member with userId:${uId} found`,1)
-                        if(memberData.length>1) {
-                            if(this.debug) notify(`[generateICS] found more then one userId:${uId} on members database, selecting first`,0)
+                        const memberData = await this.members({ userId: uId })
+                        if (!memberData.length) throw (`no member with userId:${uId} found`, 1)
+                        if (memberData.length > 1) {
+                            if (this.debug) notify(`[generateICS] found more then one userId:${uId} on members database, selecting first`, 0)
                         }
                         const user = head(memberData)
-                        if(!user) {
+                        if (!user) {
                             break
                         }
-                        
-                        const {name, id,userId} = user  ||{} // {crewId,name,id,userId}
-                        const userAbsencesList = await this.absences({ userId,type }, ['userId',type]) // NOTE modified queryFilter with searchByLimit
-                        notify({userAbsencesList})
+
+                        const { name, id, userId } = user || {} // {crewId,name,id,userId}
+                        const userAbsencesList = await this.absences({ userId, type }, ['userId', type]) // NOTE modified queryFilter with searchByLimit
+                        notify({ userAbsencesList: userAbsencesList.length })
 
                     } catch (error) {
                         notify({ error }, 1)
@@ -130,6 +98,42 @@ module.exports = () => {
             return true
         }
 
+
+        /**
+         * @absences
+         * @extends queryFilter
+         * @param {array} searchByLimit when selected will override `queryFilter`
+         * @returns [{},..] list of items
+         */
+        async absences(query = null, searchByLimit = []) {
+            let data = []
+            try {
+                data = await this.XDB.absences()
+            } catch (err) {
+                if (this.debug) notify(`[absences] database empty`, 1)
+                return Promise.reject('database empt')
+            }
+
+            if (isObject(query) && !isFalsy(query)) {
+                try {
+                    let filter = ['userId', 'startDate', 'endDate'] // queryFilter
+                    if ((searchByLimit || []).length) filter = searchByLimit
+                    return this.queryFilter(data, query, filter, 'absences')
+                } catch (error) {
+                    notify({ error }, 1)
+                    return []
+                }
+            }
+
+            // invalid query
+            else if (query) {
+                if (this.debug) notify(`[absences] specified query must be an object`, 0)
+                return []
+            }
+            else return data
+
+        }
+
         /**
         * @members
         * @param {object} query optional
@@ -140,7 +144,7 @@ module.exports = () => {
 
             let data = []
             try {
-                data = await database.members()
+                data = await this.XDB.members()
             } catch (err) {
                 if (this.debug) notify(`[members] database empty`, 1)
                 return Promise.reject('database empt')
@@ -169,18 +173,20 @@ module.exports = () => {
         Queryfulfilled(query) {
             return (new function () {
                 const q = query
-                this.query = Object.entries(q).reduce((nn, item, k) => {
-                    nn[k] = { value: item, match: false }
+                this.query = Object.entries(q).reduce((nn, [key, value]) => {
+                    nn.push({ value, match: false, key })
                     return nn
-                }, {})
+                }, [])
 
-                this.done = (name) => {
-                    if (this.query[name]) this.query[name].match = true
+                this.set = (name) => {
+                    this.query.forEach((el) => {
+                        if (el['key'] === name) el['match'] = true
+                    })
                     return this
                 }
 
                 this.ok = () => {
-                    return Object.entries(this.query).filter((item) => item['match'] === true).length === Object.keys(q).length
+                    return this.query.filter((item) => item['match'] === true).length === Object.keys(q).length
                 }
             }())
         }
@@ -194,9 +200,9 @@ module.exports = () => {
          * @param {string} dbName reference to which db we are performing this filter
          * @returns [] filtered array by query filter
          */
-        queryFilter(data = [], query = {}, limitedSearch = [], dbName='') {
+        queryFilter(data = [], query = {}, limitedSearch = [], dbName = '') {
 
-            if (!limitedSearch || !(limitedSearch || []).length || limitedSearch.indexOf('ALL_ITEMS') !== -1){
+            if (!limitedSearch || !(limitedSearch || []).length || limitedSearch.indexOf('ALL_ITEMS') !== -1) {
                 limitedSearch = ['ALL_ITEMS'] // only limit to these props
             }
 
@@ -212,90 +218,78 @@ module.exports = () => {
                 return false
             }
 
-            // const someQueryKeyMatch = (item) => {
-            //     return Object.keys(query).filter(z => Object.keys(item).filter(zz => zz === z).length).length
-            // }
 
-            // const exectQueryKeyMatch = (item) => {
-            //     const qkeys = Object.keys(query)
-            //     return qkeys.filter(z => Object.keys(item).filter(zz => zz === z).length).length === qkeys.length
-            // }
-
- 
             const limit = () => {
-                if( limitedSearch.indexOf('ALL_ITEMS') !== -1) return 1
+                if (limitedSearch.indexOf('ALL_ITEMS') !== -1) return 1
                 return limitedSearch.filter(z => {
                     return Object.keys(query).filter(zz => zz == z).length
                 }).length
             }
-            
+
             // apply limit to block search thru other props
-            if( !limit()) return []
+            if (!limit()) return []
 
-            const filteredData = data.reduce((n, el, inx) => {
+            const filteredData = data.reduce((n, el) => {
+                try {
+                    // only perform if any matching keys are found
+                    if (!someKeyMatch(el, query)) return n
+                    // const queryMatched = query[key] !== undefined
+                    const isStart = el['startDate'] && query['startDate']
+                    const isEnd = el['endDate'] && query['endDate']
+                    const queryRange = query['startDate'] && query['endDate']
+                    // if query has date applied and item also has data
+                    if (isStart || isEnd) {
 
-                // only perform if any matching keys are found
-                if (!someKeyMatch(query,el)) return n 
-                const queryMatched = query[key] !== undefined
- 
-                const isStart = el['startDate'] && query['startDate']
-                const isEnd =  el['endDate'] && query['endDate']
-                const queryRange = query['startDate'] && query['endDate']
-                // if query has date applied and item also has data
-                if (isStart || isEnd) {
-                       
-                    const withStartDate = () => {
-                        if (query['startDate'] && el['startDate']) {
-                            return date(query['startDate']).getTime() <= date(el['startDate']).getTime() && isStart
+                        const withStartDate = () => {
+                            if (query['startDate'] && el['startDate']) return date(query['startDate']).getTime() <= date(el['startDate']).getTime() && isStart
+                            return false
                         }
-                        return false
-                    }
 
-                    const withEndDate = () => {
-                        if (query['endDate'] && el['endDate']) {
-                            return date(el['endDate']).getTime() <= date(query['endDate']).getTime() && isEnd
+                        const withEndDate = () => {
+                            if (query['endDate'] && el['endDate']) return date(el['endDate']).getTime() <= date(query['endDate']).getTime() && isEnd
+                            return false
                         }
-                        return false
-                    }
-                    
-                    if (withStartDate() && withEndDate()) {
-                         n.push(el)
-                         return n
+
+                        if (withStartDate() && withEndDate()) {
+                            n.push(el)
+                            return n
+                        }
+
+                        if (withStartDate() && !queryRange) {
+                            n.push(el)
+                            return n
+                        }
+
+                        if (withEndDate() && !queryRange) {
+                            n.push(el)
+                            return n
+                        }
                     }
 
-                    if (withStartDate() && !queryRange) {
-                        n.push(el)
-                        return n
-                    }
+                    const fulfilled = this.Queryfulfilled(query)
+                    const notDate = !isStart || !isEnd
 
-                    if (withEndDate() && !queryRange) {
-                        n.push(el)
-                        return n
+                    // all other query props matching current dataTable
+                    if (notDate) {
+                        const itemMatched = reduce(query, (nn, val, k) => {
+                            if (matched(el[k], val)) {
+                                nn.push(true)
+                                fulfilled.set(k)
+                            }
+                            return nn
+                        }, []).filter(f => fulfilled.ok())
+                        // 
+                        if (itemMatched.length) n.push(el)
                     }
+                    // end of try    
+                } catch (error) {
+                    notify({ error }, 1)
                 }
-
-                const fulfilled = new Queryfulfilled()
-                const notDate = !isStart || !isEnd
-
-                // all other query props matching current dataTable
-                if(notDate && exectKeyMatch(query,el)){
-                    const itemMatched = reduce(query, (nn, val, k) => {
-                        if (matched(el[k], query[k])) {
-                            nn[k] = val
-                            fulfilled.done(k)
-                        }
-                        return nn
-                    }, {}).filter(f => fulfilled.ok())
-                    if (itemMatched.length) n.push(el)
-                }
-
-
-      
 
                 return n
             }, [])
             // sort all by createdAt  or userId
-           return filteredData.sort((a, b) => {
+            return filteredData.sort((a, b) => {
                 if (dbName === 'absences') {
                     if (!a['createdAt'] || !b['createdAt']) return 1
                     return new Date(a['createdAt']).getTime() - new Date(b['createdAt']).getTime()
