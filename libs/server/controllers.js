@@ -48,7 +48,8 @@ module.exports = function (expressApp) {
             const query = objectSize(req.query) ? req.query: null
 
             if (routeName === 'absences') {
-                return this.ics.absences(query).then(response => res.status(200).json({ success: true, response, code: 200 }))
+                const includeMember = true
+                return this.ics.absences(query, includeMember).then(response => res.status(200).json({ success: true, response, code: 200 }))
                     // can debate regarding which code to throw
                     .catch(error => res.status(404).json({ error, response: null, code: 404 }))
             }

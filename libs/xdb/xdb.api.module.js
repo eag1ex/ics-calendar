@@ -13,12 +13,12 @@ module.exports = () => {
         }
 
         members() {
-            return dataAsync(require('./members.db.json.js'))
+            return dataAsync(require('./members.db.json'))
                 .then((data) => data.payload)
         }
 
         absences() {
-            return dataAsync(require('./absences.db.json.js'))
+            return dataAsync(require('./absences.db.json'))
                 .then((data) => data.payload)
         }
     }
