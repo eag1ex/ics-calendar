@@ -55,7 +55,7 @@ module.exports = () => {
 
                     try {
                         const memberData = await this.members({ userId: uId })
-                        if (!memberData.length) throw (`no member with userId:${uId} found`, 1)
+                        if (!memberData.length) throw (`no member with userId:${uId} found`)
                         if (memberData.length > 1) {
                             if (this.debug) notify(`[generateICS] found more then one userId:${uId} on members database, selecting first`, 0)
                         }
@@ -65,7 +65,7 @@ module.exports = () => {
                             break
                         }
 
-                        const { name, id, userId } = user || {} // {crewId,name,id,userId}
+                        const {userId} = user  // {crewId,name,id,userId}
                         const userAbsencesList = await this.absences({ userId, type }, null, ['userId', type]) // NOTE modified queryFilter with searchByLimit
                         notify({ userAbsencesList: userAbsencesList.length })
 
@@ -102,9 +102,8 @@ module.exports = () => {
 
 
         /**
-         * @absences
          * 
-         * @extends queryFilter,assignMember
+         * @borrows `queryFilter,assignMember`
          * @param {boolean} includeMember when true, propetry: `member:{}` will be added
          * @param {array} searchByLimit when selected will override `queryFilter`
          * @returns [{},..] list of items
@@ -117,6 +116,7 @@ module.exports = () => {
                 if (this.debug) notify(`[absences] database empty`, 1)
                 return Promise.reject('database empt')
             }
+            
             // when query is set and `includeMember` enabled (by default) on controller.absences(...)
             // it will again perform another query against `members({userId})` to be added on each item
             if (isObject(query) && !isFalsy(query)) {
@@ -139,17 +139,16 @@ module.exports = () => {
                 if (this.debug) notify(`[absences] specified query must be an object`, 0)
                 return []
             }
+            
             else {
                 this.d = data
                 return Promise.all(this.assignMember(includeMember).d)
             }
-
         }
 
         /**
-        * @members
         * @param {object} query optional
-        * @extends queryFilter
+        * @borrows queryFilter
         * @param {array} searchByLimit when selected will override `queryFilter`
         * @returns [{},..] list of items
         */

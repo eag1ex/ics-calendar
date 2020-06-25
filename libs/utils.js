@@ -4,7 +4,7 @@ module.exports = function () {
 
     /** 
      * @param str must provide valid date format, example: `2017-12-15`
-     * @returns new Date()
+     * @returns new Date() or null
     */
     o.date = (str = "") => {
         if(!str) str =""
@@ -15,7 +15,7 @@ module.exports = function () {
     o.dataAsync = (data)=>{
         return new Promise((resolve) => resolve(data))
     }
-    
+
     o.listRoutes = (stack) => {
         return reduce(stack, (n, el, k) => {
             if (el.route) {
