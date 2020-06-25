@@ -1,7 +1,7 @@
 `use strict`
 
 module.exports = function (expressApp) {
-    const { isNumber, notify } = require('x-units')
+    const { isNumber, notify, objectSize } = require('x-units')
     const querystring = require('querystring')
     const url = require('url')
     return class ServerController {
@@ -42,11 +42,10 @@ module.exports = function (expressApp) {
             if (this.serverError) return res.status(500).json({ message: `ICS databse error`, code: 500 });
 
             const routeName = req.params.routeName || ''
-            const query = req.query
-            console.log('req.query',query)
-            
+            const query = objectSize(req.query) ? req.query: null
+
             if (routeName === 'absences') {
-                return this.ics.absences().then(response => res.status(200).json({ success: true, response, code: 200 }))
+                return this.ics.absences(query).then(response => res.status(200).json({ success: true, response, code: 200 }))
                     // can debate regarding which code to throw
                     .catch(error => res.status(404).json({ error, response: null, code: 404 }))
             }
