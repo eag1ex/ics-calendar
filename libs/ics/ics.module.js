@@ -3,36 +3,45 @@
 /** 
  * @ICS
  * - calendar file handler class, used to generate `.ics, .ical` files for MS and Apple
- * - import `ics.api` database documents: `{absences,members}` both correlate with `crewId, userId` props.
+ * - import `ics.api` database records: `{absences,members}` both correlate with `crewId, userId` props.
  * - `new ICS({},debug)`
  * - ical ref: `https://en.wikipedia.org/wiki/ICalendar`
  * - ics ref: `https://www.npmjs.com/package/ics`
 */
 module.exports = () => {
     const XDB = require('../xdb/xdb.api.module')()
+    const ics = require('ics')
     const { notify, isObject, isFalsy, head } = require('x-units')
-    const { reduce } = require('lodash')
 
     class ICSmodule {
+        // @ts-ignore
         constructor(opts = {}, debug) {
             this.debug = debug
             this.d = null // temporary hold data
             this.XDB = new XDB() // initiale database
         }
 
+       
+
+        /** 
+         * 
+         * - generate new calendar event for each absenceMember available in `absences.db`
+         * @param {object} absenceMember, optional, merged memberAbsence record, or used last `this.d` cached value after chaining sequence
+        */
+        async newICalEvent(absenceMember={}){
+
+            if(!absenceMember &&  this.d) absenceMember = this.d
+        }
+
         /**
          * - generate new ics file by cross reference of 2 databases. Find member by `userId` and match them with  by `type`
-         * @param {string} type references document prop on `absences` database
+         * @param {string} type references record prop on `absences` database
          * @param {number} uId required, get user by id
          * @param {string} dbName defaults to `members`
+         * @borrows `members, absences`
          */
         async generateICS(type = 'vacation', uId = null, dbName = 'members') {
 
-            // "crewId": 352,
-            // "id": 2245,
-            // "image": "http://place-hoff.com/300/400",
-            // "name": "Monika",
-            // "userId": 2290
             const availableTypes = ['vacation', 'sickness']
 
             if (!dbName) {
@@ -80,32 +89,15 @@ module.exports = () => {
                     notify(`[generateICS] wrong dbName: ${dbName} selected not ics generated`, 1)
             }
 
-
-            // {
-            //     "absence_days": [],
-            //     "admitterNote": "",
-            //     "confirmedAt": "2017-01-27T17:35:03.000+01:00",
-            //     "createdAt": "2017-01-25T11:06:19.000+01:00",
-            //     "crewId": 352,
-            //     "endDate": "2017-03-11",
-            //     "id": 2909,
-            //     "memberNote": "Urlaub",
-            //     "rejectedAt": null,
-            //     "startDate": "2017-02-23",
-            //     "type": "vacation", // available types 'vacation' 'sickness'
-            //     "userId": 5192
-            //   },
             return true
         }
 
-       
-
-
+    
         /**
          * 
-         * @borrows `queryFilter,assignMember`
          * @param {boolean} includeMember when true, propetry: `member:{}` will be added
          * @param {array} searchByLimit when selected will override `queryFilter`
+         * @borrows `queryFilter,assignMember`
          * @returns [{},..] list of items
          */
         async absences(query = null, includeMember = null, searchByLimit = []) {
@@ -124,6 +116,7 @@ module.exports = () => {
                     let filter = ['userId', 'startDate', 'endDate'] // queryFilter
                     if ((searchByLimit || []).length) filter = searchByLimit
 
+                    // @ts-ignore
                     const arrAsync = this.queryFilter(data, query, filter, 'absences')
                                          .assignMember(includeMember).d 
 
@@ -139,17 +132,17 @@ module.exports = () => {
                 if (this.debug) notify(`[absences] specified query must be an object`, 0)
                 return []
             }
-            
             else {
                 this.d = data
+                // @ts-ignore
                 return Promise.all(this.assignMember(includeMember).d)
             }
         }
 
         /**
         * @param {object} query optional
-        * @borrows queryFilter
         * @param {array} searchByLimit when selected will override `queryFilter`
+        * @borrows `queryFilter`
         * @returns [{},..] list of items
         */
         async members(query = null, searchByLimit = []) {
@@ -166,6 +159,7 @@ module.exports = () => {
                 try {
                     let filter = ['userId'] // queryFilter
                     if ((searchByLimit || []).length) filter = searchByLimit
+                    // @ts-ignore
                     return this.queryFilter(data, query, filter, 'members').d
                 } catch (error) {
                     notify({ error }, 1)

@@ -4,17 +4,102 @@
  * - extention to ics module
 */
 module.exports = (ICSmodule) => {
-    const { notify, someKeyMatch, head } = require('x-units')
+
     const { date } = require('../utils')()
-    const { reduce } = require('lodash')
+    const { notify, isObject, isFalsy, head, someKeyMatch } = require('x-units')
+    const uuidv4 = require('uuid').v4
+    // @ts-ignore
+    const { reduce,pickBy, identity } = require('lodash')
+    const moment = require('moment')
 
     return class ICSlibs extends ICSmodule {
         constructor(opts, debug) {
             super(opts, debug)
         }
 
+         /** 
+         * 
+         * - performs validation against `requiredFields`, and generates new ics event file based on `ics` npm package `https://www.npmjs.com/package/ics`
+         * - to execute call: `CreateEventData({...}).event()`
+         * @param {object} absenceMember data to parse new even
+         * @returns valid object or null
+        */
+       CreateEventData(absenceMember) {
+
+        return (new function (absenceMember) {
+            if(isFalsy(absenceMember) || !isObject(absenceMember)) {
+                throw('absenceMember must not be empty')
+            }
+
+            const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote } = absenceMember
+
+            this.created = moment(createdAt).isValid() ? moment(createdAt).toArray() : null
+            this.start = moment(confirmedAt).isValid() ? moment(confirmedAt).toArray() : null
+            // `duration:` or `end:` is required, not both
+
+            this.end = () => {
+                const dateStr = endDate || rejectedAt
+                return moment(dateStr).isValid() ? moment(endDate).toArray() : null
+            }
+            this.uid = uuidv4()
+
+            // NOTE not sure of this format, there is not valid example on absences.db
+            this.duration = (absence_days || []).length ? { days: head(absence_days) } : null
+
+            //title: `Employee, ${member.name}`,
+            this.title = type === 'vacation' ? `${member.name} is on ${type}` : type === 'sickness'
+                ? `${member.name} is ${type}` : null
+
+            this.description = (admitterNote || '').length > (memberNote || '').length
+                ? admitterNote : memberNote || ''
+
+            // TENTATIVE, CONFIRMED, CANCELLED
+            this.status = this.start && !rejectedAt ? 'CONFIRMED' : rejectedAt ? 'CANCELLED' : 'TENTATIVE'
+            // 'BUSY' OR 'FREE' OR 'TENTATIVE' OR 'OOF'
+            this.busyStatus = this.status === 'CONFIRMED' ? 'BUSY' : this.status === 'CANCELLED' ? 'OOF' : this.status === 'TENTATIVE' ? 'TENTATIVE' : 'FREE'
+
+            this.event = () => {
+                const env = reduce({
+                    uid: this.uid,
+                    created: this.created,
+                    start: this.start,
+                    end: this.end(),
+                    duration: this.duration,
+                    status: this.status,
+                    busyStatus: this.busyStatus,
+                    title: this.title,
+                    description: this.description
+                }, (n, el, k, all) => {
+                    // remove 
+
+                    // NOTE cannot have 2 end settings, duration takes priority ?                      
+                    if (k === 'end' && all['duration']) {
+                        n['duration'] = all['duration']
+                    }
+                    if (k === 'end' && !all['duration']) {
+                        n[k] = el
+                    }
+                    else if (k !== 'duration' && el) n[k] = el
+                    return n
+                }, {})
+
+                const requiredFields = ['uid', 'created', 'start', ['end', 'duration'], 'status', 'busyStatus', 'title']
+
+                // exclude any empty props
+                let validEnv = pickBy(env, identity)
+                const lastTest = Object.keys(validEnv).filter(z => requiredFields.indexOf(z) !== -1).length === requiredFields.length
+
+                if (lastTest) return validEnv
+                else {
+                    notify(`[CreateValidEventData] failed [requiredFields,...] validation`, 1)
+                    return null
+                }
+            }
+        }(absenceMember))
+    }
+
         /** 
-         *  - per database document, check if profided query was fulfilled 
+         *  - per database record, check if profided query was fulfilled 
          * @param {object} query can search thru name properties provided by members/absences database
          */
         Queryfulfilled(query) {

@@ -61,7 +61,6 @@ module.exports = (DEBUG = true) => {
         const host = (server.address().address || "").replace(/::/, 'localhost')
         // @ts-ignore
         const port = server.address().port;
-        //defer.resolve(true)
         notify(`server runnign on http://${host}:${port}`)
     })
     return server

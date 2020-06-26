@@ -1,5 +1,5 @@
 `use strict`
 // initialize server
-require('./server')(true)
+require('./server')()
 
 module.exports = true
