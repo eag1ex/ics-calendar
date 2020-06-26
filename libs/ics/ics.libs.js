@@ -9,13 +9,72 @@ module.exports = (ICSmodule) => {
     const { notify, isObject, isFalsy, head, someKeyMatch,isArray } = require('x-units')
     const uuidv4 = require('uuid').v4
     const ics = require('ics')
+    const fs = require('fs')
+    const path = require('path')
     const { reduce,pickBy, identity } = require('lodash')
+    const sq = require('simple-q')
     const moment = require('moment')
 
     return class ICSlibs extends ICSmodule {
         constructor(opts, debug) {
             super(opts, debug)
         }
+
+        /** 
+          * 
+          * - generate new calendar event for each absenceMember available in `absences.db`
+          * @param {array} absenceMembers, optional, merged memberAbsence record, or used last `this.d` cached value after chaining sequence
+         */
+        newICalEvents(absenceMembers = []) {
+
+            if (!absenceMembers && this.d) absenceMembers = this.d        
+            const eventsArr = [] 
+
+            // 1. get all valid events
+            for (let inx = 0; inx < (absenceMembers||[]).length; inx++) {
+                    const item = absenceMembers[inx]
+                try {
+                    const eventData = this.CreateEventData(item).event()
+                    if (!eventData) continue
+                    eventsArr.push(eventData)
+                } catch (error) {
+                    continue
+                }     
+            }
+            return eventsArr
+        }
+
+        /** 
+         * @param {array} eventsArr ready array created by `newICalEvents`
+        */
+        async populateICalEvents(eventsArr = []) {
+
+            function genIcal(eventData) {
+                const defer = sq()
+
+                ics.createEvent(eventData, (error, value) => {
+                    if (error) return defer.reject({ [eventData.productId]: error })
+                    
+                    fs.writeFile(path.join(__dirname, `./ical-event-files/${eventData.productId}_absence_event.ics`), value, err => {
+                        if (err) return defer.reject({ [eventData.productId]: err })
+                        defer.resolve({ [eventData.productId]: value })
+                    })
+                })
+                return defer.promise()
+            }
+
+            const deneratedResults = []
+            for (let inx = 0; inx < eventsArr.length; inx++) {
+                try {
+                    deneratedResults.push({ done: await genIcal(eventsArr[inx]) })
+                } catch (error) {
+                    notify({ error, populateICalEvents: true, }, 1)
+                    deneratedResults.push({ error: Object.keys(error)[0] })
+                }
+            }
+            return deneratedResults
+        }
+
 
          /** 
          * 
@@ -25,32 +84,68 @@ module.exports = (ICSmodule) => {
          * @returns valid event object or null
         */
        CreateEventData(absenceMember) {
+
         const self = this
+            
+            // const absenceMemberExample = {
+            //     absence_days: [5],
+            //     admitterNote: "some notice to add", << use this if `memberNote` is lesser then
+
+            // NOTE  NOT TOO SURE WHAT TAKES PRIORITY HERE
+            //     confirmedAt: "2017-01-27T17:35:03.000+01:00",  << or use startDate
+            //     createdAt: "2017-01-25T11:06:19.000+01:00", << or use startDate
+            //     startDate: "2017-02-23", if createdAt not set 
+            //     endDate: "2017-03-11", 
+
+            //     rejectedAt: null, << if endDate not set
+            //     id: 2909, << refers to productId
+            //     memberNote: "blah", << use this if `admitterNote` is lesser then
+           
+
+            //     type: "vacation",
+            //     userId: 5192,
+            //     // member: {
+            //     //     name: "Sandra"
+            //     // }
+            // }
+
         return (new function (absenceMember) {
             if(isFalsy(absenceMember) || !isObject(absenceMember)) {
                 throw('absenceMember must not be empty')
             }
-            const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote } = absenceMember ||{}
+            const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote, id } = absenceMember ||{}
 
             // NOTE not too sure which one should be used ? createdAt or startDate
-            this.created = moment(createdAt || startDate || null).isValid() ? moment(createdAt || startDate).toArray() : null
+            this.created = ()=>{
+              const c =   moment(createdAt || startDate || null).isValid() ? moment(createdAt || startDate).toArray() : null
+              if(c) c.splice(6) // max size is 6
+              return c
+            }
             // NOTE not too sure which one should be used ? confirmedAt or startDate
-            this.start = moment(confirmedAt || null).isValid() ? moment(confirmedAt).toArray() : null
+            this.start = () => {
+                const c = moment(confirmedAt || startDate || null).isValid() ? moment(confirmedAt || startDate).toArray() : null
+                if (c) c.splice(6) // max size is 6
+                return c
+            }
+
             // `duration:` or `end:` is required, not both
             this.end = () => {
                 const dateStr = endDate || rejectedAt || null
-                return moment(dateStr).isValid() ? moment(endDate).toArray() : null
+                const c =  moment(dateStr).isValid() ? moment(endDate).toArray() : null
+                if(c) c.splice(6) // max size is 6
+                return c
             }
-            this.uid = uuidv4()
 
+            this.uid = uuidv4() 
+            this.productId = id.toString()
             // NOTE not sure of this format, there is not valid example on absences.db
             this.duration = (absence_days || []).length ? { days: head(absence_days) } : null
 
             //title: `Employee, ${member.name}`,
             this.title = () => {
                 try {
-                    return type === 'vacation' ? `${member.name} is on ${type}` : type === 'sickness'
-                        ? `${member.name} is ${type}` : null
+                    return type === 'vacation' ? `${member.name} is on vacation` : type === 'sickness'
+                        ? `${member.name} is sick` : null
                 } catch (err) {
                     // member not provided
                     return null
@@ -70,9 +165,10 @@ module.exports = (ICSmodule) => {
 
             this.event = () => {
                 const env = {
+                    productId:this.productId,
                     uid: this.uid,
-                    created: this.created,
-                    start: this.start,
+                    created: this.created(),
+                    start: this.start(),
                     end: this.end(),
                     duration: this.duration,
                     status: this.status,
@@ -85,7 +181,7 @@ module.exports = (ICSmodule) => {
                 // NOTE can only allow 1 end time
                 if(env['duration']) delete env['end']
 
-                const requiredFields = ['uid', 'created' /*,'start'*/, ['end', 'duration'], 'status', 'busyStatus', 'title']
+                const requiredFields = ['uid', 'productId', 'created' /*,'start'*/, ['end', 'duration'], 'status', 'busyStatus', 'title']
 
                 // exclude any empty props
                 let validEnv = pickBy(env, identity)

@@ -21,18 +21,23 @@ module.exports = function (expressApp) {
 
         /**
          * (GET) REST/api
-         * - Show me calendar item by `id`
-         * `example: /calendar/:id` 
+         * - produce calendar with valid params `./:type/:userId`
          */
         calendar(req, res) {
             if (this.serverError) return res.status(500).json({ message: `ICS databse error`, code: 500 });
 
+            const validTypes = ['sickness', 'vacation'].filter(z=>z===req.params.type).length
+            if(!validTypes) return res.status(200).json({ error: 'wrong type provided', response: {}, code: 200 });
+            const type = req.params.type
             const userId = Number(req.params.userId)    
             if (!isNumber(userId) || userId < 0) return res.status(200).json({ error: 'wrong userId provided', response: {}, code: 200 });
 
-            this.ics.generateICS('sickness', userId, 'members')
-
-            return res.status(200).json({ success: true, response: { userId }, code: 200 });
+            return this.ics.generateICS(type, userId, 'members').then(z => {
+                let message
+                if (z.length) message = '.ics files generated'
+                else message = 'no match for provided query'
+                res.status(200).json({ success: true, response: z, message, code: 200 });
+            })
         }
 
         /**
