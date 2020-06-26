@@ -31,8 +31,7 @@ module.exports = () => {
          * @borrows `members, absences`
          */
         async generateICS(type = 'vacation', uId = null, dbName = 'members') {
-
-            const availableTypes = ['vacation', 'sickness']
+           
 
             if (!dbName) {
                 if (this.debug) notify(`[generateICS] no dbName selected`, 1)
@@ -44,7 +43,7 @@ module.exports = () => {
                 return []
             }
 
-            if (availableTypes.indexOf(type || '') === -1) {
+            if ( this.availableAbsenceTypes.indexOf(type || '') === -1) {
                 if (this.debug) notify(`[generateICS] wrong type selected`, 1)
                 return []
             }
@@ -100,6 +99,7 @@ module.exports = () => {
          * @returns [{},..] list of items
          */
         async absences(query = null, includeMember = null, searchByLimit = []) {
+            this.d = null
             let data = []
             try {
                 data = await this.XDB.absences()
@@ -125,11 +125,11 @@ module.exports = () => {
                 }
             }
 
-            // invalid query
-            else if (query) {
-                if (this.debug) notify(`[absences] specified query must be an object`, 0)
-                return []
-            }
+            // invalid query {}
+            // else if (query) {
+            //     if (this.debug) notify(`[absences] specified query must be an object`, 0)
+            //     return []
+            // }
             else {
                 this.d = data
                 // @ts-ignore
@@ -143,8 +143,8 @@ module.exports = () => {
         * @borrows `queryFilter`
         * @returns [{},..] list of items
         */
-        async members(query = null, searchByLimit = []) {
-
+        async members(query = null, searchByLimit = [], showAbsence=null) {
+            this.d = null
             let data = []
             try {
                 data = await this.XDB.members()
@@ -152,24 +152,29 @@ module.exports = () => {
                 if (this.debug) notify(`[members] database empty`, 1)
                 return Promise.reject('database empty')
             }
-
             if (isObject(query) && !isFalsy(query)) {
                 try {
                     let filter = ['userId'] // queryFilter
                     if ((searchByLimit || []).length) filter = searchByLimit
                     // @ts-ignore
-                    return this.queryFilter(data, query, filter, 'members').d
+                    const arrAsync = this.queryFilter(data, query, filter, 'members')
+                                .assignAbsences(showAbsence).d
+
+                      return Promise.all(arrAsync)
                 } catch (error) {
                     notify({ error }, 1)
                     return []
                 }
             }
-            // invalid query
-            else if (query) {
-                if (this.debug) notify(`[absences] specified query must be an object`, 0)
-                return []
+            // invalid query {}
+            // else if (query) {
+            //     if (this.debug) notify(`[absences] specified query must be an object`, 0)
+            //     return []
+            // }
+            else {
+                this.d = data         
+                return Promise.all(this.assignAbsences(showAbsence).d)
             }
-            else return data
         }
     }
 

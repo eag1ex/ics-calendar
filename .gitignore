@@ -8,6 +8,7 @@ npm-debug.log
 dist
 assets
 
+libs/ics/ical-event-files
 
 # Docker
 Dockerfile

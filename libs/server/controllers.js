@@ -1,7 +1,7 @@
 `use strict`
 
 module.exports = function (expressApp) {
-    const { isNumber, notify, objectSize, copy } = require('x-units')
+    const { isNumber, notify, objectSize, copy,isArray } = require('x-units')
     const querystring = require('querystring')
     const url = require('url')
     return class ServerController {
@@ -25,8 +25,8 @@ module.exports = function (expressApp) {
          */
         calendar(req, res) {
             if (this.serverError) return res.status(500).json({ message: `ICS databse error`, code: 500 });
-
-            const validTypes = ['sickness', 'vacation'].filter(z=>z===req.params.type).length
+            
+            const validTypes = this.ics.availableAbsenceTypes.filter(z=>z===req.params.type).length
             if(!validTypes) return res.status(200).json({ error: 'wrong type provided', response: {}, code: 200 });
             const type = req.params.type
             const userId = Number(req.params.userId)    
@@ -41,9 +41,10 @@ module.exports = function (expressApp) {
         }
 
         /**
-        * (GET) REST/api
-        * - Show me calendar item by `id`
-        * `examples: /database/:absences` , `/database/:members`
+        * (GET) REST/api 
+        *  end points: `/database/absences` , `/database/members` will list all documents
+        *  deep queries: /database/members?absence=1 include absences of to each member
+        *  ?userId ?startDate ?endDate can be called on each end point
         */
         database(req, res) {
 
@@ -54,13 +55,35 @@ module.exports = function (expressApp) {
 
             if (routeName === 'absences') {
                 const includeMember = true
-                return this.ics.absences(query, includeMember).then(response => res.status(200).json({ success: true, response, code: 200 }))
+
+                return this.ics.absences(query, includeMember).then(response => {
+                    // modify type for user output
+                    return copy(response).map(item => {
+                        if (item['type'] && item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
+                        return item
+                    })          
+                }).then(response=>res.status(200).json({ success: true, response, code: 200 }))
                     // can debate regarding which code to throw
                     .catch(error => res.status(404).json({ error, response: null, code: 404 }))
             }
 
             if (routeName === 'members') {
-               return this.ics.members(query).then(response => res.status(200).json({ success: true, response, code: 200 }))
+                // response assigns absences array when showAbsence=true
+                const showAbsence = (query||{}).absence ? true:false
+                if((query||{}).absence) delete query.absence
+               
+                return this.ics.members(query, [], showAbsence).then(response => {
+                    return copy(response).map(item => {               
+                            if (showAbsence) {
+                                item['absences'] = item['absences'].map((z)=>{
+                                      // update message
+                                    if (z.type) z.type = this.ics.typeSetMessage(item.name, z.type)
+                                    return z
+                                })                
+                            }       
+                        return item
+                    })
+                }).then(response => res.status(200).json({ success: true, response, code: 200 }))
                     // can debate regarding which code to throw
                     .catch(error => res.status(404).json({ error, response: null, code: 404 }))
             }
