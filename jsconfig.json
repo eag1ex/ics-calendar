@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "checkJs": true,
+    "checkJs": false,
     "moduleResolution": "node",
     "module": "commonJS",
     "target": "es6",

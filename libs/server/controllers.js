@@ -30,7 +30,7 @@ module.exports = function (expressApp) {
             const userId = Number(req.params.userId)    
             if (!isNumber(userId) || userId < 0) return res.status(200).json({ error: 'wrong userId provided', response: {}, code: 200 });
 
-            this.ics.generateICS('vacation', userId, 'members')
+            this.ics.generateICS('sickness', userId, 'members')
 
             return res.status(200).json({ success: true, response: { userId }, code: 200 });
         }

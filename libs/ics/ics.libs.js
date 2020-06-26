@@ -6,9 +6,9 @@
 module.exports = (ICSmodule) => {
 
     const { date } = require('../utils')()
-    const { notify, isObject, isFalsy, head, someKeyMatch } = require('x-units')
+    const { notify, isObject, isFalsy, head, someKeyMatch,isArray } = require('x-units')
     const uuidv4 = require('uuid').v4
-    // @ts-ignore
+    const ics = require('ics')
     const { reduce,pickBy, identity } = require('lodash')
     const moment = require('moment')
 
@@ -22,23 +22,23 @@ module.exports = (ICSmodule) => {
          * - performs validation against `requiredFields`, and generates new ics event file based on `ics` npm package `https://www.npmjs.com/package/ics`
          * - to execute call: `CreateEventData({...}).event()`
          * @param {object} absenceMember data to parse new even
-         * @returns valid object or null
+         * @returns valid event object or null
         */
        CreateEventData(absenceMember) {
-
+        const self = this
         return (new function (absenceMember) {
             if(isFalsy(absenceMember) || !isObject(absenceMember)) {
                 throw('absenceMember must not be empty')
             }
+            const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote } = absenceMember ||{}
 
-            const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote } = absenceMember
-
-            this.created = moment(createdAt).isValid() ? moment(createdAt).toArray() : null
-            this.start = moment(confirmedAt).isValid() ? moment(confirmedAt).toArray() : null
+            // NOTE not too sure which one should be used ? createdAt or startDate
+            this.created = moment(createdAt || startDate || null).isValid() ? moment(createdAt || startDate).toArray() : null
+            // NOTE not too sure which one should be used ? confirmedAt or startDate
+            this.start = moment(confirmedAt || null).isValid() ? moment(confirmedAt).toArray() : null
             // `duration:` or `end:` is required, not both
-
             this.end = () => {
-                const dateStr = endDate || rejectedAt
+                const dateStr = endDate || rejectedAt || null
                 return moment(dateStr).isValid() ? moment(endDate).toArray() : null
             }
             this.uid = uuidv4()
@@ -47,8 +47,15 @@ module.exports = (ICSmodule) => {
             this.duration = (absence_days || []).length ? { days: head(absence_days) } : null
 
             //title: `Employee, ${member.name}`,
-            this.title = type === 'vacation' ? `${member.name} is on ${type}` : type === 'sickness'
-                ? `${member.name} is ${type}` : null
+            this.title = () => {
+                try {
+                    return type === 'vacation' ? `${member.name} is on ${type}` : type === 'sickness'
+                        ? `${member.name} is ${type}` : null
+                } catch (err) {
+                    // member not provided
+                    return null
+                }
+            }
 
             this.description = (admitterNote || '').length > (memberNote || '').length
                 ? admitterNote : memberNote || ''
@@ -57,9 +64,12 @@ module.exports = (ICSmodule) => {
             this.status = this.start && !rejectedAt ? 'CONFIRMED' : rejectedAt ? 'CANCELLED' : 'TENTATIVE'
             // 'BUSY' OR 'FREE' OR 'TENTATIVE' OR 'OOF'
             this.busyStatus = this.status === 'CONFIRMED' ? 'BUSY' : this.status === 'CANCELLED' ? 'OOF' : this.status === 'TENTATIVE' ? 'TENTATIVE' : 'FREE'
+            
+            // NOTE optional field
+            this.organizer = { name: 'Admin', email: 'admin@Crewmeister.com' },
 
             this.event = () => {
-                const env = reduce({
+                const env = {
                     uid: this.uid,
                     created: this.created,
                     start: this.start,
@@ -67,33 +77,35 @@ module.exports = (ICSmodule) => {
                     duration: this.duration,
                     status: this.status,
                     busyStatus: this.busyStatus,
-                    title: this.title,
-                    description: this.description
-                }, (n, el, k, all) => {
-                    // remove 
+                    title: this.title(),
+                    description: this.description,
+                    organizer:this.organizer
+                }
 
-                    // NOTE cannot have 2 end settings, duration takes priority ?                      
-                    if (k === 'end' && all['duration']) {
-                        n['duration'] = all['duration']
-                    }
-                    if (k === 'end' && !all['duration']) {
-                        n[k] = el
-                    }
-                    else if (k !== 'duration' && el) n[k] = el
-                    return n
-                }, {})
+                // NOTE can only allow 1 end time
+                if(env['duration']) delete env['end']
 
-                const requiredFields = ['uid', 'created', 'start', ['end', 'duration'], 'status', 'busyStatus', 'title']
+                const requiredFields = ['uid', 'created' /*,'start'*/, ['end', 'duration'], 'status', 'busyStatus', 'title']
 
                 // exclude any empty props
                 let validEnv = pickBy(env, identity)
-                const lastTest = Object.keys(validEnv).filter(z => requiredFields.indexOf(z) !== -1).length === requiredFields.length
+                const lastTest = Object.keys(validEnv).filter(a => {
+                      
+                    return requiredFields.filter(b=>{
+                        // at least 1 should match
+                        if (isArray(b)) return b.filter(c=> a.indexOf(c) !== -1).length > 0
+                        // all should match
+                        else return a.indexOf(b) !== -1                  
+                    }).length
+                
+                }).length >= requiredFields.length
 
                 if (lastTest) return validEnv
                 else {
-                    notify(`[CreateValidEventData] failed [requiredFields,...] validation`, 1)
+                    if(self.debug) notify(`[CreateValidEventData] failed [requiredFields,...] validation`, 1)
                     return null
                 }
+
             }
         }(absenceMember))
     }
@@ -160,6 +172,7 @@ module.exports = (ICSmodule) => {
 
             // apply limit to block search thru other props
             if (!limit()) {
+                if(this.debug) notify(`[queryFilter] no match for limitedSearch`,0)
                 this.d = []
                 return this
             }
@@ -221,7 +234,7 @@ module.exports = (ICSmodule) => {
                 }
                 return n
             }, [])
-
+           
             // sort all by createdAt  or userId
             this.d = filteredData.sort((a, b) => {
                 if (dbName === 'absences') {
@@ -234,7 +247,6 @@ module.exports = (ICSmodule) => {
                 }
                 else return 1
             })
-
             return this
         }
 
@@ -244,10 +256,13 @@ module.exports = (ICSmodule) => {
         * @returns arrAsync including `member:{}` property
        */
         assignMember(includeMember = null) {
-
-            if (!includeMember) return this.d
+          
+            if (!includeMember) {
+                return this
+            }
+            
             const absencesAsyncArr = this.d || []
-
+        
             const arrAsync = absencesAsyncArr.map(async (item) => {
                 // conditionaly append `member` 
                 if (includeMember === true) {
@@ -258,6 +273,7 @@ module.exports = (ICSmodule) => {
                         // ups
                         notify({ error }, 1)
                     }
+                    
                     // NOTE
                     // 1. assing `{member}` to absences/item
                     // 2. reduce to only show `name`

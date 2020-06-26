@@ -10,7 +10,7 @@
 */
 module.exports = () => {
     const XDB = require('../xdb/xdb.api.module')()
-    const ics = require('ics')
+   
     const { notify, isObject, isFalsy, head } = require('x-units')
 
     class ICSmodule {
@@ -21,8 +21,6 @@ module.exports = () => {
             this.XDB = new XDB() // initiale database
         }
 
-       
-
         /** 
          * 
          * - generate new calendar event for each absenceMember available in `absences.db`
@@ -31,6 +29,30 @@ module.exports = () => {
         async newICalEvent(absenceMember={}){
 
             if(!absenceMember &&  this.d) absenceMember = this.d
+
+            // few tests
+            const test1 = {
+                absence_days: [5],
+                // admitterNote: "some notice to add",
+                confirmedAt: "2017-01-27T17:35:03.000+01:00",
+               // createdAt: "2017-01-25T11:06:19.000+01:00",
+                crewId: 352,
+                // endDate: "2017-03-11",
+                id: 2909,
+                //memberNote: "blah",
+                rejectedAt: null,
+                startDate: "2017-02-23",
+                type: "vacation",
+                userId: 5192,
+                // member: {
+                //     name: "Sandra"
+                // }
+            }
+
+
+
+            notify({CreateEventData:this.CreateEventData(test1).event()})
+            
         }
 
         /**
@@ -75,8 +97,9 @@ module.exports = () => {
                         }
 
                         const {userId} = user  // {crewId,name,id,userId}
-                        const userAbsencesList = await this.absences({ userId, type }, null, ['userId', type]) // NOTE modified queryFilter with searchByLimit
-                        notify({ userAbsencesList: userAbsencesList.length })
+                        const userAbsencesList = await this.absences({ userId, type }, true, ['userId', type]) // NOTE modified queryFilter with searchByLimit
+                        this.newICalEvent()     
+                        //notify({ userAbsencesList: })
 
                     } catch (error) {
                         notify({ error }, 1)
@@ -115,11 +138,10 @@ module.exports = () => {
                 try {
                     let filter = ['userId', 'startDate', 'endDate'] // queryFilter
                     if ((searchByLimit || []).length) filter = searchByLimit
-
                     // @ts-ignore
                     const arrAsync = this.queryFilter(data, query, filter, 'absences')
                                          .assignMember(includeMember).d 
-
+                    
                     return Promise.all(arrAsync)
                 } catch (error) {
                     notify({ error }, 1)
