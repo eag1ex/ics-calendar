@@ -21,8 +21,6 @@ module.exports = () => {
             this.XDB = new XDB() // initiale database
         }
 
- 
-
         /**
          * - generate new ics file by cross reference of 2 databases. Find member by `userId` and match them with  by `type`
          * @param {string} type references record prop on `absences` database
@@ -31,7 +29,6 @@ module.exports = () => {
          * @borrows `members, absences`
          */
         async generateICS(type = 'vacation', uId = null, dbName = 'members') {
-           
 
             if (!dbName) {
                 if (this.debug) notify(`[generateICS] no dbName selected`, 1)
@@ -43,7 +40,7 @@ module.exports = () => {
                 return []
             }
 
-            if ( this.availableAbsenceTypes.indexOf(type || '') === -1) {
+            if (this.availableAbsenceTypes.indexOf(type || '') === -1) {
                 if (this.debug) notify(`[generateICS] wrong type selected`, 1)
                 return []
             }
@@ -64,23 +61,22 @@ module.exports = () => {
                             break
                         }
 
-                        const {userId} = user  // {crewId,name,id,userId}
+                        const { userId } = user // {crewId,name,id,userId}
                         const userAbsencesList = await this.absences({ userId, type }, true, ['userId', type]) 
-                        
 
                         // 1. produce event list for ics files
                         const calEvents = this.newICalEvents(userAbsencesList) 
                         // 2. populate ics files   
-                        userOutput = await this.populateICalEvents(calEvents).then(z=>{
+                        userOutput = await this.populateICalEvents(calEvents).then(z => {
                             // notify({populateICalEvents:z})
-                            return z.map(el=>Object.keys(el)[0])
+                            return z.map(el => Object.keys(el)[0])
                         })
 
                     } catch (error) {
                         notify({ error }, 1)
                     }
 
-                    break;
+                    break
                 }
 
                 default:
@@ -89,7 +85,6 @@ module.exports = () => {
 
             return userOutput
         }
-
     
         /**
          * 
@@ -116,21 +111,14 @@ module.exports = () => {
                     if ((searchByLimit || []).length) filter = searchByLimit
                     // @ts-ignore
                     const arrAsync = this.queryFilter(data, query, filter, 'absences')
-                                         .assignMember(includeMember).d 
+                        .assignMember(includeMember).d 
                     
                     return Promise.all(arrAsync)
                 } catch (error) {
                     notify({ error }, 1)
                     return []
                 }
-            }
-
-            // invalid query {}
-            // else if (query) {
-            //     if (this.debug) notify(`[absences] specified query must be an object`, 0)
-            //     return []
-            // }
-            else {
+            } else {
                 this.d = data
                 // @ts-ignore
                 return Promise.all(this.assignMember(includeMember).d)
@@ -143,7 +131,7 @@ module.exports = () => {
         * @borrows `queryFilter`
         * @returns [{},..] list of items
         */
-        async members(query = null, searchByLimit = [], showAbsence=null) {
+        async members(query = null, searchByLimit = [], showAbsence = null) {
             this.d = null
             let data = []
             try {
@@ -158,20 +146,14 @@ module.exports = () => {
                     if ((searchByLimit || []).length) filter = searchByLimit
                     // @ts-ignore
                     const arrAsync = this.queryFilter(data, query, filter, 'members')
-                                .assignAbsences(showAbsence).d
+                        .assignAbsences(showAbsence).d
 
-                      return Promise.all(arrAsync)
+                    return Promise.all(arrAsync)
                 } catch (error) {
                     notify({ error }, 1)
                     return []
                 }
-            }
-            // invalid query {}
-            // else if (query) {
-            //     if (this.debug) notify(`[absences] specified query must be an object`, 0)
-            //     return []
-            // }
-            else {
+            } else {
                 this.d = data         
                 return Promise.all(this.assignAbsences(showAbsence).d)
             }

@@ -9,7 +9,7 @@ module.exports = () => {
 
     return class XDB {
         // @ts-ignore
-        constructor(opts={}) {
+        constructor(opts = {}) {
             // TODO
         }
 
@@ -26,5 +26,3 @@ module.exports = () => {
         }
     }
 }
-
-

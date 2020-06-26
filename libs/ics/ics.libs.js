@@ -6,12 +6,12 @@
 module.exports = (ICSmodule) => {
 
     const { date } = require('../utils')()
-    const { notify, isObject, isFalsy, head, someKeyMatch,isArray, copy } = require('x-units')
+    const { notify, isObject, isFalsy, head, someKeyMatch, isArray, copy } = require('x-units')
     const uuidv4 = require('uuid').v4
     const ics = require('ics')
     const fs = require('fs')
     const path = require('path')
-    const { reduce,pickBy, identity } = require('lodash')
+    const { reduce, pickBy, identity } = require('lodash')
     const sq = require('simple-q')
     const moment = require('moment')
 
@@ -31,8 +31,8 @@ module.exports = (ICSmodule) => {
             const eventsArr = [] 
 
             // 1. get all valid events
-            for (let inx = 0; inx < (absenceMembers||[]).length; inx++) {
-                    const item = absenceMembers[inx]
+            for (let inx = 0; inx < (absenceMembers || []).length; inx++) {
+                const item = absenceMembers[inx]
                 try {
                     const eventData = this.CreateEventData(item).event()
                     if (!eventData) continue
@@ -66,19 +66,18 @@ module.exports = (ICSmodule) => {
             const deneratedResults = []
             for (let inx = 0; inx < eventsArr.length; inx++) {
                 try {
-                    deneratedResults.push({done:await genIcal(eventsArr[inx])})
+                    deneratedResults.push({ done: await genIcal(eventsArr[inx]) })
                 } catch (error) {
-                    notify({ error, populateICalEvents: true, }, 1)
-                    deneratedResults.push({error:Object.keys(error)[0], message})
+                    notify({ error, populateICalEvents: true }, 1)
+                    deneratedResults.push({ error: Object.keys(error)[0] })
                 }
 
             }
             return deneratedResults
         }
-
         
-        get availableAbsenceTypes(){
-            return ['sickness','vacation' ]
+        get availableAbsenceTypes() {
+            return ['sickness', 'vacation' ]
         }
 
         /** 
@@ -100,16 +99,16 @@ module.exports = (ICSmodule) => {
             return message
         }
 
-         /** 
+        /** 
          * 
          * - performs validation against `requiredFields`, and generates new ics event file based on `ics` npm package `https://www.npmjs.com/package/ics`
          * - to execute call: `CreateEventData({...}).event()`
          * @param {object} absenceMember data to parse new even
          * @returns valid event object or null
         */
-       CreateEventData(absenceMember) {
+        CreateEventData(absenceMember) {
 
-        const self = this
+            const self = this
             
             // const absenceMemberExample = {
             //     absence_days: [5],
@@ -124,7 +123,6 @@ module.exports = (ICSmodule) => {
             //     rejectedAt: null, << if endDate not set
             //     id: 2909, << refers to productId
             //     memberNote: "blah", << use this if `admitterNote` is lesser then
-           
 
             //     type: "vacation",
             //     userId: 5192,
@@ -133,99 +131,99 @@ module.exports = (ICSmodule) => {
             //     // }
             // }
 
-        return (new function (absenceMember) {
-            if(isFalsy(absenceMember) || !isObject(absenceMember)) {
-                throw('absenceMember must not be empty')
-            }
-            const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote, id } = absenceMember ||{}
+            return (new function (absenceMember) {
+                if (isFalsy(absenceMember) || !isObject(absenceMember)) {
+                    throw ('absenceMember must not be empty')
+                }
+                const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote, id } = absenceMember || {}
 
-            // NOTE not too sure which one should be used ? createdAt or startDate
-            this.created = ()=>{
-              const c =   moment(createdAt || startDate || null).isValid() ? moment(createdAt || startDate).toArray() : null
-              if(c) c.splice(6) // max size is 6
-              return c
-            }
-            // NOTE not too sure which one should be used ? confirmedAt or startDate
-            this.start = () => {
-                const c = moment(confirmedAt || startDate || null).isValid() ? moment(confirmedAt || startDate).toArray() : null
-                if (c) c.splice(6) // max size is 6
-                return c
-            }
+                // NOTE not too sure which one should be used ? createdAt or startDate
+                this.created = () => {
+                    const c = moment(createdAt || startDate || null).isValid() ? moment(createdAt || startDate).toArray() : null
+                    if (c) c.splice(6) // max size is 6
+                    return c
+                }
+                // NOTE not too sure which one should be used ? confirmedAt or startDate
+                this.start = () => {
+                    const c = moment(confirmedAt || startDate || null).isValid() ? moment(confirmedAt || startDate).toArray() : null
+                    if (c) c.splice(6) // max size is 6
+                    return c
+                }
 
-            // `duration:` or `end:` is required, not both
-            this.end = () => {
-                const dateStr = endDate || rejectedAt || null
-                const c =  moment(dateStr).isValid() ? moment(endDate).toArray() : null
-                if(c) c.splice(6) // max size is 6
-                return c
-            }
+                // `duration:` or `end:` is required, not both
+                this.end = () => {
+                    const dateStr = endDate || rejectedAt || null
+                    const c = moment(dateStr).isValid() ? moment(endDate).toArray() : null
+                    if (c) c.splice(6) // max size is 6
+                    return c
+                }
 
-            this.uid = uuidv4() 
-            this.productId = id.toString()
-            // NOTE not sure of this format, there is not valid example on absences.db
-            this.duration = (absence_days || []).length ? { days: head(absence_days) } : null
+                this.uid = uuidv4() 
+                this.productId = id.toString()
+                // NOTE not sure of this format, there is not valid example on absences.db
+                this.duration = (absence_days || []).length ? { days: head(absence_days) } : null
             
-            this.title = () => {
-                try {
-                    return self.typeSetMessage(member.name,type)
-                } catch (err) {
+                this.title = () => {
+                    try {
+                        return self.typeSetMessage(member.name, type)
+                    } catch (err) {
                     // member not provided
-                    return null
+                        return null
+                    }
                 }
-            }
 
-            this.description = (admitterNote || '').length > (memberNote || '').length
-                ? admitterNote : memberNote || ''
+                this.description = (admitterNote || '').length > (memberNote || '').length
+                    ? admitterNote : memberNote || ''
 
-            // TENTATIVE, CONFIRMED, CANCELLED
-            this.status = this.start && !rejectedAt ? 'CONFIRMED' : rejectedAt ? 'CANCELLED' : 'TENTATIVE'
-            // 'BUSY' OR 'FREE' OR 'TENTATIVE' OR 'OOF'
-            this.busyStatus = this.status === 'CONFIRMED' ? 'BUSY' : this.status === 'CANCELLED' ? 'OOF' : this.status === 'TENTATIVE' ? 'TENTATIVE' : 'FREE'
+                // TENTATIVE, CONFIRMED, CANCELLED
+                this.status = this.start && !rejectedAt ? 'CONFIRMED' : rejectedAt ? 'CANCELLED' : 'TENTATIVE'
+                // 'BUSY' OR 'FREE' OR 'TENTATIVE' OR 'OOF'
+                this.busyStatus = this.status === 'CONFIRMED' ? 'BUSY' : this.status === 'CANCELLED' ? 'OOF' : this.status === 'TENTATIVE' ? 'TENTATIVE' : 'FREE'
             
-            // NOTE optional field
-            this.organizer = { name: 'Admin', email: 'admin@Crewmeister.com' },
+                // NOTE optional field
+                this.organizer = { name: 'Admin', email: 'admin@Crewmeister.com' }
 
-            this.event = () => {
-                const env = {
-                    productId:this.productId,
-                    uid: this.uid,
-                    created: this.created(),
-                    start: this.start(),
-                    end: this.end(),
-                    duration: this.duration,
-                    status: this.status,
-                    busyStatus: this.busyStatus,
-                    title: this.title(),
-                    description: this.description,
-                    organizer:this.organizer
-                }
+                this.event = () => {
+                    const env = {
+                        productId: this.productId,
+                        uid: this.uid,
+                        created: this.created(),
+                        start: this.start(),
+                        end: this.end(),
+                        duration: this.duration,
+                        status: this.status,
+                        busyStatus: this.busyStatus,
+                        title: this.title(),
+                        description: this.description,
+                        organizer: this.organizer
+                    }
 
-                // NOTE can only allow 1 end time
-                if(env['duration']) delete env['end']
+                    // NOTE can only allow 1 end time
+                    if (env['duration']) delete env['end']
 
-                const requiredFields = ['uid', 'productId', 'created' /*,'start'*/, ['end', 'duration'], 'status', 'busyStatus', 'title']
+                    const requiredFields = ['uid', 'productId', 'created' /*, 'start' */, ['end', 'duration'], 'status', 'busyStatus', 'title']
 
-                // exclude any empty props
-                let validEnv = pickBy(env, identity)
-                const lastTest = Object.keys(validEnv).filter(a => {
+                    // exclude any empty props
+                    let validEnv = pickBy(env, identity)
+                    const lastTest = Object.keys(validEnv).filter(a => {
                       
-                    return requiredFields.filter(b=>{
+                        return requiredFields.filter(b => {
                         // at least 1 should match
-                        if (isArray(b)) return b.filter(c=> a.indexOf(c) !== -1).length > 0
-                        // all should match
-                        else return a.indexOf(b) !== -1                  
-                    }).length
+                            if (isArray(b)) return b.filter(c => a.indexOf(c) !== -1).length > 0
+                            // all should match
+                            else return a.indexOf(b) !== -1                  
+                        }).length
                 
-                }).length >= requiredFields.length
+                    }).length >= requiredFields.length
 
-                if (lastTest) return validEnv
-                else {
-                    if(self.debug) notify(`[CreateValidEventData] failed [requiredFields,...] validation`, 1)
-                    return null
+                    if (lastTest) return validEnv
+                    else {
+                        if (self.debug) notify(`[CreateValidEventData] failed [requiredFields,...] validation`, 1)
+                        return null
+                    }
                 }
-            }
-        }(absenceMember))
-    }
+            }(absenceMember))
+        }
 
         /** 
          *  - per database record, check if profided query was fulfilled 
@@ -272,24 +270,22 @@ module.exports = (ICSmodule) => {
                 if (val === _with) return true
                 try {
                     if ((val || '').toString() === _with.toString()) return true
-                }
-                catch (err) {
+                } catch (err) {
                     // upy
                 }
                 return false
             }
 
-
             const limit = () => {
                 if (limitedSearch.indexOf('ALL_ITEMS') !== -1) return 1
                 return limitedSearch.filter(z => {
-                    return Object.keys(query).filter(zz => zz == z).length
+                    return Object.keys(query).filter(zz => zz === z).length
                 }).length
             }
 
             // apply limit to block search thru other props
             if (!limit()) {
-                if(this.debug) notify(`[queryFilter] no match for limitedSearch`,0)
+                if (this.debug) notify(`[queryFilter] no match for limitedSearch`, 0)
                 this.d = []
                 return this
             }
@@ -361,12 +357,10 @@ module.exports = (ICSmodule) => {
                 if (dbName === 'members') {
                     if (!a['userId'] || !b['userId']) return 1
                     return Number(a['userId']) - Number(b['userId'])
-                }
-                else return 1
+                } else return 1
             })
             return this
         }
-
 
         /** 
         * @param {boolean} includeMember when set, we grab `this.d` generated by `absences()`,  then execute `members({userId})` for each absence
@@ -377,40 +371,39 @@ module.exports = (ICSmodule) => {
             if (!includeMember) {
                 return this
             }
-            const absencesList = (this.d || [] )    
+            const absencesList = (this.d || [])    
             const arrAsync = copy(absencesList).map(async (item) => {
                 // conditionaly append `member` 
-                    let member = {}
-                    try {
-                        member = head(await this.members({ userId: item.userId }))
-                    } catch (error) {
-                        // ups
-                        notify({ error }, 1)
-                    }
+                let member = {}
+                try {
+                    member = head(await this.members({ userId: item.userId }))
+                } catch (error) {
+                    // ups
+                    notify({ error }, 1)
+                }
                     
-                    // NOTE
-                    // 1. assing `{member}` to absences/item
-                    // 2. reduce to only show `name`
-                    if (member) {
-                        item['member'] = reduce(member, (n, el, k) => {
-                            if (k === 'name') n['name'] = el
-                            return n
-                        }, {})
-                    }
-                    else {
-                        // return absences/item without member
-                        item['member'] = {}
-                        if (this.debug) notify(`[absences] no member for userId:${item.userId} found on members.db `, 0)
-                    }
+                // NOTE
+                // 1. assing `{member}` to absences/item
+                // 2. reduce to only show `name`
+                if (member) {
+                    item['member'] = reduce(member, (n, el, k) => {
+                        if (k === 'name') n['name'] = el
+                        return n
+                    }, {})
+                } else {
+                    // return absences/item without member
+                    item['member'] = {}
+                    if (this.debug) notify(`[absences] no member for userId:${item.userId} found on members.db `, 0)
+                }
                     
-                    return item
+                return item
             })
 
             this.d = arrAsync
             return this
         }
 
-      /** 
+        /** 
         * @param {boolean} includeAbsence when set, we grab `this.d` generated by `members()`,  then execute `absences({userId})` for each member
         * @returns arrAsync including `absences:{}` property
        */

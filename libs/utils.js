@@ -7,12 +7,12 @@ module.exports = function () {
      * @returns new Date() or null
     */
     o.date = (str = "") => {
-        if(!str) str =""
+        if (!str) str = ""
         if ((new Date(str)).toDateString() === 'Invalid Date') return null
         return new Date(str)
     }
 
-    o.dataAsync = (data)=>{
+    o.dataAsync = (data) => {
         return new Promise((resolve) => resolve(data))
     }
 

@@ -4,7 +4,7 @@
  * - ServerAuth extention
  */
 module.exports = function (expressApp) {
-    const {notify} = require('x-units')
+    const { notify } = require('x-units')
     return class ServerAuth {
         constructor(debug) {
             this.debug = debug
@@ -12,19 +12,19 @@ module.exports = function (expressApp) {
 
         authCheck(req, res, next) {
 
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Methods', 'GET');
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, token-expiry");
-            if(this.debug) notify(`-- calling url: ${req.url}`)
-            return next();
+            res.header('Access-Control-Allow-Origin', '*')
+            res.header('Access-Control-Allow-Methods', 'GET')
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, token-expiry")
+            if (this.debug) notify(`-- calling url: ${req.url}`)
+            return next()
             // providing no restrictions apart from the header
             // return res.status(400).send({ error: true, msg: 'No token provided, or session expired' });
 
         }
 
         AppUseAuth() {
-            expressApp.use(this.authCheck.bind(this));
+            expressApp.use(this.authCheck.bind(this))
         }
 
         // SECTION disabled, not in play
