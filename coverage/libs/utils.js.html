@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">38.1% </span>
+                <span class="strong">90.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/21</span>
+                <span class='fraction'>19/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">62.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/16</span>
+                <span class='fraction'>10/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.67% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">43.75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/16</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -95,24 +95,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">452x</span>
+<span class="cline-any cline-yes">452x</span>
+<span class="cline-any cline-yes">452x</span>
+<span class="cline-any cline-yes">452x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">168x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -125,24 +125,24 @@
      * @param str must provide valid date format, example: `2017-12-15`
      * @returns new Date() or null
     */
-    o.date = <span class="fstat-no" title="function not covered" >(s</span>tr = '') =&gt; <span class="cstat-no" title="statement not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >        if (!str) <span class="cstat-no" title="statement not covered" >str = '</span></span>'
-<span class="cstat-no" title="statement not covered" >        if ((new Date(str)).toDateString() === 'Invalid Date') <span class="cstat-no" title="statement not covered" >return n</span></span>ull
-<span class="cstat-no" title="statement not covered" >        return n</span>ew Date(str)
+    o.date = (str = <span class="branch-1 cbranch-no" title="branch not covered" >'') =&gt; {</span>
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!str) <span class="cstat-no" title="statement not covered" >str = '</span>'
+        <span class="missing-if-branch" title="if path not taken" >I</span>if ((new Date(str)).toDateString() === 'Invalid Date') <span class="cstat-no" title="statement not covered" >return n</span>ull
+        return new Date(str)
     }
 &nbsp;
-    o.dataAsync = <span class="fstat-no" title="function not covered" >(d</span>ata) =&gt; {
-<span class="cstat-no" title="statement not covered" >        return n</span>ew Promise(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(r</span></span>esolve) =&gt; resolve(data))
+    o.dataAsync = (data) =&gt; {
+        return new Promise((resolve) =&gt; resolve(data))
     }
 &nbsp;
-    o.listRoutes = <span class="fstat-no" title="function not covered" >(s</span>tack) =&gt; {
-<span class="cstat-no" title="statement not covered" >        return r</span>educe(stack, <span class="fstat-no" title="function not covered" >(n</span>, el, k) =&gt; {
-<span class="cstat-no" title="statement not covered" >            if (el.route) {</span>
-<span class="cstat-no" title="statement not covered" >                if (((el.route || {}).path || '').indexOf('/') !== -1) {</span>
-<span class="cstat-no" title="statement not covered" >                    n.p</span>ush({ route: el.route.path })
+    o.listRoutes = (stack) =&gt; {
+        return reduce(stack, (n, el, k) =&gt; {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (el.route) {
+                if (((el.route || <span class="branch-1 cbranch-no" title="branch not covered" >{}).p</span>ath || <span class="branch-1 cbranch-no" title="branch not covered" >'').i</span>ndexOf('/') !== -1) {
+                    n.push({ route: el.route.path })
                 }
             }
-<span class="cstat-no" title="statement not covered" >            return n</span>
+            return n
         }, [])
     }
     return o
@@ -154,7 +154,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Jun 28 2020 00:42:43 GMT+0700 (Novosibirsk Standard Time)
+                at Sun Jun 28 2020 03:21:23 GMT+0700 (Novosibirsk Standard Time)
             </div>
         </div>
         <script src="../prettify.js"></script>
