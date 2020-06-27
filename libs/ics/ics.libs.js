@@ -57,7 +57,7 @@ module.exports = (ICSmodule) => {
                     if (error) return defer.reject({ [eventData.productId]: error })
 
                     const icsFilePath = config.ics.filePath           
-                    fs.writeFile(path.join(icsFilePath,`./${eventData.productId}_event.ics`), value, err => {
+                    fs.writeFile(path.join(icsFilePath, `./${eventData.productId}_event.ics`), value, err => {
                         if (err) return defer.reject({ [eventData.productId]: err })
                         defer.resolve({ [eventData.productId]: value })
                     })
@@ -73,7 +73,7 @@ module.exports = (ICSmodule) => {
                     deneratedResults.push({ created: await genIcal(eventsArr[inx]) })
                 } catch (error) {
                     notify({ error, populateICalEvents: true }, 1)
-                    deneratedResults.push({ error: {[Object.keys(error)[0]]:true} })
+                    deneratedResults.push({ error: { [Object.keys(error)[0]]: true } })
                 }
 
             }
@@ -154,19 +154,19 @@ module.exports = (ICSmodule) => {
                 this.created = () => {
                     const c = moment(createdAt || null).isValid() ? moment(createdAt).utc().toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return c ? icsDateAdjustment(c,1): null
+                    return c ? icsDateAdjustment(c, 1) : null
                 }
 
                 this.start = () => {
                     const c = moment(startDate || null).isValid() ? moment(startDate).toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return c ? icsDateAdjustment(c,1): null
+                    return c ? icsDateAdjustment(c, 1) : null
                 }
 
                 this.lastModified = () => {
                     const c = moment(confirmedAt || null).isValid() ? moment(confirmedAt).utc().toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return c ? icsDateAdjustment(c,1): null
+                    return c ? icsDateAdjustment(c, 1) : null
                 }
 
                 // `duration:` or `end:` is required, not both
@@ -174,7 +174,7 @@ module.exports = (ICSmodule) => {
                     const dateStr = endDate || rejectedAt || null
                     const c = moment(dateStr).isValid() ? moment(endDate).toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return c ? icsDateAdjustment(c,1): null
+                    return c ? icsDateAdjustment(c, 1) : null
                 }
 
                 this.uid = uuidv4() 
@@ -184,10 +184,9 @@ module.exports = (ICSmodule) => {
                 this.duration = () => {
                     const d = (absence_days || []).length ? { days: head(absence_days).toString() } : null
                     if (d && Number((d || {}).days) < 1) {
-                        if (self.debug) notify(`[CreateEventData] absence_days must be gte >0`,0)
+                        if (self.debug) notify(`[CreateEventData] absence_days must be gte >0`, 0)
                         return null
-                    }
-                    else return d
+                    } else return d
                 }
 
                 this.title = () => {
@@ -198,7 +197,6 @@ module.exports = (ICSmodule) => {
                         return null
                     }
                 }
-
 
                 this.description = (admitterNote || '').length > (memberNote || '').length
                     ? admitterNote : memberNote || ''
@@ -211,12 +209,12 @@ module.exports = (ICSmodule) => {
                 // NOTE optional
  
                 // currently only got type for category
-                this.categories = ()=>{
-                    return type ? [type]:null
+                this.categories = () => {
+                    return type ? [type] : null
                 }
 
                 // NOTE note too sure if `admitterId` should be the organizer ?
-                this.organizer =  ()=>{
+                this.organizer = () => {
                     return pickBy({ name: 'Admin', email: 'admin@Crewmeister.com', admitterId }, identity)
                 }
 
@@ -227,14 +225,14 @@ module.exports = (ICSmodule) => {
                         created: this.created(),
                         start: this.start(),
                         end: this.end(),
-                        lastModified:this.lastModified(),
+                        lastModified: this.lastModified(),
                         duration: this.duration(),
                         status: this.status,
                         busyStatus: this.busyStatus,
                         title: this.title(),
                         description: this.description,
                         organizer: this.organizer(), 
-                        categories:this.categories()
+                        categories: this.categories()
                     }
 
                     // NOTE can only allow 1 end time

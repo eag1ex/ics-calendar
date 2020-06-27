@@ -52,7 +52,7 @@ module.exports = function (expressApp) {
 
             if (_document === 'absences') {
                 const includeMember = true
-                return ( async() => {
+                return (async() => {
                     const r = await this.ics.absences(query, includeMember)
                     const response = copy(r).map(item => {
                         if (item['type'] && item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
@@ -68,20 +68,20 @@ module.exports = function (expressApp) {
                 const showAbsence = !!(query || {}).absence
                 if ((query || {}).absence) delete query.absence
                
-               return (async ()=>{
-                   const r = await this.ics.members(query, [], showAbsence)
-                   const response = copy(r).map(item => {
-                       if (showAbsence) {
-                           item['absences'] = item['absences'].map((z) => {
-                               // update message
-                               if (z.type) z.type = this.ics.typeSetMessage(item.name, z.type)
-                               return z
-                           })
-                       }
-                       return item
-                   })          
+                return (async () => {
+                    const r = await this.ics.members(query, [], showAbsence)
+                    const response = copy(r).map(item => {
+                        if (showAbsence) {
+                            item['absences'] = item['absences'].map((z) => {
+                                // update message
+                                if (z.type) z.type = this.ics.typeSetMessage(item.name, z.type)
+                                return z
+                            })
+                        }
+                        return item
+                    })          
                     return res.status(200).json({ success: true, response, code: 200 })
-                })().catch(error=>{
+                })().catch(error => {
                     return res.status(404).json({ error, response: null, code: 404 })
                 })
 

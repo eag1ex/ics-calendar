@@ -69,7 +69,7 @@ module.exports = () => {
                         userOutput = await this.populateICalEvents(calEvents).then(z => {
                             // notify({populateICalEvents:z})
                             return z.map(el => {
-                                const userId = Object.keys(el['error'] || el['done'])[0]  // > productId
+                                const userId = Object.keys(el['error'] || el['done'])[0] // > productId
                                 if (el.done) return { created: userId }
                                 if (el.error) return { error: userId }
                             })
