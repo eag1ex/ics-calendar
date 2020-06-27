@@ -54,37 +54,48 @@ module.exports = function (expressApp) {
 
             if (routeName === 'absences') {
                 const includeMember = true
-
-                return this.ics.absences(query, includeMember).then(response => {
-                    // modify type for user output
-                    return copy(response).map(item => {
+                return ( async() => {
+                    const r = await this.ics.absences(query, includeMember)
+                    const response = copy(r).map(item => {
                         if (item['type'] && item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
                         return item
-                    })          
-                }).then(response => res.status(200).json({ success: true, response, code: 200 }))
-                    // can debate regarding which code to throw
-                    .catch(error => res.status(404).json({ error, response: null, code: 404 }))
-            }
+                    })
+                    return res.status(200).json({ success: true, response, code: 200 })
+                })().catch(error => {
+                    res.status(404).json({ error, response: null, code: 404 })
+                })
 
-            if (routeName === 'members') {
+                // return this.ics.absences(query, includeMember).then(response => {
+                //     // modify type for user output
+                //     return copy(response).map(item => {
+                //         if (item['type'] && item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
+                //         return item
+                //     })          
+                // }).then(response => res.status(200).json({ success: true, response, code: 200 }))
+                //     // can debate regarding which code to throw
+                //     .catch(error => res.status(404).json({ error, response: null, code: 404 }))
+            } if (routeName === 'members') {
                 // response assigns absences array when showAbsence=true
                 const showAbsence = !!(query || {}).absence
                 if ((query || {}).absence) delete query.absence
                
-                return this.ics.members(query, [], showAbsence).then(response => {
-                    return copy(response).map(item => {               
-                        if (showAbsence) {
-                            item['absences'] = item['absences'].map((z) => {
-                                // update message
-                                if (z.type) z.type = this.ics.typeSetMessage(item.name, z.type)
-                                return z
-                            })                
-                        }       
-                        return item
-                    })
-                }).then(response => res.status(200).json({ success: true, response, code: 200 }))
-                    // can debate regarding which code to throw
-                    .catch(error => res.status(404).json({ error, response: null, code: 404 }))
+               return (async ()=>{
+                   const r = await this.ics.members(query, [], showAbsence)
+                   const response = copy(r).map(item => {
+                       if (showAbsence) {
+                           item['absences'] = item['absences'].map((z) => {
+                               // update message
+                               if (z.type) z.type = this.ics.typeSetMessage(item.name, z.type)
+                               return z
+                           })
+                       }
+                       return item
+                   })          
+                    return res.status(200).json({ success: true, response, code: 200 })
+                })().catch(error=>{
+                    return res.status(404).json({ error, response: null, code: 404 })
+                })
+
             } else return res.status(500).json({ message: `routeName ${routeName} not found`, code: 500 })
         }
     }

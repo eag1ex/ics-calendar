@@ -69,7 +69,11 @@ module.exports = () => {
                         // 2. populate ics files   
                         userOutput = await this.populateICalEvents(calEvents).then(z => {
                             // notify({populateICalEvents:z})
-                            return z.map(el => Object.keys(el)[0])
+                            return z.map(el => {
+                                const userId = Object.keys(el['error'] || el['done'])[0]  // > productId
+                                if (el.done) return { done: userId }
+                                if (el.error) return { error: userId }
+                            })
                         })
 
                     } catch (error) {

@@ -70,7 +70,7 @@ module.exports = (ICSmodule) => {
                     deneratedResults.push({ done: await genIcal(eventsArr[inx]) })
                 } catch (error) {
                     notify({ error, populateICalEvents: true }, 1)
-                    deneratedResults.push({ error: Object.keys(error)[0] })
+                    deneratedResults.push({ error: {[Object.keys(error)[0]]:true} })
                 }
 
             }
@@ -151,19 +151,19 @@ module.exports = (ICSmodule) => {
                 this.created = () => {
                     const c = moment(createdAt || startDate || null).isValid() ? moment(createdAt || startDate).utc().toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return icsDateAdjustment(c,1)
+                    return c ? icsDateAdjustment(c,1): null
                 }
                 // NOTE not too sure which one should be used ? confirmedAt or startDate
                 this.start = () => {
                     const c = moment(confirmedAt || startDate || null).isValid() ? moment(confirmedAt || startDate).toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return icsDateAdjustment(c,1)
+                    return c ? icsDateAdjustment(c,1): null
                 }
 
                 this.lastModified = () => {
                     const c = moment(lastModified || null).isValid() ? moment(lastModified).utc().toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return icsDateAdjustment(c,1)
+                    return c ? icsDateAdjustment(c,1): null
                 }
 
 
@@ -172,7 +172,7 @@ module.exports = (ICSmodule) => {
                     const dateStr = endDate || rejectedAt || null
                     const c = moment(dateStr).isValid() ? moment(endDate).toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return icsDateAdjustment(c,1)
+                    return c ? icsDateAdjustment(c,1): null
                 }
 
                 this.uid = uuidv4() 
@@ -216,7 +216,7 @@ module.exports = (ICSmodule) => {
                         start: this.start(),
                         end: this.end(),
                         lastModified:this.lastModified(),
-                        duration: this.duration,
+                        duration: this.duration(),
                         status: this.status,
                         busyStatus: this.busyStatus,
                         title: this.title(),
