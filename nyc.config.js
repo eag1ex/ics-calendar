@@ -1,16 +1,14 @@
 `use strict`;
 
-// NOTE asset https://github.com/istanbuljs/nyc
+// asset https://github.com/istanbuljs/nyc
 
-// add more coverage based on your `./tests/**.js`
 module.exports = {
     'include': [
-        'libs/server/**/*.js' // test coverage for `server app`
+        'libs/**/*.js' 
     ],
     'temp-dir':'./.nyc_output',
-     all: true,
-    'check-coverage': true
-    
+     // all: true,
+    'check-coverage': true    
     // default coverage checks
     // 'watermarks': {
     //     'lines': [80, 95],
