@@ -40,7 +40,7 @@ module.exports = (DEBUG = true) => {
     router.get('/database/:document', controllers.database.bind(controllers))
 
     // catch all other calls
-    router.all("*", function (req, res) {
+    router.all('*', function (req, res) {
         return res.status(200).json({ message: 'welcome to ics-calendar', url: req.url, available_routes: listRoutes(router.stack), status: 200 })
     })
 
@@ -57,7 +57,7 @@ module.exports = (DEBUG = true) => {
 
     const server = app.listen(config.port, function () {
         // @ts-ignore
-        const host = (server.address().address || "").replace(/::/, 'localhost')
+        const host = (server.address().address || '').replace(/::/, 'localhost')
         // @ts-ignore
         const port = server.address().port
         notify(`server runnign on http://${host}:${port}`)

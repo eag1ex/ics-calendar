@@ -6,8 +6,8 @@ module.exports = function () {
      * @param str must provide valid date format, example: `2017-12-15`
      * @returns new Date() or null
     */
-    o.date = (str = "") => {
-        if (!str) str = ""
+    o.date = (str = '') => {
+        if (!str) str = ''
         if ((new Date(str)).toDateString() === 'Invalid Date') return null
         return new Date(str)
     }

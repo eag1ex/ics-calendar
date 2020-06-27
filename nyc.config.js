@@ -1,4 +1,4 @@
-'use strict';
+`use strict`;
 
 // NOTE asset https://github.com/istanbuljs/nyc
 

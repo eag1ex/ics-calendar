@@ -21,7 +21,7 @@ module.exports = function (expressApp) {
          * - produce calendar with valid params `./:type/:userId`
          */
         calendar(req, res) {
-            if (this.serverError) return res.status(500).json({ message: `ICS databse error`, code: 500 })
+            if (this.serverError) return res.status(500).json({ message: 'ICS databse error', code: 500 })
             
             const validTypes = this.ics.availableAbsenceTypes.filter(z => z === req.params.type).length
             if (!validTypes) return res.status(200).json({ error: 'wrong type provided', response: {}, code: 200 })
@@ -45,7 +45,7 @@ module.exports = function (expressApp) {
         */
         database(req, res) {
 
-            if (this.serverError) return res.status(500).json({ message: `ICS databse error`, code: 500 })
+            if (this.serverError) return res.status(500).json({ message: 'ICS databse error', code: 500 })
 
             const _document = req.params.document || ''
             const query = objectSize(req.query) ? req.query : null

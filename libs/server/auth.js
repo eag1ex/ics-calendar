@@ -15,7 +15,7 @@ module.exports = function (expressApp) {
             res.header('Access-Control-Allow-Origin', '*')
             res.header('Access-Control-Allow-Methods', 'GET')
             res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, token-expiry")
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, token-expiry')
             if (this.debug) notify(`-- calling url: ${req.url}`)
             return next()
             // providing no restrictions apart from the header

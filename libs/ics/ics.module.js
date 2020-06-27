@@ -30,17 +30,17 @@ module.exports = () => {
         async generateICS(type = 'vacation', uId = null, dbName = 'members') {
 
             if (!dbName) {
-                if (this.debug) notify(`[generateICS] no dbName selected`, 1)
+                if (this.debug) notify('[generateICS] no dbName selected', 1)
                 return []
             }
 
             if (Number(uId) < 0) {
-                if (this.debug) notify(`[generateICS] wrong userId`, 1)
+                if (this.debug) notify('[generateICS] wrong userId', 1)
                 return []
             }
 
             if (this.availableAbsenceTypes.indexOf(type || '') === -1) {
-                if (this.debug) notify(`[generateICS] wrong type selected`, 1)
+                if (this.debug) notify('[generateICS] wrong type selected', 1)
                 return []
             }
 
@@ -102,7 +102,7 @@ module.exports = () => {
             try {
                 data = await this.XDB.absencesDB()
             } catch (err) {
-                if (this.debug) notify(`[absences] database empty`, 1)
+                if (this.debug) notify('[absences] database empty', 1)
                 return Promise.reject('database empt')
             }
             
@@ -140,7 +140,7 @@ module.exports = () => {
             try {
                 data = await this.XDB.membersDB()
             } catch (err) {
-                if (this.debug) notify(`[members] database empty`, 1)
+                if (this.debug) notify('[members] database empty', 1)
                 return Promise.reject('database empty')
             }
             if (isObject(query) && !isFalsy(query)) {

@@ -149,7 +149,7 @@
     "operator-linebreak": ["error", "after", { "overrides": { "?": "before", ":": "before" } }],
     "padded-blocks": 0,
     "prefer-promise-reject-errors":0,
-    "quotes": ["error", "double"],
+    "quotes": 0,
     "rest-spread-spacing": ["error", "never"],
     "semi": ["error", "never"],
     "semi-spacing": ["error", { "before": false, "after": true }],

@@ -184,7 +184,7 @@ module.exports = (ICSmodule) => {
                 this.duration = () => {
                     const d = (absence_days || []).length ? { days: head(absence_days).toString() } : null
                     if (d && Number((d || {}).days) < 1) {
-                        if (self.debug) notify(`[CreateEventData] absence_days must be gte >0`, 0)
+                        if (self.debug) notify('[CreateEventData] absence_days must be gte >0', 0)
                         return null
                     } else return d
                 }
@@ -255,7 +255,7 @@ module.exports = (ICSmodule) => {
 
                     if (lastTest) return validEnv
                     else {
-                        if (self.debug) notify(`[CreateValidEventData] failed [requiredFields,...] validation`, 1)
+                        if (self.debug) notify('[CreateValidEventData] failed [requiredFields,...] validation', 1)
                         return null
                     }
                 }
@@ -322,7 +322,7 @@ module.exports = (ICSmodule) => {
 
             // apply limit to block search thru other props
             if (!limit()) {
-                if (this.debug) notify(`[queryFilter] no match for limitedSearch`, 0)
+                if (this.debug) notify('[queryFilter] no match for limitedSearch', 0)
                 this.d = []
                 return this
             }
