@@ -4,7 +4,7 @@
  * - extention to ics module
 */
 module.exports = (ICSmodule) => {
-
+    const config = require('../../config')
     const { date } = require('../utils')()
     const { notify, isObject, isFalsy, head, someKeyMatch, isArray, copy } = require('x-units')
     const uuidv4 = require('uuid').v4
@@ -55,19 +55,22 @@ module.exports = (ICSmodule) => {
 
                 ics.createEvent(eventData, (error, value) => {
                     if (error) return defer.reject({ [eventData.productId]: error })
-                    
-                    fs.writeFile(path.join(__dirname, `./ical-event-files/${eventData.productId}_absence_event.ics`), value, err => {
+
+                    const icsFilePath = config.ics.filePath           
+                    fs.writeFile(path.join(icsFilePath,`./${eventData.productId}_event.ics`), value, err => {
                         if (err) return defer.reject({ [eventData.productId]: err })
                         defer.resolve({ [eventData.productId]: value })
                     })
                 })
+
                 return defer.promise()
             }
 
             const deneratedResults = []
             for (let inx = 0; inx < eventsArr.length; inx++) {
+                // add `created` and `error` properties to handle user outputs called by `generateICS`
                 try {
-                    deneratedResults.push({ done: await genIcal(eventsArr[inx]) })
+                    deneratedResults.push({ created: await genIcal(eventsArr[inx]) })
                 } catch (error) {
                     notify({ error, populateICalEvents: true }, 1)
                     deneratedResults.push({ error: {[Object.keys(error)[0]]:true} })
@@ -104,29 +107,30 @@ module.exports = (ICSmodule) => {
          * 
          * - performs validation against `requiredFields`, and generates new ics event file based on `ics` npm package `https://www.npmjs.com/package/ics`
          * - to execute call: `CreateEventData({...}).event()`
-         * @param {object} absenceMember data to parse new even
+         * @param {object} absenceWithMember data to parse new even
          * @returns valid event object or null
         */
-        CreateEventData(absenceMember) {
+        CreateEventData(absenceWithMember) {
 
             const self = this
             
             // const absenceMemberExample = {
-            //     absence_days: [5],
+            //     absence_days: [5], refer to duration
             //     admitterNote: "some notice to add", << use this if `memberNote` is lesser then
 
             // NOTE  NOT TOO SURE WHAT TAKES PRIORITY HERE
-            //     confirmedAt: "2017-01-27T17:35:03.000+01:00",  << or use startDate
-            //     createdAt: "2017-01-25T11:06:19.000+01:00", << or use startDate
-            //     startDate: "2017-02-23", if createdAt not set 
-            //     endDate: "2017-03-11", 
+            //     confirmedAt: "2017-01-27T17:35:03.000+01:00",  << refer to lastModified
+            //     createdAt: "2017-01-25T11:06:19.000+01:00", << refer to created
+            //     startDate: "2017-02-23", <<  refer to start
+            //     endDate: "2017-03-11",  refer to end 
 
             //     rejectedAt: null, << if endDate not set
             //     id: 2909, << refers to productId
             //     memberNote: "blah", << use this if `admitterNote` is lesser then
-
+            //     lastModified:   refers to lastModified
+            //     admitterId:123, NOTE refers to organiser ?? 
             //     type: "vacation",
-            //     userId: 5192,
+
             //     // member: {
             //     //     name: "Sandra"
             //     // }
@@ -135,37 +139,35 @@ module.exports = (ICSmodule) => {
             /** 
              * `ics offset notes vs moment/date format:`
              * - date properties, for example: `created=[2017,1,2,0]` render: `2017-1-2` but, standard date/moment.js format would render `2017-0-1`, The month and date index counts from 0 (+1) < fixed with `icsDateAdjustment`
+             * - `absenceMember` is an absence document with `member:{}` property
             */
-
             return (new function (absenceMember) {
                 if (isFalsy(absenceMember) || !isObject(absenceMember)) {
                     throw ('absenceMember must not be empty')
                 }
-                const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote,lastModified, id } = absenceMember || {}
+                const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote, id, admitterId } = absenceMember || {}
 
                 const icsDateAdjustment = (dataArr, increment = 1) => {
                     return dataArr.map((n, inx) => inx === 0 ? n : (inx > 0 && inx < 3) ? n + increment : n)
                 }
 
-                // NOTE not too sure which one should be used ? createdAt or startDate
                 this.created = () => {
-                    const c = moment(createdAt || startDate || null).isValid() ? moment(createdAt || startDate).utc().toArray() : null
+                    const c = moment(createdAt || null).isValid() ? moment(createdAt).utc().toArray() : null
                     if (c) c.splice(6) // max size is 6
                     return c ? icsDateAdjustment(c,1): null
                 }
-                // NOTE not too sure which one should be used ? confirmedAt or startDate
+
                 this.start = () => {
-                    const c = moment(confirmedAt || startDate || null).isValid() ? moment(confirmedAt || startDate).toArray() : null
+                    const c = moment(startDate || null).isValid() ? moment(startDate).toArray() : null
                     if (c) c.splice(6) // max size is 6
                     return c ? icsDateAdjustment(c,1): null
                 }
 
                 this.lastModified = () => {
-                    const c = moment(lastModified || null).isValid() ? moment(lastModified).utc().toArray() : null
+                    const c = moment(confirmedAt || null).isValid() ? moment(confirmedAt).utc().toArray() : null
                     if (c) c.splice(6) // max size is 6
                     return c ? icsDateAdjustment(c,1): null
                 }
-
 
                 // `duration:` or `end:` is required, not both
                 this.end = () => {
@@ -197,6 +199,7 @@ module.exports = (ICSmodule) => {
                     }
                 }
 
+
                 this.description = (admitterNote || '').length > (memberNote || '').length
                     ? admitterNote : memberNote || ''
 
@@ -205,8 +208,17 @@ module.exports = (ICSmodule) => {
                 // 'BUSY' OR 'FREE' OR 'TENTATIVE' OR 'OOF'
                 this.busyStatus = this.status === 'CONFIRMED' ? 'BUSY' : this.status === 'CANCELLED' ? 'OOF' : this.status === 'TENTATIVE' ? 'TENTATIVE' : 'FREE'
             
-                // NOTE optional field
-                this.organizer = { name: 'Admin', email: 'admin@Crewmeister.com' }
+                // NOTE optional
+
+                // currently only got type for category
+                this.categories = ()=>{
+                    return type ? [type]:null
+                }
+
+                // NOTE note too sure if `admitterId` should be the organizer ?
+                this.organizer =  ()=>{
+                    return pickBy({ name: 'Admin', email: 'admin@Crewmeister.com', admitterId }, identity)
+                }
 
                 this.event = () => {
                     const env = {
@@ -221,7 +233,8 @@ module.exports = (ICSmodule) => {
                         busyStatus: this.busyStatus,
                         title: this.title(),
                         description: this.description,
-                        organizer: this.organizer,
+                        organizer: this.organizer(), 
+                        categories:this.categories()
                     }
 
                     // NOTE can only allow 1 end time
@@ -248,7 +261,7 @@ module.exports = (ICSmodule) => {
                         return null
                     }
                 }
-            }(absenceMember))
+            }(absenceWithMember))
         }
 
         /** 

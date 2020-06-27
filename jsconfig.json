@@ -17,7 +17,7 @@
   },
   "include": [
     "libs",
-    "tests"
+    "tests", "config.js"
   ],
   "exclude": [
     "node_modules",

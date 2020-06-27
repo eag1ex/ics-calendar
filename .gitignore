@@ -9,6 +9,7 @@ dist
 assets
 
 libs/ics/ical-event-files
+./ical-event-files
 
 # Docker
 Dockerfile

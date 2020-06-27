@@ -10,7 +10,6 @@
 */
 module.exports = () => {
     const XDB = require('../xdb/xdb.api.module')()
-   
     const { notify, isObject, isFalsy, head } = require('x-units')
 
     class ICSmodule {
@@ -71,7 +70,7 @@ module.exports = () => {
                             // notify({populateICalEvents:z})
                             return z.map(el => {
                                 const userId = Object.keys(el['error'] || el['done'])[0]  // > productId
-                                if (el.done) return { done: userId }
+                                if (el.done) return { created: userId }
                                 if (el.error) return { error: userId }
                             })
                         })

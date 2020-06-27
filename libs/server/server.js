@@ -10,7 +10,7 @@ module.exports = (DEBUG = true) => {
     const router = express.Router()
     const morgan = require('morgan')
     const bodyParser = require('body-parser')
-    const config = require('../config')
+    const config = require('../../config')
     const ServerAuth = require('./auth')(app)
     const ServerCtrs = require('./controllers')(app)
     const cors = require('cors')
