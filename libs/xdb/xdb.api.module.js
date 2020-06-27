@@ -13,13 +13,13 @@ module.exports = () => {
             // TODO
         }
 
-        members() {
+        membersDB() {
             // @ts-ignore
             return dataAsync(require('./members.db.json'))
                 .then((data) => data.payload)
         }
 
-        absences() {
+        absencesDB() {
             // @ts-ignore
             return dataAsync(require('./absences.db.json'))
                 .then((data) => data.payload)

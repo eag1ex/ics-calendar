@@ -37,7 +37,7 @@ module.exports = (DEBUG = true) => {
     // set server routes
     // router.get('/calendar/:userId', controllers.calendar.bind(controllers));
     router.get('/calendar/:type/:userId', controllers.calendar.bind(controllers))
-    router.get('/database/:routeName', controllers.database.bind(controllers))
+    router.get('/database/:document', controllers.database.bind(controllers))
 
     // catch all other calls
     router.all("*", function (req, res) {

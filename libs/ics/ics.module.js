@@ -100,7 +100,7 @@ module.exports = () => {
             this.d = null
             let data = []
             try {
-                data = await this.XDB.absences()
+                data = await this.XDB.absencesDB()
             } catch (err) {
                 if (this.debug) notify(`[absences] database empty`, 1)
                 return Promise.reject('database empt')
@@ -138,7 +138,7 @@ module.exports = () => {
             this.d = null
             let data = []
             try {
-                data = await this.XDB.members()
+                data = await this.XDB.membersDB()
             } catch (err) {
                 if (this.debug) notify(`[members] database empty`, 1)
                 return Promise.reject('database empty')

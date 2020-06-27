@@ -48,7 +48,7 @@ that I can import them into outlook.
 ## Acceptance Criteria
 
 - (DONE) I can get a list of absences including the names of the employee (using api.js or api.rb)
-- I can generate an iCal file and import it into outlook (maybe use a gem or npm package)
+- (done) I can generate an iCal file and import it into outlook (maybe use a gem or npm package)
 - (DONE) I can see vacations of my employees as "#{member.name} is on vacation" 
 - (DONE) I can see sickness of my employees as "#{member.name} is sick" 
 - (Bonus) I can go to http://localhost:3000 and download the iCal file

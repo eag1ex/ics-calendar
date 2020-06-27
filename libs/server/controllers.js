@@ -1,9 +1,7 @@
 `use strict`
 
 module.exports = function (expressApp) {
-    const { isNumber, notify, objectSize, copy, isArray } = require('x-units')
-    const querystring = require('querystring')
-    const url = require('url')
+    const { isNumber, notify, objectSize, copy } = require('x-units')
     return class ServerController {
         constructor(debug) {
 
@@ -41,18 +39,18 @@ module.exports = function (expressApp) {
 
         /**
         * (GET) REST/api 
-        *  end points: `/database/absences` , `/database/members` will list all documents
-        *  deep queries: /database/members?absence=1 include absences of to each member
-        *  ?userId ?startDate ?endDate can be called on each end point
+        *  end points: `/database/:document` >> `/database/members` or `/database/absences` will list document items
+        *  deep queries: `/database/members?absence=1` assign absences list
+        *  ?userId ?startDate ?endDate can be called to deepend your query
         */
         database(req, res) {
 
             if (this.serverError) return res.status(500).json({ message: `ICS databse error`, code: 500 })
 
-            const routeName = req.params.routeName || ''
+            const _document = req.params.document || ''
             const query = objectSize(req.query) ? req.query : null
 
-            if (routeName === 'absences') {
+            if (_document === 'absences') {
                 const includeMember = true
                 return ( async() => {
                     const r = await this.ics.absences(query, includeMember)
@@ -65,7 +63,7 @@ module.exports = function (expressApp) {
                     res.status(404).json({ error, response: null, code: 404 })
                 })
 
-            } if (routeName === 'members') {
+            } if (_document === 'members') {
                 // response assigns absences array when showAbsence=true
                 const showAbsence = !!(query || {}).absence
                 if ((query || {}).absence) delete query.absence
@@ -87,7 +85,7 @@ module.exports = function (expressApp) {
                     return res.status(404).json({ error, response: null, code: 404 })
                 })
 
-            } else return res.status(500).json({ message: `routeName ${routeName} not found`, code: 500 })
+            } else return res.status(500).json({ message: `document ${_document} not found`, code: 500 })
         }
     }
 
