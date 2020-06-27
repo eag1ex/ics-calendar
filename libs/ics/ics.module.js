@@ -64,8 +64,8 @@ module.exports = () => {
                         const { userId } = user // {crewId,name,id,userId}
                         const userAbsencesList = await this.absences({ userId, type }, true, ['userId', type]) 
 
-                        // 1. produce event list for ics files
-                        const calEvents = this.newICalEvents(userAbsencesList) 
+                        // 1. create event list for ics files
+                        const calEvents = this.createICalEvents(userAbsencesList) 
                         // 2. populate ics files   
                         userOutput = await this.populateICalEvents(calEvents).then(z => {
                             // notify({populateICalEvents:z})

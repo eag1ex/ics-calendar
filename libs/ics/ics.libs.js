@@ -25,7 +25,7 @@ module.exports = (ICSmodule) => {
           * - generate new calendar event for each absenceMember available in `absences.db`
           * @param {array} absenceMembers, optional, merged memberAbsence record, or used last `this.d` cached value after chaining sequence
          */
-        newICalEvents(absenceMembers = []) {
+        createICalEvents(absenceMembers = []) {
 
             if (!absenceMembers && this.d) absenceMembers = this.d        
             const eventsArr = [] 
@@ -45,7 +45,8 @@ module.exports = (ICSmodule) => {
         }
 
         /** 
-         * @param {array} eventsArr ready array created by `newICalEvents`
+         * - `ics.createEvent` populate .ics files
+         * @param {array} eventsArr  array created by `createICalEvents`
         */
         async populateICalEvents(eventsArr = []) {
 
@@ -131,38 +132,62 @@ module.exports = (ICSmodule) => {
             //     // }
             // }
 
+            /** 
+             * `ics offset notes vs moment/date format:`
+             * - date properties, for example: `created=[2017,1,2,0]` render: `2017-1-2` but, standard date/moment.js format would render `2017-0-1`, The month and date index counts from 0 (+1) < fixed with `icsDateAdjustment`
+            */
+
             return (new function (absenceMember) {
                 if (isFalsy(absenceMember) || !isObject(absenceMember)) {
                     throw ('absenceMember must not be empty')
                 }
-                const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote, id } = absenceMember || {}
+                const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote,lastModified, id } = absenceMember || {}
+
+                const icsDateAdjustment = (dataArr, increment = 1) => {
+                    return dataArr.map((n, inx) => inx === 0 ? n : (inx > 0 && inx < 3) ? n + increment : n)
+                }
 
                 // NOTE not too sure which one should be used ? createdAt or startDate
                 this.created = () => {
-                    const c = moment(createdAt || startDate || null).isValid() ? moment(createdAt || startDate).toArray() : null
+                    const c = moment(createdAt || startDate || null).isValid() ? moment(createdAt || startDate).utc().toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return c
+                    return icsDateAdjustment(c,1)
                 }
                 // NOTE not too sure which one should be used ? confirmedAt or startDate
                 this.start = () => {
                     const c = moment(confirmedAt || startDate || null).isValid() ? moment(confirmedAt || startDate).toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return c
+                    return icsDateAdjustment(c,1)
                 }
+
+                this.lastModified = () => {
+                    const c = moment(lastModified || null).isValid() ? moment(lastModified).utc().toArray() : null
+                    if (c) c.splice(6) // max size is 6
+                    return icsDateAdjustment(c,1)
+                }
+
 
                 // `duration:` or `end:` is required, not both
                 this.end = () => {
                     const dateStr = endDate || rejectedAt || null
                     const c = moment(dateStr).isValid() ? moment(endDate).toArray() : null
                     if (c) c.splice(6) // max size is 6
-                    return c
+                    return icsDateAdjustment(c,1)
                 }
 
                 this.uid = uuidv4() 
                 this.productId = id.toString()
+
                 // NOTE not sure of this format, there is not valid example on absences.db
-                this.duration = (absence_days || []).length ? { days: head(absence_days) } : null
-            
+                this.duration = () => {
+                    const d = (absence_days || []).length ? { days: head(absence_days).toString() } : null
+                    if (d && Number((d || {}).days) < 1) {
+                        if (self.debug) notify(`[CreateEventData] absence_days must be gte >0`,0)
+                        return null
+                    }
+                    else return d
+                }
+
                 this.title = () => {
                     try {
                         return self.typeSetMessage(member.name, type)
@@ -190,12 +215,13 @@ module.exports = (ICSmodule) => {
                         created: this.created(),
                         start: this.start(),
                         end: this.end(),
+                        lastModified:this.lastModified(),
                         duration: this.duration,
                         status: this.status,
                         busyStatus: this.busyStatus,
                         title: this.title(),
                         description: this.description,
-                        organizer: this.organizer
+                        organizer: this.organizer,
                     }
 
                     // NOTE can only allow 1 end time
