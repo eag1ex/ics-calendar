@@ -26,6 +26,10 @@
 - `npm start` will start the server and give access to all rest points
 
 
+#### ICS file
+- Each .ics file is produced as according to `ics/version:2` explained in `https://en.wikipedia.org/wiki/ICalendar` and with suport of output Interpolation, with `ics` npm package.
+
+
 #### Rest API
 - available end points explained:
     * `http://localhost:5000/calendar/:event/:userId` : `:event` we have [sickness, vacation] events available based on current database/absences. `:userId` targets all absences referencing this userId.
