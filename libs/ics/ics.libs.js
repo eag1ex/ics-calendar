@@ -128,7 +128,7 @@ module.exports = (ICSmodule) => {
             //     id: 2909, << refers to productId
             //     memberNote: "blah", << use this if `admitterNote` is lesser then
             //     lastModified:   refers to lastModified
-            //     admitterId:123, NOTE refers to organiser ?? 
+            //     admitterId:123, NOTE refers to organizer ?? 
             //     type: "vacation",
 
             //     // member: {
@@ -209,7 +209,7 @@ module.exports = (ICSmodule) => {
                 this.busyStatus = this.status === 'CONFIRMED' ? 'BUSY' : this.status === 'CANCELLED' ? 'OOF' : this.status === 'TENTATIVE' ? 'TENTATIVE' : 'FREE'
             
                 // NOTE optional
-
+ 
                 // currently only got type for category
                 this.categories = ()=>{
                     return type ? [type]:null
