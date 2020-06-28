@@ -1,7 +1,7 @@
 /** 
  * @ICSical
  * - this class generate valid ics data and creates `ics` file events
- * - NOTE tests available in `./tests/ics.ical.spec.js`
+ * - NOTE independant tests in `./tests/ics.ical.spec.js`
 */
 
 module.exports = (ICSmodule = null) => {

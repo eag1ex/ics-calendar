@@ -1,45 +1,56 @@
 ### ics-calendar-server
 
 #### About
-- ics-calendar-server is a Node.js back-end stack application used to produce `ics/iCal` files for Calendars like: `MS-Outlook, or Mail for Mac.` It works by GET/request of specific types currently `[sickness, vacation]` followed by `userId`, example `http://localhost:5000/calendar/vacation/644` (http://localhost:5000/calendar/type/userId)
-- The application provides mocked database called `xdb` with access TWO documents `members.db` and `absences.db` from .json file
-- It is scructured by 3 independand micro services called `server => ics <= xdb`
-- Build in ES6 with good functional programming support.
-- Code is linted, well scaled with comments, and debug features
+- ics-calendar-server is a Node.js back-end stack application used to produce `ics/iCal` files for Calendars like: `MS-Outlook, or Mail for Mac.` It works by request with specific types currently `[sickness, vacation]` followed by `userId`, example `http://localhost:5000/calendar/vacation/644` (http://localhost:5000/calendar/type/userId)
+- The application provides mocked database: `xdb` with access TWO documents `members.db` and `absences.db` from `.json`
+- It is scructured with 3 independand micro services: `server => ics <= xdb`, and middleware :`StatusHandler`
+- Build in ES6 with good functional programming.
+- Linted code, well scaled with comments, and debug features
+- Bonus implemented istanbul/nyc coverage
+- Inclused tests with Mocha/Chai
 
 #### Why use it
-- Generage ics files in bulk and use it to import to your Calendar that supports `ics/version:2`
-- Lookup company members by type - it will produce list of all member sickness of vacation leaves
+- Generage ics files in bulk, and use it to import to your Calendar. Supports `ics/version:2`
+- Lookup company members by type - will produce list of all members by type
 - Search with queries...  database/:document >  `database/members?userId=644`, `database/absences?userId=644`, `database/absences?startDate=2016-12-31&endDate=2017-03-10`, `database/members?userId=644&absence=1`
 
 
 #### Stack
-- The application uses own build external/repo `x-utils, simple-q`, as well as public vendor npm packages.
-- Full list `Express.js, ics, lodash, uuid, Node.js, Javascript, ES6, promises, Error handling, micro-services: (xdb, ics, server), x-utils, simple-q, Lint, Chai, Mocha, Istanbul/nyc`
+- The application uses own build external/utilities `x-utils, simple-q`, as well as vendor npm packages.
+- Full list `Express.js, ics/ical/v2, lodash, moment.js, uuid, Node.js, Javascript, ES6, Error handling, micro-services: (xdb, ics, server), x-utils, simple-q, Lint, Chai, Mocha, Istanbul/nyc`
+
+
+#### Micro Services
+- List of services that runs this application:
+    - `Server` : Independant Express.js server that imports all assets, barebone authentication is implemented but not inforeced.
+    - `ICS` : Module that controls logic and operation of the application, it imports `xdb` and implements the middleware: `StateHandler` for status response management.
+    - `XDB` : Mock database manager, imports all data, its managed by `ICS`
+    - `StatusHandler` : Middleware that handles status codes and message response, available examples in `./tests/**`
+
 
 #### Install
 - To instal run `npm i`
-- To enable eslint, first must run `npm lint:install`, and then can use `npm run lint` or `npm run lint:fix`
+- To enable eslint, first must run `npm lint:install`, then can use `npm run lint` or `npm run lint:fix`
 
 
 #### Start 
-- `npm start` will start the server and give access to all rest points
+- `npm start` will start the server and give access to all rest end points
 
 
 #### ICS file
-- Each .ics file is produced as according to `ics/version:2` explained in `https://en.wikipedia.org/wiki/ICalendar` and with suport of output Interpolation, with `ics` npm package.
+- Each .ics file is produced according to `ics/version:2` explained in `https://en.wikipedia.org/wiki/ICalendar`  with interpolation suport from `ics` npm package.
 
 
 #### Rest API
 - available end/points explained:
 
-    * `http://localhost:5000/calendar/:event/:userId` : `:event` we have [sickness, vacation] events available based on current database/absences. `:userId` targets all absences referencing this userId.
-    The result will produce list of calendar files to location specified on `./config.js` (default: ./ical_event_files )
+    * `http://localhost:5000/calendar/:event/:userId` : `:event` we have [sickness, vacation] event/types available based on current database/absences. `:userId` targets all absences referencing this userId.
+    Will produce list of calendar files to location specified in `./config.js` (default: ./ical_event_files )
 
-    * `http://localhost:5000/database/:document` : `:document` select your document to produce results, defaults to no query parameters, and will list all available items.
+    * `http://localhost:5000/database/:document` : `:document` select your document to produce results, defaults to no query parameters, will list all available items.
 
     * queries on `datebase/absences?` {userId, startDate/endDate}
-    * queries on `datebase/members?` {userId, absence=1} if `absence=1` will append all absences of that member. It is a ritch operation so use it wisely!
+    * queries on `datebase/members?` {userId, absence=1} if `absence=1` will append all absences of member. It is a rich operation so use it wisely!
     
 
     * `other notes`, each database/:document has available `searchByLimit[]` in ics.members and ics.absences  that can be set to allow search by other fields available in database. (disabled by default). We can use config.js to add each configuration accordingly, so its easy to understand.
@@ -58,7 +69,7 @@
 // list absences for 644
 `http://localhost:5000/database/absences?userId=644`  
 
-// list all absences with in range
+// list all absences with-in range
 `http://localhost:5000/database/absences?startDate=2016-12-31&endDate=2017-03-10`
 
 // list all absences from startDate
@@ -76,10 +87,10 @@
 ```
 
 
-#### Tests
-- todo
+#### Tests & coverage
+- To run full spec coverage test: `npm run test`
+- To only run mocha without nyc/instanbul: `npm run mocha`
 
 
-## Running Specs
-
-`npm run test` or `npm run test -- --watch`
+#### TODO
+- Stage on Heroku

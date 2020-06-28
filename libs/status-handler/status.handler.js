@@ -1,7 +1,7 @@
 
 /** 
  * @StatusHandler middleware, handles messages and code for REST
- * - NOTE tests available in `./tests/ics.ical.spec.js`
+ * - NOTE independant tests in `./tests/ics.ical.spec.js`
  * 
  * - we dont want to change endpoint datatypes, or make any descructive changes, so will store each status to help return appropiate  `messageCodes`
  * `StatusHandler.$set({})` > sets new lastStatus
