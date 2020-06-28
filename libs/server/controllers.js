@@ -3,7 +3,6 @@
 module.exports = function (expressApp) {
     const { isNumber, notify, objectSize, copy } = require('x-units')
     const messageCodes = require('../message.codes')
-    
     return class ServerController {
         constructor(debug) {
 
@@ -37,7 +36,7 @@ module.exports = function (expressApp) {
                 // if (z.length) message = '.ics files generated'
                 // else message = 'no match for provided query'
                 
-                res.status(200).json({ success: true, response: z, ...this.ics.statusHandler.$get()})
+                res.status(200).json({ success: true, response: z, ...this.ics.statusHandler.$get() })
             }).catch(error => res.status(400).json({ error, ...messageCodes[601] }))
         }
 
@@ -62,11 +61,15 @@ module.exports = function (expressApp) {
                     const response = copy(r).map(item => {
                         if (item['type'] && item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
                         return item
-                    })              
-                    return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get()})
+                    })  
+                    try{
+                        return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get() })
+
+                    }catch(err){
+                        console.log('absences err', err)
+                    }         
+                  
                 })().catch(error => res.status(404).json({ error, ...messageCodes[600] }))
-               
-          
 
             } if (_document === 'members') {
                 // NOTE response assigns absences array when showAbsence=true
@@ -88,7 +91,7 @@ module.exports = function (expressApp) {
                     return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get() })
                 })().catch(error => res.status(404).json({ error, ...messageCodes[601] }))
 
-            } else return res.status(404).json({error:true, ...messageCodes[603]})
+            } else return res.status(404).json({ error: true, ...messageCodes[603] })
         }
     }
 

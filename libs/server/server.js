@@ -1,10 +1,11 @@
 `use strict`
 
 module.exports = (DEBUG = true) => {
-
+    const { notify } = require('x-units')
+    if(DEBUG) notify(`[ics-calendar-server] is running in DEBUG mode`)
     const { listRoutes } = require('../utils')()
     // @ts-ignore
-    const { notify } = require('x-units')
+ 
     const express = require('express')
     const app = express()
     const router = express.Router()
@@ -48,9 +49,9 @@ module.exports = (DEBUG = true) => {
     // handle errors
     // @ts-ignore
     app.use(function (error, req, res, next) {
-       
         res.status(500).json({ error: error.toString(), ...messageCodes[500] })
     })
+
     app.use('/', router)
 
     /// //////////////////

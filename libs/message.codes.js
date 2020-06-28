@@ -31,6 +31,7 @@ module.exports = codeMessage({
     600: ['ICS unpresented error database/absences response'],
     601: ['ICS unpresented error database/members response'],
     602: ['ICS unpresented error producing .ics file'],
-    603: ['No /document found']
+    603: ['No /document found'],
+    604: ['Unhandeled response error'],
 
 })

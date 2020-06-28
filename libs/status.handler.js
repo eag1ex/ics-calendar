@@ -32,8 +32,9 @@ module.exports = () => {
                 notify(`[$setWith] both passStatus/failStatus must be set to condition the correct results`, 1)
                 return {}
             }
+
             if (condition === true || condition > 0) return this.$set(passStatus)
-            if (condition === false || condition < 0) return this.$set(failStatus)
+            if (condition === false || condition <= 0) return this.$set(failStatus)
             else return null
         }
         /** 
@@ -44,17 +45,18 @@ module.exports = () => {
         $set({ message, code, error }) {
 
             let status = pickBy({ message, code, error }, identity)
+
             if (isFalsy(status)) {
                 notify(`[setStatus] status cannot be empty, nothing set`, 0)
                 return false
             }
-
             if (!Number(status['code']) < 0) {
                 notify(`[setStatus] code is missing, status not set`, 0)
                 return false
             }
             status.code = Number(status.code)
             this._lastStatus = status
+
             return true
         }
 
@@ -63,16 +65,21 @@ module.exports = () => {
          * @returns {object} `{message,code,error} returns message and code
         */
         $get() {
-            const last = copy(this._lastStatus)
-            const newStatus = messageCodes[last['code']]
-            if (!newStatus) {
-                notify(`[getStatus] new status nto set because asking code is not yet in './message.codes.js'`, 1)
-                return {}
+            try {
+                const last = copy(this._lastStatus)
+                const newStatus = messageCodes[last['code']]
+                if (!newStatus) {
+                    notify(`[getStatus] new status nto set because asking code is not yet in './message.codes.js'`, 1)
+                    return {}
+                }
+
+                // produce status from available message.codes 
+                return newStatus
+            } catch (err) {
+                notify(`[$get] unhandeled status, returning default`,1)
+                return messageCodes[604]
             }
 
-            this._lastStatus = null
-            // produce status from available message.codes 
-            return newStatus
         }
 
     }

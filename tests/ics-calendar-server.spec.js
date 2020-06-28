@@ -91,8 +91,7 @@ describe('PASS:GET /absences requests', function () {
       expect(res.status === 200 || res.status === 300).equal(true)
       res.should.be.json
       res.should.have.status('200')
-      expect('error').not.equal('success')
-
+      
       res.body.response.forEach((item, inx) => {
         absencesList.filter(key => {
           assert(Object.keys(item).includes(key))
@@ -163,10 +162,8 @@ describe('PASS:GET /members requests', function () {
       assert.equal(res.body.success, true)
       expect(res.body.response.length).above(0)
       expect(res.status === 200 || res.status === 300).equal(true)
-      res.should.be.json
       res.should.have.status('200')
-      expect('error').not.equal('success')
-
+      
       res.body.response.forEach((item, inx) => {
         membersList.filter(key => {
           assert(Object.keys(item).includes(key))
@@ -233,10 +230,74 @@ describe('PASS:GET /members requests', function () {
 }) //!SECTION 
 
 
-// describe('FAIL:GET  /absences requests', function () {
+// SECTION Calendar should create (.ics) events for types: [sickness,vacation]
+describe('Calendar should create (.ics) events for types: [sickness,vacation]', function () {
+  
+  it('generate events for type:sickness, for userId=644', function (done) {
 
-// })
+    chaiGetRequest(server, `/calendar/sickness/644`, (res) => {
+      assert.equal(res.body.success, true)
+      res.body.response.forEach((el, inx) => {
+        expect(el).to.have.property('created')
+      })
+      expect(res.body.response.length).above(0)
+      res.should.have.status('200')
 
-// describe('FAIL:GET  /members requests', function () {
+    }, done)
+  })
 
-// })
+  it('generate events for type:vacation, for userId=644', function (done) {
+
+    chaiGetRequest(server, `/calendar/vacation/644`, (res) => {
+      assert.equal(res.body.success, true)
+      res.body.response.forEach((el, inx) => {
+        expect(el).to.have.property('created')
+      })
+      expect(res.body.response.length).above(0)
+      res.should.have.status('200')
+
+    }, done)
+  })
+})  //!SECTION 
+
+// SECTION Calendar should create (.ics) events for types: [sickness,vacation]
+describe('FAIL:GET /members requests', function () {
+
+  it('failed results for {query} ?userId=000&absence=1', function (done) {
+
+    chaiGetRequest(server, `/database/members?userId=000&absence=1`, (res) => {
+      expect(res.body.response.length).below(1)
+      res.should.have.status('200')
+      expect(res.body).to.have.property('code').to.equal(103)
+
+    }, done)
+
+  })
+  
+  it('failed results for invalid range startDate=20161-12-311&endDate=2017-03-101', function (done) {
+
+    chaiGetRequest(server, `/database/members?startDate=20161-12-311&endDate=2017-03-101`, (res) => {
+      expect(res.body.response.length).below(1)
+      res.should.have.status('200')
+      expect(res.body).to.have.property('code').to.equal(103)
+    }, done)
+    
+  })
+
+
+})// !SECTION 
+
+// SECTION FAIL:GET /absences requests
+describe('FAIL:GET /absences requests', function () {
+
+  it('failed results for {query} ?userId=000', function (done) {
+    
+    chaiGetRequest(server, `/database/absences?userId=000`, (res) => {
+      expect(res.body.response.length).below(1)
+      res.should.have.status('200')
+      expect(res.body).to.have.property('code').to.equal(100)
+
+    }, done)
+  })
+}) //!SECTION
+

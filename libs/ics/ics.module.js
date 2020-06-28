@@ -67,7 +67,7 @@ module.exports = () => {
                         const calEvents = this.createICalEvents(userAbsencesList)
                         // 2. populate ics files   
                         userOutput = await this.populateICalEvents(calEvents).then(z => {                    
-                           if(!(z || []).length) throw(`no file batch available`)
+                            if (!(z || []).length) throw (`no file batch available`)
                             return z.map(el => {
                                 const userId = Object.keys(el['error'] || el['created'])[0] // > productId < absence/.id 
                                 if (el.created) return { created: userId }
@@ -87,22 +87,19 @@ module.exports = () => {
                     notify(`[generateICS] wrong dbName: ${dbName} selected no ics generated`, 1)
             }
          
-                if (!(userOutput||[]).length) {
-                    this.statusHandler.$set({ code: 107 })
-                    return userOutput
-                }
-                
-                else {
-                    // based on results set the right status
-                    let created = 0
-                    const d = userOutput.map(z => {
-                        if (z.created) created++
-                        return z
-                    })
-                    this.statusHandler.$setWith(created > 0, { code: 204 }, { code: 106 })
-                    return d
-                }
-
+            if (!(userOutput || []).length) {
+                this.statusHandler.$set({ code: 107 })
+                return userOutput
+            } else {
+                // based on results set the right status
+                let created = 0
+                const d = userOutput.map(z => {
+                    if (z.created) created++
+                    return z
+                })
+                this.statusHandler.$setWith(created > 0, { code: 204 }, { code: 106 })
+                return d
+            }
        
         }
 
@@ -134,11 +131,12 @@ module.exports = () => {
                         .assignMember(includeMember).d
 
                     return Promise.all(arrAsync).then(z => {
-                        this.statusHandler.$setWith(z.length, { code: 100 }, { code: 200 })
+                        this.statusHandler.$setWith(z.length, { code: 200 }, { code: 100 })
                         return z
                     })
                 } catch (error) {
                     if (this.debug) notify({ error }, 1)
+                    console.log('absences z 2',error)
                     this.statusHandler.$set({ code: 101 })
                     return []
                 }

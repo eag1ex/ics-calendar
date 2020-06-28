@@ -31,7 +31,8 @@
 
 
 #### Rest API
-- available end points explained:
+- available end/points explained:
+
     * `http://localhost:5000/calendar/:event/:userId` : `:event` we have [sickness, vacation] events available based on current database/absences. `:userId` targets all absences referencing this userId.
     The result will produce list of calendar files to location specified on `./config.js` (default: ./ical_event_files )
 
@@ -39,11 +40,17 @@
 
     * queries on `datebase/absences?` {userId, startDate/endDate}
     * queries on `datebase/members?` {userId, absence=1} if `absence=1` will append all absences of that member. It is a ritch operation so use it wisely!
+    
 
     * `other notes`, each database/:document has available `searchByLimit[]` in ics.members and ics.absences  that can be set to allow search by other fields available in database. (disabled by default). We can use config.js to add each configuration accordingly, so its easy to understand.
 
 ```
 // GET/ examples
+
+// create calendar files by type and userId
+`http://localhost:5000/calendar/vacation/644` 
+`http://localhost:5000/calendar/sickness/644`
+
 
 // list all absences
 `http://localhost:5000/database/absences` 

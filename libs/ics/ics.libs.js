@@ -44,7 +44,6 @@ module.exports = (ICSmodule) => {
             return eventsArr
         }
 
-
         /** 
          * - `ics.createEvent` populate .ics files
          * @param {array} eventsArr  array created by `createICalEvents`
@@ -150,7 +149,7 @@ module.exports = (ICSmodule) => {
                 const { createdAt, startDate, endDate, type, member, absence_days, confirmedAt, rejectedAt, admitterNote, memberNote, id, admitterId } = absenceMember || {}
 
                 const icsDateAdjustment = (dataArr, increment = 1) => {
-                    return dataArr.map((n, inx) => (inx===1) ? n + increment : n)
+                    return dataArr.map((n, inx) => (inx === 1) ? n + increment : n)
                 }
 
                 this.created = () => {
@@ -217,7 +216,7 @@ module.exports = (ICSmodule) => {
 
                 // NOTE not too sure where admitterId should be used ?
                 this.organizer = () => {
-                    const name  = admitterId? `Admin:${admitterId}`: 'Admin' 
+                    const name = admitterId ? `Admin:${admitterId}` : 'Admin' 
                     return pickBy({ name: name, email: 'admin@Crewmeister.com' }, identity)
                 }
 
@@ -329,6 +328,7 @@ module.exports = (ICSmodule) => {
                 this.d = []
                 return this
             }
+            
             const filteredData = data.reduce((n, el) => {
                 try {
                     // only perform if any matching keys are found
@@ -341,11 +341,13 @@ module.exports = (ICSmodule) => {
                     if (isStart || isEnd) {
 
                         const withStartDate = () => {
+                            if(!date(query['startDate'])) return false
                             if (query['startDate'] && el['startDate']) return date(query['startDate']).getTime() <= date(el['startDate']).getTime() && isStart
                             return false
                         }
 
                         const withEndDate = () => {
+                            if(!date(query['endDate'])) return false
                             if (query['endDate'] && el['endDate']) return date(el['endDate']).getTime() <= date(query['endDate']).getTime() && isEnd
                             return false
                         }

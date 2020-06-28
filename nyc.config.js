@@ -8,12 +8,12 @@ module.exports = {
     ],
     'temp-dir':'./.nyc_output',
      // all: true,
-    'check-coverage': true    
+    'check-coverage': true,    
     // default coverage checks
-    // 'watermarks': {
-    //     'lines': [80, 95],
-    //     'functions': [80, 95],
-    //     'branches': [80, 95],
-    //     'statements': [80, 95]
-    //   }
+    'watermarks': {
+        'lines': [75, 90],
+        'functions': [75, 90],
+        'branches': [75, 90],
+        'statements': [75, 90]
+      }
 };

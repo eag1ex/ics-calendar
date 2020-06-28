@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.3% </span>
+                <span class="strong">94.74% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>36/37</span>
+                <span class='fraction'>36/38</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">40% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/6</span>
+                <span class='fraction'>2/5</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.06% </span>
+                <span class="strong">97.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>33/34</span>
+                <span class='fraction'>36/37</span>
             </div>
         
             
@@ -123,24 +123,27 @@
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -175,6 +178,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -191,11 +195,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">`use strict`
 &nbsp;
-module.exports = (DEBUG = <span class="branch-1 cbranch-no" title="branch not covered" >true) =&gt; {</span>
-&nbsp;
+module.exports = (DEBUG = <span class="branch-0 cbranch-no" title="branch not covered" >true)</span> =&gt; {
+    const { notify } = require('x-units')
+    <span class="missing-if-branch" title="if path not taken" >I</span>if(DEBUG) <span class="cstat-no" title="statement not covered" >notify(`[ics-calendar-server] is running in DEBUG mode`)</span>
     const { listRoutes } = require('../utils')()
     // @ts-ignore
-    const { notify } = require('x-units')
+ 
     const express = require('express')
     const app = express()
     const router = express.Router()
@@ -206,7 +211,7 @@ module.exports = (DEBUG = <span class="branch-1 cbranch-no" title="branch not co
     const ServerCtrs = require('./controllers')(app)
     const cors = require('cors')
     const ejs = require('ejs')
-&nbsp;
+    const messageCodes = require('../message.codes')
     app.set('trust proxy', 1) // trust first proxy
     app.use(morgan('dev'))
     app.use(bodyParser.urlencoded({ extended: false }))
@@ -238,9 +243,10 @@ module.exports = (DEBUG = <span class="branch-1 cbranch-no" title="branch not co
     /// //////////////////
     // handle errors
     // @ts-ignore
-    app.use(<span class="fstat-no" title="function not covered" >function (e</span>rror, req, res, next) {
-<span class="cstat-no" title="statement not covered" >        res.s</span>tatus(500).json({ error: error.toString(), message: 'ups something went wrong' })
+    app.use(<span class="fstat-no" title="function not covered" >fu</span>nction (error, req, res, next) {
+<span class="cstat-no" title="statement not covered" >        res.status(500).json({ error: error.toString(), ...messageCodes[500] })</span>
     })
+&nbsp;
     app.use('/', router)
 &nbsp;
     /// //////////////////
@@ -248,7 +254,7 @@ module.exports = (DEBUG = <span class="branch-1 cbranch-no" title="branch not co
 &nbsp;
     const server = app.listen(config.port, function () {
         // @ts-ignore
-        const host = (server.address().address || <span class="branch-1 cbranch-no" title="branch not covered" >'').r</span>eplace(/::/, 'localhost')
+        const host = (server.address().address || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.replace(/::/, 'localhost')
         // @ts-ignore
         const port = server.address().port
         notify(`server runnign on http://${host}:${port}`)
@@ -262,7 +268,7 @@ module.exports = (DEBUG = <span class="branch-1 cbranch-no" title="branch not co
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun Jun 28 2020 03:21:23 GMT+0700 (Novosibirsk Standard Time)
+                at Mon Jun 29 2020 01:36:07 GMT+0700 (Novosibirsk Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
