@@ -4,7 +4,7 @@ const path = require('path')
 module.exports = {
     ics: {
         // changing this path will automaticly update `ics.createEvent` path
-        filePath: path.join(__dirname, './ical-event-files')
+        filePath: path.join(__dirname, './ical_event_files')
     },
     // 'PUBLIC': "./views",
     //  'secret': 'disabled',

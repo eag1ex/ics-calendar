@@ -33,7 +33,7 @@
 #### Rest API
 - available end points explained:
     * `http://localhost:5000/calendar/:event/:userId` : `:event` we have [sickness, vacation] events available based on current database/absences. `:userId` targets all absences referencing this userId.
-    The result will produce list of calendar files to location specified on `./config.js` (default: ./ical-event-files )
+    The result will produce list of calendar files to location specified on `./config.js` (default: ./ical_event_files )
 
     * `http://localhost:5000/database/:document` : `:document` select your document to produce results, defaults to no query parameters, and will list all available items.
 
