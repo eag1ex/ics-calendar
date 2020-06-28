@@ -7,7 +7,8 @@
 const assert = require('assert')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
-const server = require('../libs/server/server')(false)
+const DEBUG = false  // with debug true will get better coverage because will expose notify logging
+const server = require('../libs/server/server')(DEBUG)
 const should = chai.should()
 const expect = chai.expect
 // const { notify } = require("x-units")

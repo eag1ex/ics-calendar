@@ -1,12 +1,12 @@
 /** 
  * @ICSical
- * - this class generate valid ics data and creates `ics` file events
+ * - this class generate valid ics data and creates `ics` event files
  * - NOTE independant tests in `./tests/ics.ical.spec.js`
 */
 
 module.exports = (ICSmodule = null) => {
     const config = require('../../config')
-    if (!ICSmodule) ICSmodule = function () { } // so we can do so test runs
+    if (!ICSmodule) ICSmodule = function () { } // so we can do independant test runs
     const { notify, isObject, isFalsy, head, isArray } = require('x-units')
     const uuidv4 = require('uuid').v4
     const ics = require('ics')
@@ -54,7 +54,7 @@ module.exports = (ICSmodule = null) => {
                 try {
                     deneratedResults.push({ created: await genIcal(eventsArr[inx]) })
                 } catch (error) {
-                    notify({ error, populateICalEvents: true }, 1)
+                    if(this.debug) notify({ error, populateICalEvents: true }, 1)
                     deneratedResults.push({ error: { [Object.keys(error)[0]]: true } })
                 }
             }

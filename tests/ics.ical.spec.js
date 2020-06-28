@@ -11,19 +11,20 @@ const StatusHandler = require('../libs/status-handler/status.handler')()
 const messageCodes = require('../libs/status-handler/message.codes')
 const ICSical = require('../libs/ics/ics.ical')()
 
-
-const ical = new ICSical({}, false)
+const DEBUG = false  // with debug true will get better coverage because will expose notify logging
+const ical = new ICSical({}, DEBUG)
 
 
 describe('Check (.ics) creates valid ical events for [sickness,vacation]', function () {
 
-    const genResults = (absenceList) => {
+    const genResults = (absenceList, toFail=null) => {
         const calEvents = ical.createICalEvents(absenceList)
         return ical.populateICalEvents(calEvents).then(z => {
 
             const resp = z.map(el => {
 
-                expect(el.created !== undefined).equal(true)
+            if(!toFail) expect(el.created !== undefined).equal(true)
+            else expect(el.error !== undefined).equal(true)
                 // const productId = Object.keys(el['error'] || el['created'])[0]
                 //  // > productId < absence/.id 
                 // if (el.created) return { created: productId }
@@ -46,6 +47,17 @@ describe('Check (.ics) creates valid ical events for [sickness,vacation]', funct
         // ical.availableAbsenceTypes
         const absenceList = absenceWithMemberList().filter(z => z.type === 'sickness')
         return genResults(absenceList)
+    })
+
+    it('userId=644 should fail to creaate .ics event files', function () {
+        // ical.availableAbsenceTypes
+        const absenceList = absenceWithMemberList().map(z=>{
+            delete z.createdAt
+            delete z.endDate
+            return z
+        }).filter(z => z.type === 'sickness')
+
+        return genResults(absenceList, true)
     })
 
 })

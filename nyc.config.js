@@ -14,9 +14,9 @@ module.exports = {
     'check-coverage': true,
     // default coverage checks
  
-     "branches": 60, 
+     "branches": 65, 
      "lines": 85,
-     "functions": 90,
+     "functions": 95,
      "statements": 80
 
 };

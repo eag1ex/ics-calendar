@@ -11,7 +11,8 @@ const messageCodes = require('../libs/status-handler/message.codes')
 
 
 describe('Check StatusHandler status codes', function () {
-    const sth = new StatusHandler({}, false)
+    const DEBUG = false  // with debug true will get better coverage because will expose notify logging
+    const sth = new StatusHandler({}, DEBUG)
     it('Should request correct $get()=>{code.message} per each $set({})', function (done) {
         for (let [key, val] of Object.entries(messageCodes)) {
             sth.$set({ code: val.code })

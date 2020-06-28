@@ -76,7 +76,7 @@ module.exports = () => {
                         })
 
                     } catch (error) {
-                        notify({ error }, 1)
+                        if(this.debug) notify({ error }, 1)
                         this.statusHandler.$set({ code: 602 })
                     }
 
