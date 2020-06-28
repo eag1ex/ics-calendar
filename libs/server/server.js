@@ -15,7 +15,7 @@ module.exports = (DEBUG = true) => {
     const ServerCtrs = require('./controllers')(app)
     const cors = require('cors')
     const ejs = require('ejs')
-
+    const messageCodes = require('../message.codes')
     app.set('trust proxy', 1) // trust first proxy
     app.use(morgan('dev'))
     app.use(bodyParser.urlencoded({ extended: false }))
@@ -48,7 +48,8 @@ module.exports = (DEBUG = true) => {
     // handle errors
     // @ts-ignore
     app.use(function (error, req, res, next) {
-        res.status(500).json({ error: error.toString(), message: 'ups something went wrong' })
+       
+        res.status(500).json({ error: error.toString(), ...messageCodes[500] })
     })
     app.use('/', router)
 

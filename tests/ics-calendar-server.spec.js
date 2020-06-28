@@ -228,7 +228,7 @@ describe('PASS:GET /members requests', function () {
       })
     }, done)
 
-  }) 
+  })
 
 }) //!SECTION 
 

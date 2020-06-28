@@ -2,6 +2,8 @@
 
 module.exports = function (expressApp) {
     const { isNumber, notify, objectSize, copy } = require('x-units')
+    const messageCodes = require('../message.codes')
+    
     return class ServerController {
         constructor(debug) {
 
@@ -22,19 +24,21 @@ module.exports = function (expressApp) {
          */
         calendar(req, res) {
             if (this.serverError) return res.status(500).json({ message: 'ICS databse error', code: 500 })
-            
+
             const validTypes = this.ics.availableAbsenceTypes.filter(z => z === req.params.type).length
-            if (!validTypes) return res.status(200).json({ error: 'wrong type provided', response: {}, code: 200 })
+            if (!validTypes) return res.status(200).json({ error: true, ...messageCodes[108] })
             const type = req.params.type
-            const userId = Number(req.params.userId)    
-            if (!isNumber(userId) || userId < 0) return res.status(200).json({ error: 'wrong userId provided', response: {}, code: 200 })
+            const userId = Number(req.params.userId)
+            if (!isNumber(userId) || userId < 0) return res.status(404).json({ error: 'wrong userId provided', response: {}, code: 200 })
 
             return this.ics.generateICS(type, userId, 'members').then(z => {
-                let message
-                if (z.length) message = '.ics files generated'
-                else message = 'no match for provided query'
-                res.status(200).json({ success: true, response: z, message, code: 200 })
-            })
+                // let message
+
+                // if (z.length) message = '.ics files generated'
+                // else message = 'no match for provided query'
+                
+                res.status(200).json({ success: true, response: z, ...this.ics.statusHandler.$get()})
+            }).catch(error => res.status(400).json({ error, ...messageCodes[601] }))
         }
 
         /**
@@ -52,22 +56,23 @@ module.exports = function (expressApp) {
 
             if (_document === 'absences') {
                 const includeMember = true
-                return (async() => {
+         
+                return (async () => {
                     const r = await this.ics.absences(query, includeMember)
                     const response = copy(r).map(item => {
                         if (item['type'] && item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
                         return item
-                    })
-                    return res.status(200).json({ success: true, response, code: 200 })
-                })().catch(error => {
-                    res.status(404).json({ error, response: null, code: 404 })
-                })
+                    })              
+                    return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get()})
+                })().catch(error => res.status(404).json({ error, ...messageCodes[600] }))
+               
+          
 
             } if (_document === 'members') {
-                // response assigns absences array when showAbsence=true
+                // NOTE response assigns absences array when showAbsence=true
                 const showAbsence = !!(query || {}).absence
                 if ((query || {}).absence) delete query.absence
-               
+
                 return (async () => {
                     const r = await this.ics.members(query, [], showAbsence)
                     const response = copy(r).map(item => {
@@ -79,13 +84,11 @@ module.exports = function (expressApp) {
                             })
                         }
                         return item
-                    })          
-                    return res.status(200).json({ success: true, response, code: 200 })
-                })().catch(error => {
-                    return res.status(404).json({ error, response: null, code: 404 })
-                })
+                    })
+                    return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get() })
+                })().catch(error => res.status(404).json({ error, ...messageCodes[601] }))
 
-            } else return res.status(500).json({ message: `document ${_document} not found`, code: 500 })
+            } else return res.status(404).json({error:true, ...messageCodes[603]})
         }
     }
 

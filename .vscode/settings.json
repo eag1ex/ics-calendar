@@ -1,5 +1,4 @@
 {
-    "jslint.enable": false,
     "standard.enable":true,
     "eslint.nodePath":"./node_modules/eslint",
     "node-module-intellisense.scanBuiltinModules": true,
@@ -14,8 +13,10 @@
         ".vue",
         ".json"
       ],
+    "jslint.enable":false,
     "eslint.enable": true,
     "eslint.autoFixOnSave":true,
+    "eslint.quiet":true,
     "javascript.validate.enable":true,
     "javascript.format.enable": true,
     "eslint.codeAction.showDocumentation":{

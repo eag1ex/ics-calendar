@@ -10,14 +10,14 @@
 */
 module.exports = () => {
     const XDB = require('../xdb/xdb.api.module')()
-    const { notify, isObject, isFalsy, head } = require('x-units')
-
+    const { notify, isObject, isFalsy, head, isPromise } = require('x-units')
+    const StatusHandler = require('../status.handler')()
     class ICSmodule {
-        // @ts-ignore
         constructor(opts = {}, debug) {
-            this.debug = debug
-            this.d = null // temporary hold data
-            this.XDB = new XDB() // initiale database
+            this.debug = debug || null
+            this.d = null // temporary data hold
+            this.statusHandler = new StatusHandler({}, this.debug) // middleware, handles messages and code for REST
+            this.XDB = new XDB() // initialize database
         }
 
         /**
@@ -61,22 +61,23 @@ module.exports = () => {
                         }
 
                         const { userId } = user // {crewId,name,id,userId}
-                        const userAbsencesList = await this.absences({ userId, type }, true, ['userId', type]) 
+                        const userAbsencesList = await this.absences({ userId, type }, true, ['userId', type])
 
                         // 1. create event list for ics files
-                        const calEvents = this.createICalEvents(userAbsencesList) 
+                        const calEvents = this.createICalEvents(userAbsencesList)
                         // 2. populate ics files   
-                        userOutput = await this.populateICalEvents(calEvents).then(z => {
-                            // notify({populateICalEvents:z})
+                        userOutput = await this.populateICalEvents(calEvents).then(z => {                    
+                           if(!(z || []).length) throw(`no file batch available`)
                             return z.map(el => {
-                                const userId = Object.keys(el['error'] || el['done'])[0] // > productId
-                                if (el.done) return { created: userId }
+                                const userId = Object.keys(el['error'] || el['created'])[0] // > productId < absence/.id 
+                                if (el.created) return { created: userId }
                                 if (el.error) return { error: userId }
                             })
                         })
 
                     } catch (error) {
                         notify({ error }, 1)
+                        this.statusHandler.$set({ code: 602 })
                     }
 
                     break
@@ -85,10 +86,26 @@ module.exports = () => {
                 default:
                     notify(`[generateICS] wrong dbName: ${dbName} selected no ics generated`, 1)
             }
+         
+                if (!(userOutput||[]).length) {
+                    this.statusHandler.$set({ code: 107 })
+                    return userOutput
+                }
+                
+                else {
+                    // based on results set the right status
+                    let created = 0
+                    const d = userOutput.map(z => {
+                        if (z.created) created++
+                        return z
+                    })
+                    this.statusHandler.$setWith(created > 0, { code: 204 }, { code: 106 })
+                    return d
+                }
 
-            return userOutput
+       
         }
-    
+
         /**
          * 
          * @param {boolean} includeMember when true, propetry: `member:{}` will be added
@@ -105,7 +122,7 @@ module.exports = () => {
                 if (this.debug) notify('[absences] database empty', 1)
                 return Promise.reject('database empt')
             }
-            
+
             // when query is set and `includeMember` enabled (by default) on controller.absences(...)
             // it will again perform another query against `members({userId})` to be added on each item
             if (isObject(query) && !isFalsy(query)) {
@@ -114,17 +131,24 @@ module.exports = () => {
                     if ((searchByLimit || []).length) filter = searchByLimit
                     // @ts-ignore
                     const arrAsync = this.queryFilter(data, query, filter, 'absences')
-                        .assignMember(includeMember).d 
-                    
-                    return Promise.all(arrAsync)
+                        .assignMember(includeMember).d
+
+                    return Promise.all(arrAsync).then(z => {
+                        this.statusHandler.$setWith(z.length, { code: 100 }, { code: 200 })
+                        return z
+                    })
                 } catch (error) {
-                    notify({ error }, 1)
+                    if (this.debug) notify({ error }, 1)
+                    this.statusHandler.$set({ code: 101 })
                     return []
                 }
             } else {
                 this.d = data
                 // @ts-ignore
-                return Promise.all(this.assignMember(includeMember).d)
+                return Promise.all(this.assignMember(includeMember).d).then(z => {
+                    this.statusHandler.$setWith(z.length, { code: 201 }, { code: 102 })
+                    return z
+                })
             }
         }
 
@@ -151,14 +175,21 @@ module.exports = () => {
                     const arrAsync = this.queryFilter(data, query, filter, 'members')
                         .assignAbsences(showAbsence).d
 
-                    return Promise.all(arrAsync)
+                    return Promise.all(arrAsync).then(z => {
+                        this.statusHandler.$setWith(z.length, { code: 202 }, { code: 103 })
+                        return z
+                    })
                 } catch (error) {
                     notify({ error }, 1)
+                    this.statusHandler.$set({ code: 104 })
                     return []
                 }
             } else {
-                this.d = data         
-                return Promise.all(this.assignAbsences(showAbsence).d)
+                this.d = data
+                return Promise.all(this.assignAbsences(showAbsence).d).then(z => {
+                    this.statusHandler.$setWith(z.length, { code: 203 }, { code: 105 })
+                    return z
+                })
             }
         }
     }

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./libs/server/serverApp.js",
+    "start": "node ./libs/server/server.app.js",
     "mocha": "mocha --compilers js:babel-register --require babel-polyfill ./tests/{*,**/*,**/**/*,**/**/**/*,**/**/**/**/*}.spec.js --colors",
     "test": "nyc --reporter=html --port=2222 --reporter=text mocha --compilers js:babel-register --require babel-polyfill ./tests/{*,**/*,**/**/*,**/**/**/*,**/**/**/**/*}.spec.js --colors",
     "lint:install": "npm i babel-eslint eslint eslint-plugin-node eslint-plugin-standard",

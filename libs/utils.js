@@ -1,4 +1,5 @@
 module.exports = function () {
+    // const config = require('../config')
     const { reduce } = require('lodash')
     const o = {}
 
@@ -26,5 +27,19 @@ module.exports = function () {
             return n
         }, [])
     }
+
+    /**
+     * - accepting object, example: `{'001':['SimpleOrder listStore is empty'],...}`
+     * - we can pass code as either number or string, will be updated to number
+     * @returns : {001:{message,code},...}
+     */
+    o.codeMessage = (messages) => {
+        const msgs = {}
+        for (let [k, v] of Object.entries(messages)) {
+            msgs[k] = { message: v[0], code: Number(k) }
+        }
+        return msgs
+    }
     return o
+
 }
