@@ -62,10 +62,10 @@ module.exports = function (expressApp) {
                         if (item['type'] && item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
                         return item
                     })  
-                    try{
+                    try {
                         return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get() })
 
-                    }catch(err){
+                    } catch (err) {
                         console.log('absences err', err)
                     }         
                   

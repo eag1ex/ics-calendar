@@ -6,7 +6,7 @@
 module.exports = (ICSmodule) => {
 
     const { date } = require('../utils')()
-    const { notify,head, someKeyMatch, copy } = require('x-units')
+    const { notify, head, someKeyMatch, copy } = require('x-units')
     const { reduce } = require('lodash')
 
     class ICSlibs extends ICSmodule {
@@ -91,13 +91,13 @@ module.exports = (ICSmodule) => {
                     if (isStart || isEnd) {
 
                         const withStartDate = () => {
-                            if(!date(query['startDate'])) return false
+                            if (!date(query['startDate'])) return false
                             if (query['startDate'] && el['startDate']) return date(query['startDate']).getTime() <= date(el['startDate']).getTime() && isStart
                             return false
                         }
 
                         const withEndDate = () => {
-                            if(!date(query['endDate'])) return false
+                            if (!date(query['endDate'])) return false
                             if (query['endDate'] && el['endDate']) return date(el['endDate']).getTime() <= date(query['endDate']).getTime() && isEnd
                             return false
                         }

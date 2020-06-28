@@ -61,8 +61,6 @@ module.exports = (ICSmodule = null) => {
             return deneratedResults
         }
 
-
-
         /** 
        * 
        * - generate new calendar event for each absenceMember available in `absences.db`
@@ -86,7 +84,6 @@ module.exports = (ICSmodule = null) => {
             }
             return eventsArr
         }
-
 
         /** 
        * 

@@ -136,7 +136,7 @@ module.exports = () => {
                     })
                 } catch (error) {
                     if (this.debug) notify({ error }, 1)
-                    console.log('absences z 2',error)
+                    console.log('absences z 2', error)
                     this.statusHandler.$set({ code: 101 })
                     return []
                 }

@@ -31,7 +31,7 @@ module.exports = () => {
         $setWith(condition = null, passStatus = {}, failStatus = {}) {
             const bothSet = !isFalsy(passStatus) && !isFalsy(failStatus)
             if (!bothSet) {
-                if(this.debug) notify(`[$setWith] both passStatus/failStatus must be set to condition the correct results`, 1)
+                if (this.debug) notify(`[$setWith] both passStatus/failStatus must be set to condition the correct results`, 1)
                 return null
             }
 
@@ -71,14 +71,14 @@ module.exports = () => {
                 const last = copy(this._lastStatus)
                 const newStatus = messageCodes[last['code']]
                 if (!newStatus) {
-                    if(this.debug) notify(`[getStatus] new status nto set because asking code is not yet in './message.codes.js'`, 1)
+                    if (this.debug) notify(`[getStatus] new status nto set because asking code is not yet in './message.codes.js'`, 1)
                     return null
                 }
 
                 // produce status from available message.codes 
                 return newStatus
             } catch (err) {
-                notify(`[$get] unhandeled status, returning default`,1)
+                notify(`[$get] unhandeled status, returning default`, 1)
                 return messageCodes[604]
             }
         }

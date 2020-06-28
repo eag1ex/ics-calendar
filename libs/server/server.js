@@ -2,7 +2,7 @@
 
 module.exports = (DEBUG = true) => {
     const { notify } = require('x-units')
-    if(DEBUG) notify(`[ics-calendar-server] is running in DEBUG mode`)
+    if (DEBUG) notify(`[ics-calendar-server] is running in DEBUG mode`)
     const { listRoutes } = require('../utils')()
     // @ts-ignore
  
