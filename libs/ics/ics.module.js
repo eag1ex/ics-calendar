@@ -10,8 +10,8 @@
 */
 module.exports = () => {
     const XDB = require('../xdb/xdb.api.module')()
-    const { notify, isObject, isFalsy, head, isPromise } = require('x-units')
-    const StatusHandler = require('../status.handler')()
+    const { notify, isObject, isFalsy, head } = require('x-units')
+    const StatusHandler = require('../status-handler/status.handler')()
     class ICSmodule {
         constructor(opts = {}, debug) {
             this.debug = debug || null
@@ -69,9 +69,9 @@ module.exports = () => {
                         userOutput = await this.populateICalEvents(calEvents).then(z => {                    
                             if (!(z || []).length) throw (`no file batch available`)
                             return z.map(el => {
-                                const userId = Object.keys(el['error'] || el['created'])[0] // > productId < absence/.id 
-                                if (el.created) return { created: userId }
-                                if (el.error) return { error: userId }
+                                const productId = Object.keys(el['error'] || el['created'])[0] // > productId < absence/.id 
+                                if (el.created) return { created: productId }
+                                if (el.error) return { error: productId }
                             })
                         })
 

@@ -4,16 +4,19 @@
 
 module.exports = {
     'include': [
-        'libs/**/*.js' 
+        'libs/**/*.js'
     ],
-    'temp-dir':'./.nyc_output',
-     // all: true,
-    'check-coverage': true,    
+    "exclude": [
+        "**/*.spec.js"
+    ],
+    'temp-dir': './.nyc_output',
+    // all: true,
+    'check-coverage': true,
     // default coverage checks
-    'watermarks': {
-        'lines': [75, 90],
-        'functions': [75, 90],
-        'branches': [75, 90],
-        'statements': [75, 90]
-      }
+ 
+     "branches": 60, 
+     "lines": 85,
+     "functions": 90,
+     "statements": 80
+
 };

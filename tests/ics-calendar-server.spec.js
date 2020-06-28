@@ -231,7 +231,7 @@ describe('PASS:GET /members requests', function () {
 
 
 // SECTION Calendar should create (.ics) events for types: [sickness,vacation]
-describe('Calendar should create (.ics) events for types: [sickness,vacation]', function () {
+describe('Calendar test (.ics) events for types: [sickness,vacation]', function () {
   
   it('generate events for type:sickness, for userId=644', function (done) {
 
@@ -258,7 +258,31 @@ describe('Calendar should create (.ics) events for types: [sickness,vacation]', 
 
     }, done)
   })
+
+  it('Should fail generate events {type:vacation} for invalid userId=000', function (done) {
+
+    chaiGetRequest(server, `/calendar/vacation/000`, (res) => {
+      assert.equal(res.body.success, true)
+      expect(res.body).to.have.property('code').to.equal(107)
+      expect(res.body.response.length).below(1)
+      res.should.have.status('200')
+    }, done)
+  })
+  
+  it('Should fail generate events {type:sickness} for invalid userId=000', function (done) {
+
+    chaiGetRequest(server, `/calendar/sickness/000`, (res) => {
+      assert.equal(res.body.success, true)
+      expect(res.body).to.have.property('code').to.equal(107)
+      expect(res.body.response.length).below(1)
+      res.should.have.status('200')
+    }, done)
+  })
+
 })  //!SECTION 
+
+
+
 
 // SECTION Calendar should create (.ics) events for types: [sickness,vacation]
 describe('FAIL:GET /members requests', function () {
@@ -291,7 +315,7 @@ describe('FAIL:GET /members requests', function () {
 describe('FAIL:GET /absences requests', function () {
 
   it('failed results for {query} ?userId=000', function (done) {
-    
+
     chaiGetRequest(server, `/database/absences?userId=000`, (res) => {
       expect(res.body.response.length).below(1)
       res.should.have.status('200')

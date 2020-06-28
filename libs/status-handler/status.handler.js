@@ -1,6 +1,7 @@
 
 /** 
  * @StatusHandler middleware, handles messages and code for REST
+ * - NOTE tests available in `./tests/ics.ical.spec.js`
  * 
  * - we dont want to change endpoint datatypes, or make any descructive changes, so will store each status to help return appropiate  `messageCodes`
  * `StatusHandler.$set({})` > sets new lastStatus
@@ -16,6 +17,7 @@ module.exports = () => {
     return class StatusHandler {
         constructor(opts = {}, debug) {
             this._lastStatus = null // {message, code, error}
+            this.debug = debug
         }
 
         /** 
@@ -29,8 +31,8 @@ module.exports = () => {
         $setWith(condition = null, passStatus = {}, failStatus = {}) {
             const bothSet = !isFalsy(passStatus) && !isFalsy(failStatus)
             if (!bothSet) {
-                notify(`[$setWith] both passStatus/failStatus must be set to condition the correct results`, 1)
-                return {}
+                if(this.debug) notify(`[$setWith] both passStatus/failStatus must be set to condition the correct results`, 1)
+                return null
             }
 
             if (condition === true || condition > 0) return this.$set(passStatus)
@@ -69,8 +71,8 @@ module.exports = () => {
                 const last = copy(this._lastStatus)
                 const newStatus = messageCodes[last['code']]
                 if (!newStatus) {
-                    notify(`[getStatus] new status nto set because asking code is not yet in './message.codes.js'`, 1)
-                    return {}
+                    if(this.debug) notify(`[getStatus] new status nto set because asking code is not yet in './message.codes.js'`, 1)
+                    return null
                 }
 
                 // produce status from available message.codes 
@@ -79,7 +81,6 @@ module.exports = () => {
                 notify(`[$get] unhandeled status, returning default`,1)
                 return messageCodes[604]
             }
-
         }
 
     }

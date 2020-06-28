@@ -16,7 +16,7 @@ module.exports = (DEBUG = true) => {
     const ServerCtrs = require('./controllers')(app)
     const cors = require('cors')
     const ejs = require('ejs')
-    const messageCodes = require('../message.codes')
+    const messageCodes = require('../status-handler/message.codes')
     app.set('trust proxy', 1) // trust first proxy
     app.use(morgan('dev'))
     app.use(bodyParser.urlencoded({ extended: false }))

@@ -2,7 +2,7 @@
 
 module.exports = function (expressApp) {
     const { isNumber, notify, objectSize, copy } = require('x-units')
-    const messageCodes = require('../message.codes')
+    const messageCodes = require('../status-handler/message.codes')
     return class ServerController {
         constructor(debug) {
 

@@ -2,7 +2,7 @@
 /** 
  * - `messages and error codes to better identify issues and responses`
 */
-const { codeMessage } = require('./utils')()
+const { codeMessage } = require('../utils')()
 
 /**
  * returns example : `{'001':{message,code},...}`
@@ -33,5 +33,4 @@ module.exports = codeMessage({
     602: ['ICS unpresented error producing .ics file'],
     603: ['No /document found'],
     604: ['Unhandeled response error'],
-
 })
