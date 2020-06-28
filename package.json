@@ -12,7 +12,7 @@
     "lint:fix": "./node_modules/.bin/eslint --fix --ext .js libs"
   },
   "author": "eaglex",
-  "license": "CC BY-SA",
+  "license": "CC-BY-SA",
   "devDependencies": {
     "@istanbuljs/nyc-config-babel": "^3.0.0",
     "babel-eslint": "^10.1.0",

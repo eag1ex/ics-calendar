@@ -8,11 +8,15 @@
 - Linted code, well scaled with comments, and debug features
 - Bonus implemented istanbul/nyc coverage
 - Inclused tests with Mocha/Chai
+- Included error/response codes
 
 #### Why use it
 - Generage ics files in bulk, and use it to import to your Calendar. Supports `ics/version:2`
 - Lookup company members by type - will produce list of all members by type
 - Search with queries...  database/:document >  `database/members?userId=644`, `database/absences?userId=644`, `database/absences?startDate=2016-12-31&endDate=2017-03-10`, `database/members?userId=644&absence=1`
+
+#### Client
+- Initialy build for `crewmeister.com` software company
 
 
 #### Stack
