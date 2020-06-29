@@ -1,5 +1,5 @@
 /** 
- * - test creation  of sample event types, from dymmy data
+ * - test creation of sample event types, from dummy `absenceWithMemberList` data
 */
 
 
@@ -7,11 +7,9 @@
 const chai = require('chai')
 const should = chai.should()
 const expect = chai.expect
-const StatusHandler = require('../libs/status-handler/status.handler')()
-const messageCodes = require('../libs/status-handler/message.codes')
+// with debug true will get better coverage because will expose notify logging
+const DEBUG = require('../config').debug  
 const ICSical = require('../libs/ics/ics.ical')()
-
-const DEBUG = false  // with debug true will get better coverage because will expose notify logging
 const ical = new ICSical({}, DEBUG)
 
 
@@ -22,14 +20,13 @@ describe('Check (.ics) creates valid ical events for [sickness,vacation]', funct
         return ical.populateICalEvents(calEvents).then(z => {
 
             const resp = z.map(el => {
-
-            if(!toFail) expect(el.created !== undefined).equal(true)
-            else expect(el.error !== undefined).equal(true)
+                if(!toFail) expect(el.created !== undefined).equal(true)
+                else expect(el.error !== undefined).equal(true)
                 // const productId = Object.keys(el['error'] || el['created'])[0]
                 //  // > productId < absence/.id 
                 // if (el.created) return { created: productId }
                 // if (el.error) return { error: productId }
-
+                return el
             })
             return resp
         }).catch(err => {
@@ -56,7 +53,6 @@ describe('Check (.ics) creates valid ical events for [sickness,vacation]', funct
             delete z.endDate
             return z
         }).filter(z => z.type === 'sickness')
-
         return genResults(absenceList, true)
     })
 

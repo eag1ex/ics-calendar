@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./libs/server/server.app.js",
+    "start": "node ./index.js",
     "mocha": "mocha  ./tests/{*,/*}.spec.js --colors",
     "test": "nyc --reporter=html --port=2222 --reporter=text mocha  ./tests/{*,/*}.spec.js --colors",
     "lint:install": "npm i babel-eslint eslint eslint-plugin-node eslint-plugin-standard",

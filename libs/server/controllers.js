@@ -42,7 +42,7 @@ module.exports = function (expressApp) {
 
         /**
         * (GET) REST/api 
-        *  end points: `/database/:document` >> `/database/members` or `/database/absences` will list document items
+        *  end points: `/database/:collection` >> `/database/members` or `/database/absences` will list collection documents
         *  deep queries: `/database/members?absence=1` assign absences list
         *  ?userId ?startDate ?endDate can be called to deepend your query
         */
@@ -50,10 +50,10 @@ module.exports = function (expressApp) {
 
             if (this.serverError) return res.status(500).json({ message: 'ICS databse error', code: 500 })
 
-            const _document = req.params.document || ''
+            const collection = req.params.collection || ''
             const query = objectSize(req.query) ? req.query : null
 
-            if (_document === 'absences') {
+            if (collection === 'absences') {
                 const includeMember = true
          
                 return (async () => {
@@ -71,7 +71,7 @@ module.exports = function (expressApp) {
                   
                 })().catch(error => res.status(404).json({ error, ...messageCodes[600] }))
 
-            } if (_document === 'members') {
+            } if (collection === 'members') {
                 // NOTE response assigns absences array when showAbsence=true
                 const showAbsence = !!(query || {}).absence
                 if ((query || {}).absence) delete query.absence

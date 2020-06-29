@@ -8,8 +8,9 @@ npm-debug.log
 dist
 assets
 
-libs/ics/ical_event_files
-ical_event_files
+### ignore icals
+#libs/ics/ical_event_files
+#ical_event_files
 
 # Docker
 Dockerfile

@@ -2,10 +2,9 @@
 
 module.exports = (DEBUG = true) => {
     const { notify } = require('x-units')
-    if (DEBUG) notify(`[ics-calendar-server] is running in DEBUG mode`)
+    if (DEBUG) notify(`[ics-calendar-server] running in DEBUG mode`)
     const { listRoutes } = require('../utils')()
     // @ts-ignore
- 
     const express = require('express')
     const app = express()
     const router = express.Router()
@@ -27,6 +26,9 @@ module.exports = (DEBUG = true) => {
     // @ts-ignore
     app.engine('html', ejs.__express)
     app.set('view engine', 'html')
+    
+    //static path to ical generatod files 
+    app.use('/download',express.static(config.ics.filePath))
 
     /// ///////////////////
     // Initialize server controllers
@@ -38,11 +40,12 @@ module.exports = (DEBUG = true) => {
     // set server routes
     // router.get('/calendar/:userId', controllers.calendar.bind(controllers));
     router.get('/calendar/:type/:userId', controllers.calendar.bind(controllers))
-    router.get('/database/:document', controllers.database.bind(controllers))
+    router.get('/database/:collection', controllers.database.bind(controllers))
 
     // catch all other calls
     router.all('*', function (req, res) {
-        return res.status(200).json({ message: 'welcome to ics-calendar', url: req.url, available_routes: listRoutes(router.stack), status: 200 })
+        const routes = [].concat(listRoutes(router.stack),{route:'/download/:fileName'})
+        return res.status(200).json({ message: 'welcome to ics-calendar', url: req.url, available_routes:routes , status: 200 })
     })
 
     /// //////////////////

@@ -1,5 +1,5 @@
 `use strict`
-// initialize server
+// start the app
 
 process
     .on('unhandledRejection', (reason, p) => {
@@ -9,5 +9,5 @@ process
         console.error(err, 'Uncaught Exception thrown')
         // process.exit(1);
     })
-
-module.exports = require('./server')()
+const config = require('./config')
+module.exports = require('./libs/server/server')(config.debug)

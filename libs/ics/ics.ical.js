@@ -121,7 +121,7 @@ module.exports = (ICSmodule = null) => {
             /** 
              * `ics offset notes vs moment/date format:`
              * - date properties, for example: `created=[2017,1,2,0]` render: `2017-1-2` but, standard date/moment.js format would render `2017-0-2`, The month  index counts from 0 (+1) < fixed with `icsDateAdjustment`
-             * - `absenceMember` is an absence document with `member:{}` property
+             * - `absenceMember` is an absence collection with `member:{}` property
             */
             return (new function (absenceMember) {
                 if (isFalsy(absenceMember) || !isObject(absenceMember)) {

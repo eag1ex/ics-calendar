@@ -7,7 +7,8 @@
 const assert = require('assert')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
-const DEBUG = false  // with debug true will get better coverage because will expose notify logging
+// with debug true will get better coverage because will expose notify logging
+const DEBUG = require('../config').debug  
 const server = require('../libs/server/server')(DEBUG)
 const should = chai.should()
 const expect = chai.expect
@@ -92,7 +93,7 @@ describe('PASS:GET /absences requests', function () {
       expect(res.status === 200 || res.status === 300).equal(true)
       res.should.be.json
       res.should.have.status('200')
-      
+
       res.body.response.forEach((item, inx) => {
         absencesList.filter(key => {
           assert(Object.keys(item).includes(key))
@@ -132,8 +133,8 @@ describe('PASS:GET /absences requests', function () {
       assert.equal(res.body.success, true)
       expect(res.body.response.length).above(0)
       res.body.response.forEach((item) => {
-        if (new Date(item.startDate).getTime() >= new Date('2016-12-31')) expect(true).to.equal(true)
-        if (new Date(item.endDate).getTime() <= new Date('2017-03-10')) expect(true).to.equal(true)
+        expect(new Date(item.startDate).getTime() >= new Date('2016-12-31')).to.equal(true)
+        expect(new Date(item.endDate).getTime() <= new Date('2017-03-10')).to.equal(true)
       })
     }, done)
 
@@ -146,7 +147,7 @@ describe('PASS:GET /absences requests', function () {
       assert.equal(res.body.success, true)
       expect(res.body.response.length).above(0)
       res.body.response.forEach((item) => {
-        if (new Date(item.startDate).getTime() >= new Date('2016-12-31')) expect(true).to.equal(true)
+        expect(new Date(item.startDate).getTime() >= new Date('2016-12-31')).to.equal(true)
       })
 
     }, done)
@@ -164,7 +165,7 @@ describe('PASS:GET /members requests', function () {
       expect(res.body.response.length).above(0)
       expect(res.status === 200 || res.status === 300).equal(true)
       res.should.have.status('200')
-      
+
       res.body.response.forEach((item, inx) => {
         membersList.filter(key => {
           assert(Object.keys(item).includes(key))
@@ -233,7 +234,7 @@ describe('PASS:GET /members requests', function () {
 
 // SECTION Calendar should create (.ics) events for types: [sickness,vacation]
 describe('Calendar test (.ics) events for types: [sickness,vacation]', function () {
-  
+
   it('generate events for type:sickness, for userId=644', function (done) {
 
     chaiGetRequest(server, `/calendar/sickness/644`, (res) => {
@@ -269,7 +270,7 @@ describe('Calendar test (.ics) events for types: [sickness,vacation]', function 
       res.should.have.status('200')
     }, done)
   })
-  
+
   it('Should fail generate events {type:sickness} for invalid userId=000', function (done) {
 
     chaiGetRequest(server, `/calendar/sickness/000`, (res) => {
@@ -298,7 +299,7 @@ describe('FAIL:GET /members requests', function () {
     }, done)
 
   })
-  
+
   it('failed results for invalid range startDate=20161-12-311&endDate=2017-03-101', function (done) {
 
     chaiGetRequest(server, `/database/members?startDate=20161-12-311&endDate=2017-03-101`, (res) => {
@@ -306,7 +307,7 @@ describe('FAIL:GET /members requests', function () {
       res.should.have.status('200')
       expect(res.body).to.have.property('code').to.equal(103)
     }, done)
-    
+
   })
 
 

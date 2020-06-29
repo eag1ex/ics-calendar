@@ -8,10 +8,10 @@ const chai = require('chai')
 const expect = chai.expect
 const StatusHandler = require('../libs/status-handler/status.handler')()
 const messageCodes = require('../libs/status-handler/message.codes')
-
+ // with debug true will get better coverage because will expose notify logging
+const DEBUG = require('../config').debug  
 
 describe('Check StatusHandler status codes', function () {
-    const DEBUG = false  // with debug true will get better coverage because will expose notify logging
     const sth = new StatusHandler({}, DEBUG)
     it('Should request correct $get()=>{code.message} per each $set({})', function (done) {
         for (let [key, val] of Object.entries(messageCodes)) {
@@ -23,7 +23,7 @@ describe('Check StatusHandler status codes', function () {
         done()
     })
 
-    it('Should fail request invalid $get()=>{code.message} per each $set({})', function (done) {
+    it('Should fail response with $get()=>{code.message} per each $set({})', function (done) {
         for (let [key, val] of Object.entries(messageCodes)) {
             sth.$set({ code: val.code+1000 })
             const $get = sth.$get()
