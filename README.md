@@ -136,7 +136,7 @@ All tests are located in `./tests/{*,/*}.spec.js`
 #### TODO
 
 - Stage on Heroku
-
+- Build client interface in `ejs` markup. 
 
 ##### Contact
 
