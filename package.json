@@ -1,7 +1,7 @@
 {
   "name": "ics-calendar-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node.js back-end server application for creation of .ical/.ics calendar event files",
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
