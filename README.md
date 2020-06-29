@@ -129,6 +129,9 @@ All tests are located in `./tests/{*,/*}.spec.js`
 ```
 
 
+#### Recommended VScode extentions
+- `vscode-language-babe, vscode-babel-coloring, comment-anchors, joelday.docthis, vscode-standardjs`
+
 
 #### TODO
 
