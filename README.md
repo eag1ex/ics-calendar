@@ -37,7 +37,7 @@
 
 #### Start
 -  `npm start` will start the server and give access to all rest end points
-
+- Then navigate to welcome page : `http://localhost:5000/`
 
 #### Tests & Coverage
 - All tests are located in `./tests/{*,/*}.spec.js`
@@ -49,7 +49,7 @@
 
 
 #### Stack
-- Application uses own build external/utilities `x-utils, simple-q`, as well as vendor npm packages.
+Application uses own build external/utilities `x-utils, simple-q`, as well as vendor npm packages.
 - Full list `Express.js, ics/ical/v2, lodash, moment.js, uuid, Node.js, Javascript, ES6, Error handling, micro-services: (xdb, ics, server), x-utils, simple-q, Lint, Chai, Mocha, Istanbul/nyc`
 
 
@@ -63,7 +63,7 @@
 	*  **StatusHandler** : Middleware that handles status codes and message response, available examples in `./tests/**`
 
 #### Config
-- app config is located in `./config.js`
+- app config located in `./config.js`
 
 
   
@@ -99,37 +99,38 @@
 // GET/ examples
 
 // create calendar files by type and userId
-`http://localhost:5000/calendar/vacation/644`
-`http://localhost:5000/calendar/sickness/644`
+http://localhost:5000/calendar/vacation/644
+http://localhost:5000/calendar/sickness/644
 
 // download ical file
-`http://localhost:5000/download/:fileName` (once you generate them with calendar api)
+http://localhost:5000/download/:fileName //(once you generate them with calendar api)
 
 // ical download test file
-`http://localhost:5000/download/test_2351_event.ics`
+http://localhost:5000/download/test_2351_event.ics
 
 
 // list all absences
-`http://localhost:5000/database/absences`
+http://localhost:5000/database/absences
 
 // list absences for 644
-`http://localhost:5000/database/absences?userId=644`
+http://localhost:5000/database/absences?userId=644
 
 // list all absences with-in range
-`http://localhost:5000/database/absences?startDate=2016-12-31&endDate=2017-03-10`
+http://localhost:5000/database/absences?startDate=2016-12-31&endDate=2017-03-10
 
 // list all absences from startDate
-`http://localhost:5000/database/absences?startDate=2016-12-31`
+http://localhost:5000/database/absences?startDate=2016-12-31
 
 
 // list all absences to endDate
-`http://localhost:5000/database/absences?endDate=2017-03-10`
+http://localhost:5000/database/absences?endDate=2017-03-10
 
 // list all members
-`http://localhost:5000/database/members`
+http://localhost:5000/database/members
 
 // list member 644
-`http://localhost:5000/database/members?userId=644`
+http://localhost:5000/database/members?userId=644
+
 ```
  
 
