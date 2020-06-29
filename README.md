@@ -59,12 +59,12 @@ Application uses own-build external/utilities `x-utils, simple-q`, as well as ve
 
 
 #### Micro Services
-- List of services that run under the hood:
+List of services that run under the hood:
 
-	*  **Server** : Independant Express.js server that imports all assets, barebone authentication is implemented but not inforeced.
-	*  **ICS** : Module that controls logic and operation of the application, it imports `xdb` and implements the middleware: `StateHandler` for status response management.
-	*  **XDB** : Mock database manager, imports all data, its managed by `ICS`
-	*  **StatusHandler** : Middleware that handles status codes and message response, available examples in `./tests/**`
+*  **Server** : Independant Express.js server that imports all assets, barebone authentication is implemented but not inforeced.
+*  **ICS** : Module that controls logic and operation of the application, it imports `xdb` and implements the middleware: `StateHandler` for status response management.
+*  **XDB** : Mock database manager, imports all data, its managed by `ICS`
+*  **StatusHandler** : Middleware that handles status codes and message response, available examples in `./tests/**`
 
 #### Config
 - app config located in `./config.js`
