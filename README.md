@@ -9,15 +9,15 @@
 
   
 #### About
-**ics-calendar-server** is a Node.js back-end stack application used to produce `ics/iCal` files for Calendars like: `MS-Outlook, or Mail for Mac.` It works by GET request with specific types `[sickness, vacation]` followed by `userId`, example `http://localhost:5000/calendar/vacation/644` (http://localhost:5000/calendar/type/userId)
+- **ics-calendar-server** is a Node.js back-end stack application used to produce `ics/iCal` files for Calendars like: `MS-Outlook, or Mail for Mac.` It works by GET request with specific types `[sickness, vacation]` followed by `userId`, example `http://localhost:5000/calendar/vacation/644` (http://localhost:5000/calendar/type/userId)
 
-	- Application provides mocked database: `xdb` with access TWO collections `members.db` and `absences.db` from `.json`
-	- It is scructured with 3 independand micro services: `server => ics <= xdb`, and middleware :`StatusHandler`
-	- Build in ES6 with good functional programming.
-	- Linted code, well scaled with comments, and debug features
-	- Bonus implemented istanbul/nyc coverage
-	- Inclused tests with Mocha/Chai
-	- Included error/response codes
+	* Application provides mocked database: `xdb` with access TWO collections `members.db` and `absences.db` from `.json`
+	* It is scructured with 3 independent micro services: `server => ics <= xdb`, and middleware :`StatusHandler`
+	* Build in ES6 with good functional programming.
+	* Linted code, well scaled with comments, and debug features
+	* Bonus implemented istanbul/nyc coverage
+	* Included tests with Mocha/Chai
+	* Included error/response codes
 
 
 #### Why use it
@@ -40,11 +40,11 @@
 
 
 #### Tests & Coverage
-All tests are located in `./tests/{*,/*}.spec.js`
+- All tests are located in `./tests/{*,/*}.spec.js`
 
-- To run full spec coverage: `npm run test`
-- To only run mocha spec without nyc/instanbul: `npm run mocha`
-- Coverege file available at: `./coverage/index.html`
+	* To run full spec coverage: `npm run test`
+	* To only run mocha spec without nyc/instanbul: `npm run mocha`
+	* Coverege file available at: `./coverage/index.html`
 
 
 
@@ -57,10 +57,10 @@ All tests are located in `./tests/{*,/*}.spec.js`
 #### Micro Services
 - List of services that runs this application:
 
--  **Server** : Independant Express.js server that imports all assets, barebone authentication is implemented but not inforeced.
--  **ICS** : Module that controls logic and operation of the application, it imports `xdb` and implements the middleware: `StateHandler` for status response management.
--  **XDB** : Mock database manager, imports all data, its managed by `ICS`
--  **StatusHandler** : Middleware that handles status codes and message response, available examples in `./tests/**`
+	*  **Server** : Independant Express.js server that imports all assets, barebone authentication is implemented but not inforeced.
+	*  **ICS** : Module that controls logic and operation of the application, it imports `xdb` and implements the middleware: `StateHandler` for status response management.
+	*  **XDB** : Mock database manager, imports all data, its managed by `ICS`
+	*  **StatusHandler** : Middleware that handles status codes and message response, available examples in `./tests/**`
 
 #### Config
 - app config is located in `./config.js`
