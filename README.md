@@ -5,7 +5,7 @@
   
 ##### LICENSE
 * LICENCE: CC BY-NC-ND
-* SOURCE: https://creativecommons.org/licenses/by-nc-nd/4.0/
+* SOURCE: _(https://creativecommons.org/licenses/by-nc-nd/4.0/)_
 
   
 #### About
@@ -23,7 +23,7 @@
 #### Why use it
 - Generate (.ics) file events in bulk, use it to import to your Calendar, supports `ics/version:2`
 - Look-up company employees by absence type - and produce list of ics events
-- Search with queries... database/:collection > `database/members?userId=644`, `database/absences?userId=644`, `database/absences?startDate=2016-12-31&endDate=2017-03-10`, `database/members?userId=644&absence=1`
+- Search with queries... database/:collection > _`database/members?userId=644`, `database/absences?userId=644`, `database/absences?startDate=2016-12-31&endDate=2017-03-10`, `database/members?userId=644&absence=1`_
 
 
 #### Client
@@ -66,7 +66,7 @@ List of services that run under the hood:
 *  **ICS** : Module that controls logic and operation of the application, it imports `xdb` and implements the middleware: `StateHandler` for status response management.
 *  **XDB** : Mock database manager, imports all data, its managed by `ICS`
 *  **StatusHandler** : Middleware that handles status codes and message response, available examples in `./tests/**`
-* App/Service hierarchy order: `server => ( ics :StatusHandler) <= xdb`
+* _App/Service hierarchy order: `server => ( ics :StatusHandler) <= xdb`_
 
 #### Config
 App config located in `./config.js`
