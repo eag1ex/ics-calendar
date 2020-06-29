@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
-    "mocha": "mocha  ./tests/{*,/*}.spec.js --colors",
-    "test": "nyc --reporter=html --port=2222 --reporter=text mocha  ./tests/{*,/*}.spec.js --colors",
+    "mocha": "mocha ./tests/{*,/*}.spec.js --colors",
+    "test": "nyc --reporter=html --port=2222 --reporter=text mocha ./tests/{*,/*}.spec.js --colors",
     "lint:install": "npm i babel-eslint eslint eslint-plugin-node eslint-plugin-standard",
-    "lint": "./node_modules/.bin/eslint  --ext .js libs",
+    "lint": "./node_modules/.bin/eslint --ext .js libs",
     "lint:fix": "./node_modules/.bin/eslint --fix --ext .js libs"
   },
   "author": "eaglex",
@@ -20,7 +20,7 @@
     "mocha": "^3.5.3",
     "nyc": "^15.1.0"
   },
-  
+
   "engine": {
     "node": "*",
     "npm": "*"
