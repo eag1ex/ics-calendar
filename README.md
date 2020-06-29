@@ -30,6 +30,10 @@
 - Initialy build for `crewmeister.com` software company
 
 
+#### Deadline
+- 4 days.
+
+
 #### Install
 - To instal run `npm i`
 - To enable eslint, first must run `npm lint:install`, then can use `npm run lint` or `npm run lint:fix`
