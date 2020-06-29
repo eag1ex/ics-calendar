@@ -27,7 +27,7 @@
 
 
 #### Client
-- Initialy build for `crewmeister.com` software company
+Initialy build for `crewmeister.com` software company
 
 
 #### Deadline
@@ -40,15 +40,16 @@
 - Any Issues with node.js version, try `nvm install 11.14.0`
 
 #### Start
--  `npm start` will start the server and give access to all rest end points
-- Then navigate to welcome page : `http://localhost:5000/`
+`npm start` will start the server and give access to all rest end points
+
+* Then navigate to welcome page : `http://localhost:5000/`
 
 #### Tests & Coverage
-- All tests are located in `./tests/{*,/*}.spec.js`
+All tests are located in `./tests/{*,/*}.spec.js`
 
-	* To run full spec coverage: `npm run test`
-	* To only run mocha spec without nyc/instanbul: `npm run mocha`
-	* Coverege available at: `./coverage/index.html`
+* To run full spec coverage: `npm run test`
+* To only run mocha spec without nyc/instanbul: `npm run mocha`
+* Coverege available at: `./coverage/index.html`
 
 
 #### Stack
