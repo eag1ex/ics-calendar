@@ -4,7 +4,7 @@
  * - available databases: [members,absences]
 */
 module.exports = () => {
-    const {notify} = require('x-units')
+    const { notify } = require('x-units')
     const { dataAsync } = require('../utils')()
     return class XDB {
         // @ts-ignore
@@ -12,7 +12,7 @@ module.exports = () => {
             this.debug = debug
             this.dataPath = {
                 members: opts.members || `./members.db.json`,
-                absences: opts.absences || `./absences.db.json`,
+                absences: opts.absences || `./absences.db.json`
             }
 
             if (this.debug) notify({ XDB: { dataPath: this.dataPath } })

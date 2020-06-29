@@ -27,8 +27,8 @@ module.exports = (DEBUG = true) => {
     app.engine('html', ejs.__express)
     app.set('view engine', 'html')
     
-    //static path to ical generatod files 
-    app.use('/download',express.static(config.ics.filePath))
+    // static path to ical generatod files 
+    app.use('/download', express.static(config.ics.filePath))
 
     /// ///////////////////
     // Initialize server controllers
@@ -44,8 +44,8 @@ module.exports = (DEBUG = true) => {
 
     // catch all other calls
     router.all('*', function (req, res) {
-        const routes = [].concat(listRoutes(router.stack),{route:'/download/:fileName'})
-        return res.status(200).json({ message: 'welcome to ics-calendar', url: req.url, available_routes:routes , status: 200 })
+        const routes = [].concat(listRoutes(router.stack), { route: '/download/:fileName' })
+        return res.status(200).json({ message: 'welcome to ics-calendar', url: req.url, available_routes: routes, status: 200 })
     })
 
     /// //////////////////

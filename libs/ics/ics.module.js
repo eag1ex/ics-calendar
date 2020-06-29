@@ -21,7 +21,7 @@ module.exports = () => {
             if (!opts.dataPath) opts.dataPath = {}
             this.dataPath = {
                 members: (opts.dataPath || {}).members || `./members.db.json`,
-                absences: (opts.dataPath || {}).absences || `./absences.db.json`,
+                absences: (opts.dataPath || {}).absences || `./absences.db.json`
             }
             this.XDB = new XDB(this.dataPath, this.debug) // initialize database
         }
@@ -127,7 +127,6 @@ module.exports = () => {
                 if (this.debug) notify('[absences] database empty', 1)
                 return Promise.reject(err)
             }
-
 
             // when query is set and `includeMember` enabled (by default) on controller.absences(...)
             // it will again perform another query against `members({userId})` to be added on each item

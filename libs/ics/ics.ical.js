@@ -54,7 +54,7 @@ module.exports = (ICSmodule = null) => {
                 try {
                     deneratedResults.push({ created: await genIcal(eventsArr[inx]) })
                 } catch (error) {
-                    if(this.debug) notify({ error, populateICalEvents: true }, 1)
+                    if (this.debug) notify({ error, populateICalEvents: true }, 1)
                     deneratedResults.push({ error: { [Object.keys(error)[0]]: true } })
                 }
             }
