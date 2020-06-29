@@ -115,7 +115,7 @@ describe('PASS:GET /absences requests', function () {
   })
 
 
-  it(`{query} with ?userId=644 to list its absences`, function (done) {
+  it(`{query} ?userId=644 to get list`, function (done) {
 
     chaiGetRequest(server, `/database/absences?userId=644`, (res) => {
       assert.equal(res.body.success, true)
@@ -176,7 +176,7 @@ describe('PASS:GET /members requests', function () {
   })
 
 
-  it(`{query} ?userId=644 list by userId=644`, function (done) {
+  it(`{query} ?userId=644 to get list`, function (done) {
 
     chaiGetRequest(server, `/database/members?userId=644`, (res) => {
       res.body.response.forEach((item, inx) => {
@@ -190,7 +190,7 @@ describe('PASS:GET /members requests', function () {
   })
 
 
-  it(`{query} ?absence=1 list all items with related absences[]`, function (done) {
+  it(`{query} ?absence=1 list all with related absences[]`, function (done) {
 
     chaiGetRequest(server, `/database/members?absence=1`, (res) => {
       res.body.response.forEach((item, inx) => {
@@ -233,9 +233,9 @@ describe('PASS:GET /members requests', function () {
 
 
 // SECTION Calendar should create (.ics) events for types: [sickness,vacation]
-describe('Calendar test (.ics) events for types: [sickness,vacation]', function () {
+describe('Test calendar (.ics) events for types: [sickness,vacation]', function () {
 
-  it('generate events for type:sickness, for userId=644', function (done) {
+  it('generate events for :sickness, with userId=644', function (done) {
 
     chaiGetRequest(server, `/calendar/sickness/644`, (res) => {
       assert.equal(res.body.success, true)
@@ -248,7 +248,7 @@ describe('Calendar test (.ics) events for types: [sickness,vacation]', function 
     }, done)
   })
 
-  it('generate events for type:vacation, for userId=644', function (done) {
+  it('generate events for :vacation, with userId=644', function (done) {
 
     chaiGetRequest(server, `/calendar/vacation/644`, (res) => {
       assert.equal(res.body.success, true)
@@ -268,7 +268,7 @@ describe('Calendar test (.ics) events for types: [sickness,vacation]', function 
   })
 
 
-  it('Should fail generate events {type:vacation} for invalid userId=000', function (done) {
+  it('Should fail to generate events for :vacation with invalid userId=000', function (done) {
 
     chaiGetRequest(server, `/calendar/vacation/000`, (res) => {
       assert.equal(res.body.success, true)
@@ -278,7 +278,7 @@ describe('Calendar test (.ics) events for types: [sickness,vacation]', function 
     }, done)
   })
 
-  it('Should fail generate events {type:sickness} for invalid userId=000', function (done) {
+  it('Should fail to generate events :sickness with invalid userId=000', function (done) {
 
     chaiGetRequest(server, `/calendar/sickness/000`, (res) => {
       assert.equal(res.body.success, true)
