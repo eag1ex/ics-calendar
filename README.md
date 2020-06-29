@@ -9,7 +9,7 @@
 
   
 #### About
-- **ics-calendar-server** is a Node.js back-end stack application used to produce `ics/iCal` files for Calendars like: `MS-Outlook, or Mail for Mac.` It works by GET request with specific types `[sickness, vacation]` followed by `userId`, example `http://localhost:5000/calendar/vacation/644` (http://localhost:5000/calendar/type/userId)
+- **ics-calendar-server** is a Node.js back-end server application, used to produce `ics/iCal` files for Calendars like: `MS-Outlook, or Mail for Mac.` It works by GET request with specific types `[sickness, vacation]` followed by `userId`, example `http://localhost:5000/calendar/vacation/644` (http://localhost:5000/calendar/type/userId)
 
 	* Application provides mocked database: `xdb` with access TWO collections `members.db` and `absences.db` from `.json`
 	* It is scructured with 3 independent micro services: `server => ics <= xdb`, and middleware :`StatusHandler`
