@@ -13,7 +13,7 @@ const DEBUG = require('../config').debug
 
 describe('Check StatusHandler status codes', function () {
     const sth = new StatusHandler({}, DEBUG)
-    it('Should request correct $get()=>{code.message} per each $set({})', function (done) {
+    it('Should response $get()=>{code.message} per each $set({})', function (done) {
         for (let [key, val] of Object.entries(messageCodes)) {
             sth.$set({ code: val.code })
             const $get = sth.$get()
@@ -36,4 +36,25 @@ describe('Check StatusHandler status codes', function () {
         }
         done()
     })
+
+    it('Should response $get()=>{code.message} per each $setWith({})', function (done) {
+        for (let [key, val] of Object.entries(messageCodes)) {
+            sth.$setWith(true,{ code: 200},{code:500})
+            const $get = sth.$get()
+            expect($get).to.have.property('code').equal(200)
+        }
+
+        for (let [key, val] of Object.entries(messageCodes)) {
+            sth.$setWith(false,{ code: val.code},{code:500})
+            const $get = sth.$get()
+            expect($get).to.have.property('code').equal(500)
+        }
+        // for (let [key, val] of Object.entries(messageCodes)) {
+        //     sth.$set({ code: -1 })
+        //     const $get = sth.$get()
+        //     expect($get).equal(null) 
+        // }
+        done()
+    })
+
 })

@@ -74,7 +74,7 @@ module.exports = function (expressApp) {
             } if (collection === 'members') {
                 // NOTE response assigns absences array when showAbsence=true
                 const showAbsence = !!(query || {}).absence
-                if ((query || {}).absence) delete query.absence
+                if (showAbsence) delete query.absence
 
                 return (async () => {
                     const r = await this.ics.members(query, [], showAbsence)

@@ -260,6 +260,13 @@ describe('Calendar test (.ics) events for types: [sickness,vacation]', function 
 
     }, done)
   })
+  
+  it('/download/test_2351_event.ics should return status:200', function (done) {
+    chaiGetRequest(server, `/download/test_2351_event.ics`, (res) => {
+      res.should.have.status('200')
+    }, done)
+  })
+
 
   it('Should fail generate events {type:vacation} for invalid userId=000', function (done) {
 

@@ -10,27 +10,33 @@
 */
 module.exports = () => {
     const XDB = require('../xdb/xdb.api.module')()
-    const { notify, isObject, isFalsy, head } = require('x-units')
+    const { notify, objectSize, isFalsy, head, isString } = require('x-units')
     const StatusHandler = require('../status-handler/status.handler')()
     class ICSmodule {
         constructor(opts = {}, debug) {
             this.debug = debug || null
             this.d = null // temporary data hold
             this.statusHandler = new StatusHandler({}, this.debug) // middleware, handles messages and code for REST
-            this.XDB = new XDB() // initialize database
+
+            if (!opts.dataPath) opts.dataPath = {}
+            this.dataPath = {
+                members: (opts.dataPath || {}).members || `./members.db.json`,
+                absences: (opts.dataPath || {}).absences || `./absences.db.json`,
+            }
+            this.XDB = new XDB(this.dataPath, this.debug) // initialize database
         }
 
         /**
          * - generate new ics file by cross reference of 2 databases. Find member by `userId` and match them with  by `type`
          * @param {string} type references record prop on `absences` database
          * @param {number} uId required, get user by id
-         * @param {string} dbName defaults to `members`
+         * @param {string} collection defaults to `members`
          * @borrows `members, absences`
          */
-        async generateICS(type = 'vacation', uId = null, dbName = 'members') {
+        async generateICS(type = 'vacation', uId = null, collection = 'members') {
 
-            if (!dbName) {
-                if (this.debug) notify('[generateICS] no dbName selected', 1)
+            if (!collection) {
+                if (this.debug) notify('[generateICS] no collection selected', 1)
                 return []
             }
 
@@ -45,7 +51,7 @@ module.exports = () => {
             }
 
             let userOutput = []
-            switch (dbName) {
+            switch (collection) {
                 case 'members': {
 
                     try {
@@ -66,7 +72,7 @@ module.exports = () => {
                         // 1. create event list for ics files
                         const calEvents = this.createICalEvents(userAbsencesList)
                         // 2. populate ics files   
-                        userOutput = await this.populateICalEvents(calEvents).then(z => {                    
+                        userOutput = await this.populateICalEvents(calEvents).then(z => {
                             if (!(z || []).length) throw (`no file batch available`)
                             return z.map(el => {
                                 const productId = Object.keys(el['error'] || el['created'])[0] // > productId < absence/.id 
@@ -76,7 +82,7 @@ module.exports = () => {
                         })
 
                     } catch (error) {
-                        if(this.debug) notify({ error }, 1)
+                        if (this.debug) notify({ error }, 1)
                         this.statusHandler.$set({ code: 602 })
                     }
 
@@ -84,9 +90,9 @@ module.exports = () => {
                 }
 
                 default:
-                    notify(`[generateICS] wrong dbName: ${dbName} selected no ics generated`, 1)
+                    if (this.debug) notify(`[generateICS] wrong collection: ${collection} selected no ics generated`, 1)
             }
-         
+
             if (!(userOutput || []).length) {
                 this.statusHandler.$set({ code: 107 })
                 return userOutput
@@ -100,7 +106,6 @@ module.exports = () => {
                 this.statusHandler.$setWith(created > 0, { code: 204 }, { code: 106 })
                 return d
             }
-       
         }
 
         /**
@@ -113,16 +118,20 @@ module.exports = () => {
         async absences(query = null, includeMember = null, searchByLimit = []) {
             this.d = null
             let data = []
+
+            if (isString(query)) return []
+
             try {
                 data = await this.XDB.absencesDB()
             } catch (err) {
                 if (this.debug) notify('[absences] database empty', 1)
-                return Promise.reject('database empt')
+                return Promise.reject(err)
             }
+
 
             // when query is set and `includeMember` enabled (by default) on controller.absences(...)
             // it will again perform another query against `members({userId})` to be added on each item
-            if (isObject(query) && !isFalsy(query)) {
+            if (objectSize(query)) {
                 try {
                     let filter = ['userId', 'startDate', 'endDate'] // queryFilter
                     if ((searchByLimit || []).length) filter = searchByLimit
@@ -159,13 +168,14 @@ module.exports = () => {
         async members(query = null, searchByLimit = [], showAbsence = null) {
             this.d = null
             let data = []
+            if (isString(query)) return []
             try {
                 data = await this.XDB.membersDB()
             } catch (err) {
                 if (this.debug) notify('[members] database empty', 1)
-                return Promise.reject('database empty')
+                return Promise.reject(err)
             }
-            if (isObject(query) && !isFalsy(query)) {
+            if (objectSize(query)) {
                 try {
                     let filter = ['userId'] // queryFilter
                     if ((searchByLimit || []).length) filter = searchByLimit

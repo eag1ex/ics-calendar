@@ -71,7 +71,7 @@ module.exports = () => {
                 const last = copy(this._lastStatus)
                 const newStatus = messageCodes[last['code']]
                 if (!newStatus) {
-                    if (this.debug) notify(`[getStatus] new status nto set because asking code is not yet in './message.codes.js'`, 1)
+                    if (this.debug) notify(`[getStatus] new status not set because asking code is not yet in './message.codes.js'`, 1)
                     return null
                 }
 

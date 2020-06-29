@@ -5,24 +5,33 @@
 */
 module.exports = () => {
     const { dataAsync } = require('../utils')()
-    // const { isArray } = require('x-units')
-
     return class XDB {
         // @ts-ignore
-        constructor(opts = {}) {
-            // TODO
+        constructor(opts = {}, debug) {
+            this.dataPath = {
+                members: opts.members || `./members.db.json`,
+                absences: opts.absences || `./absences.db.json`,
+            }
+             console.log('this.dataPath is?',this.dataPath)
+            this.debug = debug
         }
 
         membersDB() {
-            // @ts-ignore
-            return dataAsync(require('./members.db.json'))
-                .then((data) => data.payload)
+            try {
+                return dataAsync(require(this.dataPath.members))
+                    .then((data) => data.payload)
+            } catch (err) {
+                return Promise.reject('dataPath for XDB.members.db not found')
+            }
         }
 
         absencesDB() {
-            // @ts-ignore
-            return dataAsync(require('./absences.db.json'))
-                .then((data) => data.payload)
+            try {
+                return dataAsync(require(this.dataPath.absences))
+                    .then((data) => data.payload)
+            } catch (err) {
+                return Promise.reject('dataPath for XDB.absences.db not found')
+            }
         }
     }
 }
