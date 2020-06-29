@@ -152,4 +152,4 @@ http://localhost:5000/database/members?userId=644
 
 ##### Contact
 
-Have questions, or would like to submit feedback, `contact me at: https://eaglex.net/app/contact?product=ics-calendar-server`
+Have questions, or would like to submit feedback, **contact me at:** (https://eaglex.net/app/contact?product=ics-calendar-server)
