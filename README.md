@@ -71,7 +71,7 @@ All tests are located in `./tests/{*,/*}.spec.js`
 
 - Each .ics file is produced according to `ics/version:2` explained in `https://en.wikipedia.org/wiki/ICalendar` with interpolation suport from `ics` npm package.
 - Generated files live in `./ical_event_files` or how you set them in `./config.js`
-
+- Already generated test file, when server is running: `http://localhost:5000/download/test_2351_event.ics` 
 
 
 
@@ -104,6 +104,10 @@ All tests are located in `./tests/{*,/*}.spec.js`
 
 // download ical file
 `http://localhost:5000/download/:fileName` (once you generate them with calendar api)
+
+// ical download test file
+`http://localhost:5000/download/test_2351_event.ics`
+
 
 // list all absences
 `http://localhost:5000/database/absences`
