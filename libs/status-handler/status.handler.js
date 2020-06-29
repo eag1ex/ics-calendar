@@ -39,8 +39,8 @@ module.exports = () => {
             if (condition === false || condition <= 0) return this.$set(failStatus)
             else return null
         }
+        
         /** 
-
          * - set new `_lastStatus`
          * @returns `true/false`
         */

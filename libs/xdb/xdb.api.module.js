@@ -11,6 +11,7 @@ module.exports = () => {
     return class XDB {
         // @ts-ignore
         constructor(opts = {}, debug) {
+            
             this.debug = debug
             this.dataPath = {
                 members: opts.members || `./members.db.json`,
