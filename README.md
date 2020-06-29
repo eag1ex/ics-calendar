@@ -9,15 +9,15 @@
 
   
 #### About
-- **ics-calendar-server** is a Node.js back-end application to create `ics/iCal` files for Calendar events and invites, supported by: `MS-Outlook, or Mail for Mac.` It works by GET request with specific types `[sickness, vacation]` followed by `userId`, example `http://localhost:5000/calendar/vacation/644` (http://localhost:5000/calendar/:type/:userId)
+**ics-calendar-server** is a Node.js back-end application to create `ics/iCal` files for Calendar events and invites, supported by: `MS-Outlook, or Mail for Mac.` It works by GET request with specific types `[sickness, vacation]` followed by `userId`, example `http://localhost:5000/calendar/vacation/644` (http://localhost:5000/calendar/:type/:userId)
 
-	* Application provides mocked database: `xdb` with access to 2 collections: `members.db` and `absences.db` from `.json`
-	* Structured with 3 micro services: `server => ics <= xdb`, and middleware :`StatusHandler`
-	* Build in ES6 with good functional programming.
-	* Linted code, well scaled with comments, and debug features
-	* Bonus implemented istanbul/nyc coverage
-	* Included tests with Mocha/Chai
-	* Included error/response codes
+* Application provides mocked database: `xdb` with access to 2 collections: `members.db` and `absences.db` from `.json`
+* Structured with 3 micro services: `server => ics <= xdb`, and middleware :`StatusHandler`
+* Build in ES6 with good functional programming.
+* Linted code, well scaled with comments, and debug features
+* Bonus implemented istanbul/nyc coverage
+* Included tests with Mocha/Chai
+* Included error/response codes
 
 
 #### Why use it
@@ -79,23 +79,23 @@ List of services that run under the hood:
 
 #### Rest API
 
-- End/points explained:
+End/points explained:
 
-	* Welcome page : `http://localhost:5000/` : You can see list of available routes
+* Welcome page : `http://localhost:5000/` : You can see list of available routes
 
-	*  `http://localhost:5000/calendar/:event/:userId` : `:event` we have [sickness, vacation] available based on current database/absences. `:userId` targets all absences referencing this userId, it produce list of calendar files to location specified in `./config.js`
+*  `http://localhost:5000/calendar/:event/:userId` : `:event` we have [sickness, vacation] available based on current database/absences. `:userId` targets all absences referencing this userId, it produce list of calendar files to location specified in `./config.js`
   
 	
-	*  `http://localhost:5000/download/:fileName` : After creating ical files  `/calendar/:type/:userId` you can access them with: `:fileName` ({productId}_event.ics), productId refers to `id` prop on `./absences` collection.
+*  `http://localhost:5000/download/:fileName` : After creating ical files  `/calendar/:type/:userId` you can access them with: `:fileName` ({productId}_event.ics), productId refers to `id` prop on `./absences` collection.
 
-	*  `http://localhost:5000/database/:collection` : `:collection` select your collection for results, defaults to no query parameters, and lists all available items.
+*  `http://localhost:5000/database/:collection` : `:collection` select your collection for results, defaults to no query parameters, and lists all available items.
 	
-	* queries on `datebase/absences?` {userId, startDate/endDate}
+* queries on `datebase/absences?` {userId, startDate/endDate}
 
-	* queries on `datebase/members?` {userId, absence=1} if `absence=1` will append available absences. It is a rich operation, use it wisely!
+* queries on `datebase/members?` {userId, absence=1} if `absence=1` will append available absences. It is a rich operation, use it wisely!
 
 
-	*  `other notes`, each database/:collection has available `searchByLimit[]` in ics.members and ics.absences that can be set to allow search by other fields available in database. (disabled by default). Note: We can use config.js to add each configuration accordingly, so its easy to understand.
+*  `other notes`, each database/:collection has available `searchByLimit[]` in ics.members and ics.absences that can be set to allow search by other fields available in database. (disabled by default). Note: We can use config.js to add each configuration accordingly, so its easy to understand.
 ```
 
 // GET/ examples
