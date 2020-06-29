@@ -6,9 +6,9 @@ const path = require('path')
  * ics-calendar app config file
 */
 module.exports = {
-    debug: true, // set debug thruout the application
+    debug: false, // debug for all application code
     ics: {
-        // changing this path will automaticly update `ics.createEvent` path
+        // changing path will automaticly update `ics.createEvent` path, and static server path
         filePath: path.join(__dirname, './ical_event_files')
     },
     // 'PUBLIC': "./views",

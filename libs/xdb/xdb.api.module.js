@@ -4,16 +4,18 @@
  * - available databases: [members,absences]
 */
 module.exports = () => {
+    const {notify} = require('x-units')
     const { dataAsync } = require('../utils')()
     return class XDB {
         // @ts-ignore
         constructor(opts = {}, debug) {
+            this.debug = debug
             this.dataPath = {
                 members: opts.members || `./members.db.json`,
                 absences: opts.absences || `./absences.db.json`,
             }
-             console.log('this.dataPath is?',this.dataPath)
-            this.debug = debug
+
+            if (this.debug) notify({ XDB: { dataPath: this.dataPath } })
         }
 
         membersDB() {

@@ -14,12 +14,7 @@
   "author": "eaglex",
   "license": "CC-BY-NC-ND",
   "devDependencies": {
-    "@istanbuljs/nyc-config-babel": "^3.0.0",
     "babel-eslint": "^10.1.0",
-    "babel-plugin-istanbul": "^6.0.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-register": "^6.26.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "mocha": "^3.5.3",
