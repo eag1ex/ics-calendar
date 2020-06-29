@@ -21,8 +21,8 @@
 
 
 #### Why use it
-- Generate (.ics) file events in bulk, use it to import to your Calendar. Supports `ics/version:2`
-- Lookup company members by type - and produce all list of all members
+- Generate (.ics) file events in bulk, use it to import to your Calendar, supports `ics/version:2`
+- Look-up company employees by absence type - and produce list of ics events
 - Search with queries... database/:collection > `database/members?userId=644`, `database/absences?userId=644`, `database/absences?startDate=2016-12-31&endDate=2017-03-10`, `database/members?userId=644&absence=1`
 
 
