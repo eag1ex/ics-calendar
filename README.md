@@ -66,6 +66,7 @@ List of services that run under the hood:
 *  **ICS** : Module that controls logic and operation of the application, it imports `xdb` and implements the middleware: `StateHandler` for status response management.
 *  **XDB** : Mock database manager, imports all data, its managed by `ICS`
 *  **StatusHandler** : Middleware that handles status codes and message response, available examples in `./tests/**`
+* Service hierarchy order: `server => ( ics :StatusHandler) <= xdb`
 
 #### Config
 App config located in `./config.js`
