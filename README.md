@@ -37,7 +37,7 @@
 #### Install
 - To instal run `npm i`
 - To enable eslint, first must run `npm lint:install`, then can use `npm run lint` or `npm run lint:fix`
-
+- Any Issues with node.js version, try `nvm install 11.14.0`
 
 #### Start
 -  `npm start` will start the server and give access to all rest end points
