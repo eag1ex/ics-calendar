@@ -20,6 +20,12 @@
     "mocha": "^3.5.3",
     "nyc": "^15.1.0"
   },
+  
+  "engine": {
+    "node": "*",
+    "npm": "*"
+  },
+
   "dependencies": {
     "bash-color": "0.0.4",
     "body-parser": "^1.19.0",

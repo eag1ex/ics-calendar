@@ -137,6 +137,9 @@ http://localhost:5000/database/members?userId=644
 
 ```
  
+#### Developer comments
+- issues with node.js version, try `nvm install 11.14.0`
+
 
 #### Recommended VScode extentions
 - `vscode-language-babe, vscode-babel-coloring, comment-anchors, joelday.docthis, vscode-standardjs`
