@@ -19,7 +19,6 @@
 	- Inclused tests with Mocha/Chai
 	- Included error/response codes
 
-  
 
 #### Why use it
 - Generage (.ics) files in bulk, and use it to import to your Calendar. Supports `ics/version:2`
@@ -31,9 +30,28 @@
 - Initialy build for `crewmeister.com` software company
 
 
+#### Install
+- To instal run `npm i`
+- To enable eslint, first must run `npm lint:install`, then can use `npm run lint` or `npm run lint:fix`
+
+
+#### Start
+-  `npm start` will start the server and give access to all rest end points
+
+
+#### Tests & Coverage
+All tests are located in `./tests/{*,/*}.spec.js`
+
+- To run full spec coverage: `npm run test`
+- To only run mocha spec without nyc/instanbul: `npm run mocha`
+- Coverege file available at: `./coverage/index.html`
+
+
+
 #### Stack
 - Application uses own build external/utilities `x-utils, simple-q`, as well as vendor npm packages.
 - Full list `Express.js, ics/ical/v2, lodash, moment.js, uuid, Node.js, Javascript, ES6, Error handling, micro-services: (xdb, ics, server), x-utils, simple-q, Lint, Chai, Mocha, Istanbul/nyc`
+
 
 
 #### Micro Services
@@ -44,19 +62,9 @@
 -  **XDB** : Mock database manager, imports all data, its managed by `ICS`
 -  **StatusHandler** : Middleware that handles status codes and message response, available examples in `./tests/**`
 
-  
-  
+#### Config
+- app config is located in `./config.js`
 
-#### Install
-
-- To instal run `npm i`
-- To enable eslint, first must run `npm lint:install`, then can use `npm run lint` or `npm run lint:fix`
-
-  
-  
-
-#### Start
--  `npm start` will start the server and give access to all rest end points
 
   
 #### ICS files
@@ -65,8 +73,6 @@
 - Generated files live in `./ical_event_files` or how you set them in `./config.js`
 
 
-#### Config
-- app config is located in `./config.js`
 
 
 #### Rest API
@@ -123,14 +129,6 @@
 ```
 
 
-#### Tests & coverage
-
-- To run full spec coverage test: `npm run test`
-- To only run mocha without nyc/instanbul: `npm run mocha`
-- Coverege file is available at: `./coverage/index.html`
-
-  
-  
 
 #### TODO
 

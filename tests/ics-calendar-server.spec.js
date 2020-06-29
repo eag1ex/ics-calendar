@@ -8,7 +8,7 @@ const assert = require('assert')
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 // with debug true will get better coverage because will expose notify logging
-const DEBUG = require('../config').debug  
+const DEBUG = require('../config').debug
 const server = require('../libs/server/server')(DEBUG)
 const should = chai.should()
 const expect = chai.expect
@@ -260,7 +260,7 @@ describe('Calendar test (.ics) events for types: [sickness,vacation]', function 
 
     }, done)
   })
-  
+
   it('/download/test_2351_event.ics should return status:200', function (done) {
     chaiGetRequest(server, `/download/test_2351_event.ics`, (res) => {
       res.should.have.status('200')

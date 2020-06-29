@@ -19,7 +19,7 @@ describe('Check ICS exceptions and method/properties', function () {
         const list = genSettingsList()
         for (let inx = 0; inx < list.length; inx++) {
             const { userId, collection, type } = list[inx]
-            
+
             if (collection === 'anonymous') {
                 const d = await ics.generateICS(type, userId, collection).catch(error => {
                     should.not.Throw(error)
@@ -73,7 +73,7 @@ describe('Check ICS exceptions and method/properties', function () {
         const list = membersSettingsList()
         for (let inx = 0; inx < list.length; inx++) {
             const { query, searchByLimit, showAbsence } = list[inx] || {}
-            
+
             if (query === 'invalid') {
                 const d = await ics.members(query, searchByLimit, showAbsence)
                 expect(d.length).below(1)

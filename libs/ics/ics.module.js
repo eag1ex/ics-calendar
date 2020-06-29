@@ -2,6 +2,7 @@
 `use strict`
 /** 
  * @ICS
+ * -  NOTE independant tests in `./tests/ics.module.spec.js`
  * - calendar file handler class, used to generate `.ics, .ical` files for MS and Apple
  * - import `ics.api` database records: `{absences,members}` both correlate with `crewId, userId` props.
  * - `new ICS({},debug)`

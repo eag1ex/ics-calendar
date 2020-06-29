@@ -8,19 +8,19 @@ const chai = require('chai')
 const should = chai.should()
 const expect = chai.expect
 // with debug true will get better coverage because will expose notify logging
-const DEBUG = require('../config').debug  
+const DEBUG = require('../config').debug
 const ICSical = require('../libs/ics/ics.ical')()
 const ical = new ICSical({}, DEBUG)
 
 
 describe('Check (.ics) creates valid ical events for [sickness,vacation]', function () {
 
-    const genResults = (absenceList, toFail=null) => {
+    const genResults = (absenceList, toFail = null) => {
         const calEvents = ical.createICalEvents(absenceList)
         return ical.populateICalEvents(calEvents).then(z => {
 
             const resp = z.map(el => {
-                if(!toFail) expect(el.created !== undefined).equal(true)
+                if (!toFail) expect(el.created !== undefined).equal(true)
                 else expect(el.error !== undefined).equal(true)
                 // const productId = Object.keys(el['error'] || el['created'])[0]
                 //  // > productId < absence/.id 
@@ -48,7 +48,7 @@ describe('Check (.ics) creates valid ical events for [sickness,vacation]', funct
 
     it('userId=644 should fail to creaate .ics event files', function () {
         // ical.availableAbsenceTypes
-        const absenceList = absenceWithMemberList().map(z=>{
+        const absenceList = absenceWithMemberList().map(z => {
             delete z.createdAt
             delete z.endDate
             return z
