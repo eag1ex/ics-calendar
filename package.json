@@ -39,7 +39,6 @@
     "lodash": "^4.17.15",
     "moment": "^2.27.0",
     "morgan": "^1.10.0",
-    "querystring": "^0.2.0",
     "simple-q": "git+https://bitbucket.org/eag1ex/simple-q.git",
     "uuid": "^8.2.0",
     "x-units": "git+https://bitbucket.org/eag1ex/x-utils.git"
