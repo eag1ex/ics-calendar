@@ -127,7 +127,7 @@ All tests are located in `./tests/{*,/*}.spec.js`
 // list member 644
 `http://localhost:5000/database/members?userId=644`
 ```
-
+ 
 
 #### Recommended VScode extentions
 - `vscode-language-babe, vscode-babel-coloring, comment-anchors, joelday.docthis, vscode-standardjs`
