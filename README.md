@@ -9,7 +9,7 @@
 
   
 #### About
-**ics-calendar-server** is a Node.js back-end application to create `ics/iCal` files for Calendar events and invites, supported by: `MS-Outlook, or Mail for Mac.` It works by GET request with specific types `[sickness, vacation]` followed by `userId`, example `http://localhost:5000/calendar/vacation/644` (http://localhost:5000/calendar/:type/:userId)
+**ics-calendar-server** is a Node.js back-end application to create `ics/iCal` files for Calendar events and invites, supported by: `MS-Outlook, or Mail for Mac.` It works by GET request with specific types `[sickness, vacation]` followed by `userId`, example (http://localhost:5000/calendar/vacation/644) _http://localhost:5000/calendar/:type/:userId_
 
 * Application provides mocked database: `xdb` with access to 2 collections: `members.db` and `absences.db` from `.json`
 * Structured with 3 micro services: `server => ics <= xdb`, and middleware :`StatusHandler`
@@ -42,7 +42,7 @@ Initialy build for `crewmeister.com` software company
 #### Start
 `npm start` will start the server and give access to all rest end points
 
-* Then navigate to welcome page : `http://localhost:5000/`
+* Then navigate to welcome page : (http://localhost:5000/)
 
 #### Tests & Coverage
 All tests are located in `./tests/{*,/*}.spec.js`
@@ -75,7 +75,7 @@ App config located in `./config.js`
 
 - Each .ics file is produced according to `ics/version:2` explained in `https://en.wikipedia.org/wiki/ICalendar` with interpolation suport from `ics` npm package.
 - Generated files live in `./ical_event_files`, and where to change them: `./config.js`
-- Generated test file for download, available at: `http://localhost:5000/download/test_2351_event.ics` 
+- Generated test file for download, available at: (http://localhost:5000/download/test_2351_event.ics) 
 
 
 #### Rest API
