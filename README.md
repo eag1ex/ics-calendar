@@ -31,7 +31,7 @@ Initialy build for `crewmeister.com` software company
 
 
 #### Deadline
-- 4 days.
+4 days.
 
 
 #### Install
@@ -68,7 +68,7 @@ List of services that run under the hood:
 *  **StatusHandler** : Middleware that handles status codes and message response, available examples in `./tests/**`
 
 #### Config
-- app config located in `./config.js`
+App config located in `./config.js`
 
   
 #### ICS files
@@ -137,7 +137,7 @@ http://localhost:5000/database/members?userId=644
 ```
  
 #### Developer comments
-- issues with node.js version, try `nvm install 11.14.0`
+- Issues with node.js version? Try `nvm install 11.14.0`
 
 
 #### Recommended VScode extentions
