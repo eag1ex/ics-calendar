@@ -27,7 +27,7 @@ module.exports = (DEBUG = true) => {
     app.engine('html', ejs.__express)
     app.set('view engine', 'html')
     
-    // static path to ical generatod files 
+    // static path to ical generated files 
     app.use('/download', express.static(config.ics.filePath))
 
     /// ///////////////////
@@ -65,7 +65,7 @@ module.exports = (DEBUG = true) => {
         const host = (server.address().address || '').replace(/::/, 'localhost')
         // @ts-ignore
         const port = server.address().port
-        notify(`server runnign on http://${host}:${port}`)
+        notify(`server running on http://${host}:${port}`)
     })
     return server
 }

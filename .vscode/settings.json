@@ -1,5 +1,6 @@
 {
     "standard.enable":true,
+    "cSpell.language": "en",
     "eslint.nodePath":"./node_modules/eslint",
     "node-module-intellisense.scanBuiltinModules": true,
     "node-module-intellisense.scanDevDependencies": true,

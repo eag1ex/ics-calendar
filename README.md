@@ -26,9 +26,8 @@
 - Search with queries... database/:collection > _`database/members?userId=644`, `database/absences?userId=644`, `database/absences?startDate=2016-12-31&endDate=2017-03-10`, `database/members?userId=644&absence=1`_
 
 
-#### Client
-Initialy build for `crewmeister.com` software company
-
+#### Motivations
+**Build better then the other guy!**
 
 #### Deadline
 4 days.
@@ -49,7 +48,7 @@ All tests are located in `./tests/{*,/*}.spec.js`
 
 * To run full spec coverage: `npm run test`
 * To only run mocha spec without nyc/instanbul: `npm run mocha`
-* Coverege available at: `./coverage/index.html`
+*  available at: `./coverage/index.html`
 
 
 #### Stack
@@ -62,7 +61,7 @@ Application uses own-build external/utilities `x-utils, simple-q`, can be found 
 #### Micro Services
 List of services that run under the hood:
 
-*  **Server** : Independant Express.js server that imports all assets, barebone authentication is implemented but not inforeced.
+*  **Server** : Independent Express.js server that imports all assets, barebone authentication is implemented but not enforced.
 *  **ICS** : Module that controls logic and operation of the application, it imports `xdb` and implements the middleware: `StateHandler` for status response management.
 *  **XDB** : Mock database manager, imports all data, its managed by `ICS`
 *  **StatusHandler** : Middleware that handles status codes and message response, available examples in `./tests/**`
@@ -74,7 +73,7 @@ App config located in `./config.js`
   
 #### ICS files
 
-- Each .ics file is produced according to `ics/version:2` explained in `https://en.wikipedia.org/wiki/ICalendar` with interpolation suport from `ics` npm package.
+- Each .ics file is produced according to `ics/version:2` explained in `https://en.wikipedia.org/wiki/ICalendar` with interpolation support from `ics` npm package.
 - Generated files live in `./ical_event_files`, and where to change them: `./config.js`
 - Generated test file for download, available at: (http://localhost:5000/download/test_2351_event.ics) 
 
@@ -92,9 +91,9 @@ End/points explained:
 
 *  `http://localhost:5000/database/:collection` : `:collection` select your collection for results, defaults to no query parameters, and lists all available items.
 	
-* queries on `datebase/absences?` {userId, startDate/endDate}
+* queries on `database/absences?` {userId, startDate/endDate}
 
-* queries on `datebase/members?` {userId, absence=1} if `absence=1` will append available absences. It is a rich operation, use it wisely!
+* queries on `database/members?` {userId, absence=1} if `absence=1` will append available absences. It is a rich operation, use it wisely!
 
 
 *  `other notes`, each database/:collection has available `searchByLimit[]` in ics.members and ics.absences that can be set to allow search by other fields available in database. (disabled by default). Note: We can use config.js to add each configuration accordingly, so its easy to understand.
@@ -141,7 +140,7 @@ http://localhost:5000/database/members?userId=644
 - Issues with node.js version? Try `nvm install 11.14.0`
 
 
-#### Recommended VScode extentions
+#### Recommended VScode extensions
 - `vscode-language-babe, vscode-babel-coloring, comment-anchors, joelday.docthis, vscode-standardjs`
 
 

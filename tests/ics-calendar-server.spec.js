@@ -49,8 +49,8 @@ function chaiGetRequest(server, url, cb, done) {
     })
 }
 
-// SECTION  Server should start sucessfully
-describe('Server should start sucessfully', function () {
+// SECTION  Server should start successfully
+describe('Server should start successfully', function () {
 
   let port
   before(async function (done) {

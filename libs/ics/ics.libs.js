@@ -1,7 +1,7 @@
 `use strict`
 /** 
  * @ICSlibs
- * - extention to ics module
+ * - extensions to ics module
 */
 module.exports = (ICSmodule) => {
 
@@ -15,7 +15,7 @@ module.exports = (ICSmodule) => {
         }
    
         /** 
-         *  - per database record, check if profided query was fulfilled 
+         *  - per database record, check if provided query was fulfilled 
          * @param {object} query can search thru name properties provided by members/absences database
          */
         QueryChecked(query) {
@@ -165,7 +165,7 @@ module.exports = (ICSmodule) => {
             }
             const absencesList = (this.d || [])
             const arrAsync = copy(absencesList).map(async (item) => {
-                // conditionaly append `member` 
+                // conditionally append `member` 
                 let member = {}
                 try {
                     member = head(await this.members({ userId: item.userId }))
@@ -175,7 +175,7 @@ module.exports = (ICSmodule) => {
                 }
 
                 // NOTE
-                // 1. assing `{member}` to absences/item
+                // 1. assign `{member}` to absences/item
                 // 2. reduce to only show `name`
                 if (member) {
                     item['member'] = reduce(member, (n, el, k) => {
@@ -215,7 +215,7 @@ module.exports = (ICSmodule) => {
                     notify({ error }, 1)
                 }
 
-                // assing `{absences}` to member/item
+                // assign `{absences}` to member/item
                 if (absences.length) item['absences'] = absences
                 else {
                     // return members/item without absences

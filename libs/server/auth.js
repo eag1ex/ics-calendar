@@ -1,7 +1,7 @@
 `use strict`
 
 /**
- * - ServerAuth extention
+ * - ServerAuth extension
  */
 module.exports = function (expressApp) {
     const { notify } = require('x-units')

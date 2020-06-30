@@ -1,12 +1,12 @@
 /** 
  * @ICSical
  * - this class generate valid ics data and creates `ics` event files
- * - NOTE independant tests in `./tests/ics.ical.spec.js`
+ * - NOTE independent tests in `./tests/ics.ical.spec.js`
 */
 
 module.exports = (ICSmodule = null) => {
     const config = require('../../config')
-    if (!ICSmodule) ICSmodule = function () { } // so we can do independant test runs
+    if (!ICSmodule) ICSmodule = function () { } // so we can do independent test runs
     const { notify, isObject, isFalsy, head, isArray } = require('x-units')
     const uuidv4 = require('uuid').v4
     const ics = require('ics')
@@ -47,18 +47,18 @@ module.exports = (ICSmodule = null) => {
                 return defer.promise()
             }
 
-            const deneratedResults = []
+            const generatedResults = []
             for (let inx = 0; inx < eventsArr.length; inx++) {
 
                 // add `created` and `error` properties to handle user outputs called by `generateICS`
                 try {
-                    deneratedResults.push({ created: await genIcal(eventsArr[inx]) })
+                    generatedResults.push({ created: await genIcal(eventsArr[inx]) })
                 } catch (error) {
                     if (this.debug) notify({ error, populateICalEvents: true }, 1)
-                    deneratedResults.push({ error: { [Object.keys(error)[0]]: true } })
+                    generatedResults.push({ error: { [Object.keys(error)[0]]: true } })
                 }
             }
-            return deneratedResults
+            return generatedResults
         }
 
         /** 
@@ -198,7 +198,7 @@ module.exports = (ICSmodule = null) => {
                 // NOTE not too sure where admitterId should be used ?
                 this.organizer = () => {
                     const name = admitterId ? `Admin:${admitterId}` : 'Admin'
-                    return pickBy({ name: name, email: 'admin@Crewmeister.com' }, identity)
+                    return pickBy({ name: name, email: 'admin@domainname.com' }, identity)
                 }
 
                 this.event = () => {

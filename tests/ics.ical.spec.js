@@ -61,7 +61,6 @@ describe('Check (.ics) creates valid ical events for [sickness,vacation]', funct
 
 
 
-
 // NOTE same data{} format passed to CreateEventData 
 function absenceWithMemberList() {
     return [

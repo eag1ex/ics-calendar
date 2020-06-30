@@ -3,7 +3,7 @@
  * @StatusHandler middleware, handles messages and code for REST
  * - NOTE independant tests in `./tests/ics.ical.spec.js`
  * 
- * - we dont want to change endpoint datatypes, or make any descructive changes, so will store each status to help return appropiate  `messageCodes`
+ * - we dont want to change endpoint datatypes, or make any destructive changes, so will store each status to help return appropriate  `messageCodes`
  * `StatusHandler.$set({})` > sets new lastStatus
  * `StatusHandler.$get({})` > returns lastStatus if any
  * `StatusHandler.$setWith({})` > can also be used as an alt to `$set()` 
@@ -26,7 +26,7 @@ module.exports = () => {
          * 
          * @param {object} passStatus required, when condition===true, then will set passStatus
          * @param {object} failStatus required, when condition===false,then will set failStatus
-         * @param {boolean} condition conditionaly set  _lastStatus
+         * @param {boolean} condition conditionally set  _lastStatus
         */
         $setWith(condition = null, passStatus = {}, failStatus = {}) {
             const bothSet = !isFalsy(passStatus) && !isFalsy(failStatus)
@@ -78,7 +78,7 @@ module.exports = () => {
                 // produce status from available message.codes 
                 return newStatus
             } catch (err) {
-                notify(`[$get] unhandeled status, returning default`, 1)
+                notify(`[$get] unhandled status, returning default`, 1)
                 return messageCodes[604]
             }
         }

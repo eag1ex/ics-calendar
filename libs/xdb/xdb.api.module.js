@@ -1,7 +1,7 @@
 `use strict`
 /** 
  * @XDB database mock
- * -  NOTE independant tests available thru `./tests/ics.module.spec.js`
+ * -  NOTE independent tests available thru `./tests/ics.module.spec.js`
  * - available databases: [members,absences]
  * - 
 */

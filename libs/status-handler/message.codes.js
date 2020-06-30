@@ -24,13 +24,13 @@ module.exports = codeMessage({
     201: ['Got all results for /absences'],
     202: ['Got results for members/{query}'],
     203: ['Got all results for /members'],
-    204: [`Calendar (.ics) files generated`],
+    204: [`Calendar ({productId}_event.ics) files generated`],
 
     // critical error from  500 up
     500: ['Server error'],
-    600: ['ICS unpresented error database/absences response'],
-    601: ['ICS unpresented error database/members response'],
-    602: ['ICS unpresented error producing .ics file'],
+    600: ['ICS unrepresented error database/absences response'],
+    601: ['ICS unrepresented error database/members response'],
+    602: ['ICS unrepresented error producing .ics file'],
     603: ['No /collection found'],
-    604: ['Unhandeled response error']
+    604: ['Unhandled response error']
 })

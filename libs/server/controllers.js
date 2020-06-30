@@ -37,11 +37,11 @@ module.exports = function (expressApp) {
         * (GET) REST/api 
         *  end points: `/database/:collection` >> `/database/members` or `/database/absences` will list collection documents
         *  deep queries: `/database/members?absence=1` assign absences list
-        *  ?userId ?startDate ?endDate can be called to deepend your query
+        *  ?userId ?startDate ?endDate can be called to deepen your query
         */
         database(req, res) {
 
-            if (this.serverError) return res.status(500).json({ message: 'ICS databse error', code: 500 })
+            if (this.serverError) return res.status(500).json({ message: 'ICS database error', code: 500 })
 
             const collection = req.params.collection || ''
             const query = objectSize(req.query) ? req.query : null
