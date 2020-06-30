@@ -62,7 +62,7 @@ journal
 # *.sdf
 *.mdf
 *.ldf
-.nyc_output
+
 
 # OS generated files #
 ######################
