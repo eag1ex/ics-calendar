@@ -30,14 +30,7 @@ module.exports = function (expressApp) {
             const userId = Number(req.params.userId)
             if (!isNumber(userId) || userId < 0) return res.status(404).json({ error: 'wrong userId provided', response: {}, code: 200 })
 
-            return this.ics.generateICS(type, userId, 'members').then(z => {
-                // let message
-
-                // if (z.length) message = '.ics files generated'
-                // else message = 'no match for provided query'
-                
-                res.status(200).json({ success: true, response: z, ...this.ics.statusHandler.$get() })
-            }).catch(error => res.status(400).json({ error, ...messageCodes[601] }))
+            return this.ics.generateICS(type, userId, 'members').then(z => res.status(200).json({ success: true, response: z, ...this.ics.statusHandler.$get() })).catch(error => res.status(400).json({ error, ...messageCodes[601] }))
         }
 
         /**
@@ -55,20 +48,16 @@ module.exports = function (expressApp) {
 
             if (collection === 'absences') {
                 const includeMember = true
-         
-                return (async () => {
-                    const r = await this.ics.absences(query, includeMember)
-                    const response = copy(r).map(item => {
-                        if (item['type'] && item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
-                        return item
-                    })  
-                    try {
-                        return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get() })
 
-                    } catch (err) {
-                        console.log('absences err', err)
-                    }         
-                  
+                return (async () => {
+                    const response = copy(await this.ics.absences(query, includeMember))
+                        .map(item => {
+                            if (item['type'] && item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
+                            return item
+                        })
+
+                    return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get() })
+
                 })().catch(error => res.status(404).json({ error, ...messageCodes[600] }))
 
             } if (collection === 'members') {
@@ -77,17 +66,16 @@ module.exports = function (expressApp) {
                 if (showAbsence) delete query.absence
 
                 return (async () => {
-                    const r = await this.ics.members(query, [], showAbsence)
-                    const response = copy(r).map(item => {
-                        if (showAbsence) {
-                            item['absences'] = item['absences'].map((z) => {
-                                // update message
-                                if (z.type) z.type = this.ics.typeSetMessage(item.name, z.type)
-                                return z
-                            })
-                        }
-                        return item
-                    })
+                    const response = copy(await this.ics.members(query, [], showAbsence))
+                        .map(item => {
+                            if (showAbsence) {
+                                // update type message
+                                item['absences'].forEach(element => {
+                                    if (element.type) element.type = this.ics.typeSetMessage(item.name, element.type)
+                                });
+                            }
+                            return item
+                        })
                     return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get() })
                 })().catch(error => res.status(404).json({ error, ...messageCodes[601] }))
 

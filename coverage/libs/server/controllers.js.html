@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.7% </span>
+                <span class="strong">80.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>46/57</span>
+                <span class='fraction'>42/52</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.88% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>23/32</span>
+                <span class='fraction'>24/32</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">88.1% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>42/49</span>
+                <span class='fraction'>37/42</span>
             </div>
         
             
@@ -143,19 +143,7 @@
 <a name='L84'></a><a href='#L84'>84</a>
 <a name='L85'></a><a href='#L85'>85</a>
 <a name='L86'></a><a href='#L86'>86</a>
-<a name='L87'></a><a href='#L87'>87</a>
-<a name='L88'></a><a href='#L88'>88</a>
-<a name='L89'></a><a href='#L89'>89</a>
-<a name='L90'></a><a href='#L90'>90</a>
-<a name='L91'></a><a href='#L91'>91</a>
-<a name='L92'></a><a href='#L92'>92</a>
-<a name='L93'></a><a href='#L93'>93</a>
-<a name='L94'></a><a href='#L94'>94</a>
-<a name='L95'></a><a href='#L95'>95</a>
-<a name='L96'></a><a href='#L96'>96</a>
-<a name='L97'></a><a href='#L97'>97</a>
-<a name='L98'></a><a href='#L98'>98</a>
-<a name='L99'></a><a href='#L99'>99</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L87'></a><a href='#L87'>87</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -193,13 +181,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -215,16 +196,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">148x</span>
 <span class="cline-any cline-yes">148x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -235,11 +212,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -261,7 +237,7 @@ module.exports = function (expressApp) {
     return class ServerController {
         constructor(debug) {
 &nbsp;
-            this.debug = debug || <span class="branch-1 cbranch-no" title="branch not covered" >null</span>
+            this.debug = debug || null
             this.serverError = null
             try {
                 const ICS = require('../ics/ics.module')()
@@ -285,14 +261,7 @@ module.exports = function (expressApp) {
             const userId = Number(req.params.userId)
             <span class="missing-if-branch" title="if path not taken" >I</span>if (!isNumber(userId) || userId &lt; 0) <span class="cstat-no" title="statement not covered" >return res.status(404).json({ error: 'wrong userId provided', response: {}, code: 200 })</span>
 &nbsp;
-            return this.ics.generateICS(type, userId, 'members').then(z =&gt; {
-                // let message
-&nbsp;
-                // if (z.length) message = '.ics files generated'
-                // else message = 'no match for provided query'
-                
-                res.status(200).json({ success: true, response: z, ...this.ics.statusHandler.$get() })
-            }).catch(<span class="fstat-no" title="function not covered" >er</span>ror =&gt; <span class="cstat-no" title="statement not covered" >res.status(400).json({ error, ...messageCodes[601] }))</span>
+            return this.ics.generateICS(type, userId, 'members').then(z =&gt; res.status(200).json({ success: true, response: z, ...this.ics.statusHandler.$get() })).catch(<span class="fstat-no" title="function not covered" >er</span>ror =&gt; <span class="cstat-no" title="statement not covered" >res.status(400).json({ error, ...messageCodes[601] }))</span>
         }
 &nbsp;
         /**
@@ -310,20 +279,16 @@ module.exports = function (expressApp) {
 &nbsp;
             if (collection === 'absences') {
                 const includeMember = true
-         
-                return (async () =&gt; {
-                    const r = await this.ics.absences(query, includeMember)
-                    const response = copy(r).map(item =&gt; {
-                        <span class="missing-if-branch" title="else path not taken" >E</span>if (item['type'] &amp;&amp; item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
-                        return item
-                    })  
-                    try {
-                        return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get() })
 &nbsp;
-                    } catch (err) {
-<span class="cstat-no" title="statement not covered" >                        console.log('absences err', err)</span>
-                    }         
-                  
+                return (async () =&gt; {
+                    const response = copy(await this.ics.absences(query, includeMember))
+                        .map(item =&gt; {
+                            <span class="missing-if-branch" title="else path not taken" >E</span>if (item['type'] &amp;&amp; item['member']) item['type'] = this.ics.typeSetMessage(item.member.name, item.type)
+                            return item
+                        })
+&nbsp;
+                    return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get() })
+&nbsp;
                 })().catch(<span class="fstat-no" title="function not covered" >er</span>ror =&gt; <span class="cstat-no" title="statement not covered" >res.status(404).json({ error, ...messageCodes[600] }))</span>
 &nbsp;
             } <span class="missing-if-branch" title="else path not taken" >E</span>if (collection === 'members') {
@@ -332,17 +297,16 @@ module.exports = function (expressApp) {
                 if (showAbsence) delete query.absence
 &nbsp;
                 return (async () =&gt; {
-                    const r = await this.ics.members(query, [], showAbsence)
-                    const response = copy(r).map(item =&gt; {
-                        if (showAbsence) {
-                            item['absences'] = item['absences'].map((z) =&gt; {
-                                // update message
-                                <span class="missing-if-branch" title="else path not taken" >E</span>if (z.type) z.type = this.ics.typeSetMessage(item.name, z.type)
-                                return z
-                            })
-                        }
-                        return item
-                    })
+                    const response = copy(await this.ics.members(query, [], showAbsence))
+                        .map(item =&gt; {
+                            if (showAbsence) {
+                                // update type message
+                                item['absences'].forEach(element =&gt; {
+                                    <span class="missing-if-branch" title="else path not taken" >E</span>if (element.type) element.type = this.ics.typeSetMessage(item.name, element.type)
+                                });
+                            }
+                            return item
+                        })
                     return res.status(200).json({ success: true, response, ...this.ics.statusHandler.$get() })
                 })().catch(<span class="fstat-no" title="function not covered" >er</span>ror =&gt; <span class="cstat-no" title="statement not covered" >res.status(404).json({ error, ...messageCodes[601] }))</span>
 &nbsp;
@@ -358,7 +322,7 @@ module.exports = function (expressApp) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Jun 29 2020 18:33:08 GMT+0700 (Novosibirsk Standard Time)
+                at Tue Jun 30 2020 20:21:16 GMT+0700 (Novosibirsk Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
