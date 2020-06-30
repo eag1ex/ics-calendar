@@ -10,6 +10,7 @@ const chaiHttp = require('chai-http')
 // with debug true will get better coverage because will expose notify logging
 const DEBUG = require('../config').debug
 const server = require('../libs/server/server')(DEBUG)
+//const server = require("supertest").agent(_server);
 const should = chai.should()
 const expect = chai.expect
 // const { notify } = require("x-units")
@@ -83,6 +84,11 @@ describe('Server should start sucessfully', function () {
 
 // SECTION PASS:GET /absences requests
 describe('PASS:GET /absences requests', function () {
+  
+  after(function (done) {
+    server.close()
+    done()
+  })
 
   it(`should list all items with all keys`, function (done) {
 
@@ -157,6 +163,11 @@ describe('PASS:GET /absences requests', function () {
 
 // SECTION PASS:GET /members requests
 describe('PASS:GET /members requests', function () {
+  
+  after(function (done) {
+    server.close()
+    done()
+  })
 
   it(`should list all items with all keys`, function (done) {
 
@@ -234,6 +245,11 @@ describe('PASS:GET /members requests', function () {
 
 // SECTION Calendar should create (.ics) events for types: [sickness,vacation]
 describe('Test calendar (.ics) events for types: [sickness,vacation]', function () {
+  
+  after(function (done) {
+    server.close()
+    done()
+  })
 
   it('generate events for :sickness, with userId=644', function (done) {
 
@@ -295,6 +311,11 @@ describe('Test calendar (.ics) events for types: [sickness,vacation]', function 
 
 // SECTION Calendar should create (.ics) events for types: [sickness,vacation]
 describe('FAIL:GET /members requests', function () {
+  
+  after(function (done) {
+    server.close()
+    done()
+  })
 
   it('failed results for {query} ?userId=000&absence=1', function (done) {
 
@@ -322,6 +343,11 @@ describe('FAIL:GET /members requests', function () {
 
 // SECTION FAIL:GET /absences requests
 describe('FAIL:GET /absences requests', function () {
+  
+  after(function (done) {
+    server.close()
+    done()
+  })
 
   it('failed results for {query} ?userId=000', function (done) {
 

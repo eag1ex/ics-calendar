@@ -7,7 +7,7 @@
     "start": "node ./index.js",
     "mocha": "mocha ./tests/{*,/*}.spec.js --colors",
     "test": "nyc --reporter=html --port=2222 --reporter=text mocha ./tests/{*,/*}.spec.js --colors",
-    "lint:install": "npm i babel-eslint eslint eslint-plugin-node eslint-plugin-standard", 
+    "lint:install": "npm i babel-eslint eslint eslint-plugin-node eslint-plugin-standard",
     "lint": "./node_modules/.bin/eslint --ext .js libs",
     "lint:fix": "./node_modules/.bin/eslint --fix --ext .js libs"
   },
@@ -17,22 +17,19 @@
     "babel-eslint": "^10.1.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "eslint": "^7.3.1",
     "mocha": "^3.5.3",
-    "nyc": "^15.1.0",
-    "eslint": "^7.3.1"
+    "nyc": "^15.1.0"
   },
-
   "engine": {
     "node": "*",
     "npm": "*"
   },
-
   "dependencies": {
     "bash-color": "0.0.4",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "ejs": "^3.1.3",
-
     "express": "^4.17.1",
     "ics": "^2.22.1",
     "lodash": "^4.17.15",
