@@ -8,7 +8,7 @@ npm-debug.log
 dist
 assets
 
-
+info.md
 ### ignore icals
 #libs/ics/ical_event_files
 #ical_event_files
