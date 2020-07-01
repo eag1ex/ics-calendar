@@ -20,6 +20,7 @@ module.exports = function (expressApp) {
         */
         deleteICSfilesIfOlderThen(enable = null) {
             if (!enable) return false
+            if (config.debug) notify({ deleteICSfilesIfOlderThen: config.deleteOlderThen })
             fs.readdir(config.ics.filePath, (err, files) => {
                 files.forEach(async (file) => {
                     if (file.indexOf('.ics') === -1) return
@@ -37,7 +38,7 @@ module.exports = function (expressApp) {
         }
 
         authCheck(req, res, next) {
-
+            
             this.deleteICSfilesIfOlderThen(true)
 
             res.header('Access-Control-Allow-Origin', '*')

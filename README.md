@@ -70,13 +70,21 @@ List of services that run under the hood:
 #### Config
 App config: `./config.js`
 
+```
+debug: false, // debug for all application code
+ics.filePath:'./ical_event_files'
+deleteOlderThen: '1m', // delete `ical_event_files` older then 1 minute
+port: 5000
+```
+
+
   
 #### ICS files
 
 - Each .ics file is produced according to `ics/version:2` explained in `https://en.wikipedia.org/wiki/ICalendar` with interpolation support from `ics` npm package.
 - Generated files live in `./ical_event_files`, you can change it: `./config.js`
 - Generated test file for download, available at: (http://localhost:5000/download/test_2351_event.ics) 
-
+- **A reminder**, there is an expiry time enabled to delete all generated files after `config.deleteOlderThen`, you need to change that, or disable it: `server>auth>deleteICSfilesIfOlderThen(false)`
 
 #### Rest API
 
