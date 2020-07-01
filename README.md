@@ -165,10 +165,11 @@ http://localhost:5000/database/members?userId=644
 - `vscode-language-babe, vscode-babel-coloring, comment-anchors, joelday.docthis, vscode-standardjs`
 
 
-#### TODO
+#### Premium version
 
-- Stage on Heroku
-- Build client interface in `ejs` markup. 
+- _(includes)_ Client UX/UI to generate .ics events
+- _(includes)_ Node Mailer to send invites
+- _(includes)_ More support and documentation.
 
 
 ##### Contact
