@@ -1,4 +1,4 @@
-const port = process.env.PORT || 8000 || 5000 //process.env.PORT || (process.argv[2] || 5000)
+const port = process.env.PORT || 5000 || 8000
 const path = require('path')
 
 /** 
