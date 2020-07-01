@@ -87,7 +87,7 @@ App config: `./config.js`
 - Each .ics file is produced according to `ics/version:2` explained in `https://en.wikipedia.org/wiki/ICalendar` with interpolation support from `ics` npm package.
 - Generated files live in `./ical_event_files`, you can change it: `./config.js`
 - Generated test file for download, available at: (http://localhost:5000/download/test_2351_event.ics) 
-- **A reminder**, there is an expiry time enabled to delete all generated files after `config.deleteOlderThen`, you need to change that, or disable it: `server>auth>deleteICSfilesIfOlderThen(false)`
+- **A reminder**, there is an expiry time enabled to delete all generated files after `config.deleteOlderThen`, you can change, or disable it at: `server>auth>deleteICSfilesIfOlderThen(false)`
 
 
 #### Heroku demo
