@@ -74,7 +74,7 @@ App config: `./config.js`
 ```
 { 
     debug: false, // debug for all application code
-    ics.filePath:'./ical_event_files'
+    ics: { filePath:'./ical_event_files' },
     deleteOlderThen: '1m', // delete `ical_event_files` older then 1 minute
     port: 5000
 }
