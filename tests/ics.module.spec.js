@@ -10,12 +10,18 @@ const expect = chai.expect
 const DEBUG = require('../config').debug
 // const sq = require('simple-q')
 const ICS = require('../libs/ics/ics.module')()
+const XDB = require('../libs/xdb/xdb.api.module')()
+
+const xdb = new XDB({
+    members: `./members.db.json`,
+    absences: `./absences.db.json`
+}, DEBUG) // initialize database
 
 describe('Check ICS exceptions and method/properties', function () {
 
 
     it('Check all ics.generateICS(type, uId, dbName)() properties and returns', async function () {
-        const ics = new ICS({}, DEBUG)
+        const ics = new ICS({XDB:xdb}, DEBUG)
         const list = genSettingsList()
         for (let inx = 0; inx < list.length; inx++) {
             const { userId, collection, type } = list[inx]
@@ -45,7 +51,7 @@ describe('Check ICS exceptions and method/properties', function () {
     })
 
     it('Check all ics.absences(query, includeMember, searchByLimit)() properties and returns', async function () {
-        const ics = new ICS({}, DEBUG)
+        const ics = new ICS({XDB:xdb}, DEBUG)
         const list = absencesSettingsList()
         for (let inx = 0; inx < list.length; inx++) {
             const { query, member, searchByLimit } = list[inx] || {}
@@ -69,7 +75,7 @@ describe('Check ICS exceptions and method/properties', function () {
     })
 
     it('Check all ics.members(query, searchByLimit, showAbsence)() properties and returns', async function () {
-        const ics = new ICS({}, DEBUG)
+        const ics = new ICS({XDB:xdb}, DEBUG)
         const list = membersSettingsList()
         for (let inx = 0; inx < list.length; inx++) {
             const { query, searchByLimit, showAbsence } = list[inx] || {}
@@ -96,12 +102,21 @@ describe('Check ICS exceptions and method/properties', function () {
 
     it('handle rejections on invalid xdb database', async function () {
         // invalid database path
-        const opts = {
-            members: `./members.db.xxx`,
-            absences: `./absences.db.xxx`,
+        let ics 
+        try{
+
+            ics = new ICS({ XDB: null }, DEBUG)
+        } catch(err){      
+            expect(err).equal('XDB must be initialized')
         }
 
-        const ics = new ICS({ dataPath: opts }, DEBUG)
+        // invalid db
+        const xdb = new XDB({
+            members: `./members.db.xxx`, 
+            absences: `./absences.db.xxx` 
+        }, DEBUG)
+
+        ics = new ICS({ XDB: xdb }, DEBUG)
 
         try {
             await ics.absences({ userId: 644 }, 1, [])

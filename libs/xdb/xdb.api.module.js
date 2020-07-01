@@ -9,7 +9,7 @@ module.exports = () => {
     const { notify } = require('x-units')
     const { dataAsync } = require('../utils')()
     return class XDB {
-        // @ts-ignore
+        // 
         constructor(opts = {}, debug) {
             
             this.debug = debug

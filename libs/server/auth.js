@@ -18,6 +18,7 @@ module.exports = function (expressApp) {
             res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, token-expiry')
             if (this.debug) notify(`-- calling url: ${req.url}`)
             return next()
+
             // providing no restrictions apart from the header
             // return res.status(400).send({ error: true, msg: 'No token provided, or session expired' });
 
@@ -52,6 +53,5 @@ module.exports = function (expressApp) {
         //     }
         // };
         // !SECTION 
-
     }
 }

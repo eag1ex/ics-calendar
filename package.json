@@ -11,6 +11,7 @@
     "lint": "./node_modules/.bin/eslint --ext .js libs",
     "lint:fix": "./node_modules/.bin/eslint --fix --ext .js libs"
   },
+  "private": true,
   "author": "eaglex",
   "license": "CC-BY-NC-ND",
   "devDependencies": {
@@ -21,9 +22,10 @@
     "mocha": "^3.5.3",
     "nyc": "^15.1.0"
   },
+  "engineStrict": true,
   "engine": {
-    "node": "*",
-    "npm": "*"
+    "node": ">=11.0.0",
+    "npm": ">=6.4.1"
   },
   "dependencies": {
     "bash-color": "0.0.4",

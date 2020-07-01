@@ -19,12 +19,9 @@ module.exports = () => {
             this.d = null // temporary data hold
             this.statusHandler = new StatusHandler({}, this.debug) // middleware, handles messages and code for REST
 
-            if (!opts.dataPath) opts.dataPath = {}
-            this.dataPath = {
-                members: (opts.dataPath || {}).members || `./members.db.json`,
-                absences: (opts.dataPath || {}).absences || `./absences.db.json`
-            }
-            this.XDB = new XDB(this.dataPath, this.debug) // initialize database
+            if (!opts.XDB) throw (`XDB must be initialized`)
+            else this.XDB = opts.XDB // instance
+
         }
 
         /**
@@ -71,7 +68,7 @@ module.exports = () => {
                         const userAbsencesList = await this.absences({ userId, type }, true, ['userId', type])
 
                         // 1. create event list for ics files
-                        const calEvents = this.createICalEvents(userAbsencesList)
+                        const calEvents = this.createICalEventList(userAbsencesList)
                         // 2. populate ics files   
                         userOutput = await this.populateICalEvents(calEvents).then(z => {
                             if (!(z || []).length) throw (`no file batch available`)
@@ -126,6 +123,8 @@ module.exports = () => {
                 data = await this.XDB.absencesDB()
             } catch (err) {
                 if (this.debug) notify('[absences] database empty', 1)
+                 // in case we forgot to load the actual class the error would be defferent
+                 if(err.toString().indexOf('XDB.absences.db')==-1) err = 'XDB.absences.db not found'
                 return Promise.reject(err)
             }
 
@@ -135,7 +134,7 @@ module.exports = () => {
                 try {
                     let filter = ['userId', 'startDate', 'endDate'] // queryFilter
                     if ((searchByLimit || []).length) filter = searchByLimit
-                    // @ts-ignore
+                    // 
                     const arrAsync = this.queryFilter(data, query, filter, 'absences')
                         .assignMember(includeMember).d
 
@@ -151,7 +150,7 @@ module.exports = () => {
                 }
             } else {
                 this.d = data
-                // @ts-ignore
+                // 
                 return Promise.all(this.assignMember(includeMember).d).then(z => {
                     this.statusHandler.$setWith(z.length, { code: 201 }, { code: 102 })
                     return z
@@ -173,13 +172,15 @@ module.exports = () => {
                 data = await this.XDB.membersDB()
             } catch (err) {
                 if (this.debug) notify('[members] database empty', 1)
+                // in case we forgot to load the actual class the error would be defferent
+                if(err.toString().indexOf('XDB.members.db')==-1) err = 'XDB.members.db not found'
                 return Promise.reject(err)
             }
             if (objectSize(query)) {
                 try {
                     let filter = ['userId'] // queryFilter
                     if ((searchByLimit || []).length) filter = searchByLimit
-                    // @ts-ignore
+                    // 
                     const arrAsync = this.queryFilter(data, query, filter, 'members')
                         .assignAbsences(showAbsence).d
 

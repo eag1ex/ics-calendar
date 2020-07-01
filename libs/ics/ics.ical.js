@@ -26,8 +26,8 @@ module.exports = (ICSmodule = null) => {
         }
 
         /** 
-        * - `ics.createEvent` populate .ics files
-        * @param {array} eventsArr  array created by `createICalEvents`
+        * - with `ics.createEvent` populate .ics static files
+        * @param {array} eventsArr  array created by `createICalEventList`
        */
         async populateICalEvents(eventsArr = []) {
 
@@ -63,10 +63,10 @@ module.exports = (ICSmodule = null) => {
 
         /** 
        * 
-       * - generate new calendar event for each absenceMember available in `absences.db`
-       * @param {array} absenceMembers, optional, merged memberAbsence record, or used last `this.d` cached value after chaining sequence
+       * - create event list for each absenceMember available in `absences.db`
+       * @param {array} absenceMembers, optional merged memberAbsence record, or used last `this.d`
        */
-        createICalEvents(absenceMembers = []) {
+        createICalEventList(absenceMembers = []) {
 
             if (!absenceMembers && this.d) absenceMembers = this.d
             const eventsArr = []

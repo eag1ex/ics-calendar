@@ -4,7 +4,7 @@ module.exports = (DEBUG = true) => {
     const { notify } = require('x-units')
     if (DEBUG) notify(`[ics-calendar-server] running in DEBUG mode`)
     const { listRoutes } = require('../utils')()
-    // @ts-ignore
+    // 
     const express = require('express')
     const app = express()
     const router = express.Router()
@@ -23,7 +23,7 @@ module.exports = (DEBUG = true) => {
     app.use(cors())
 
     // for rendering html
-    // @ts-ignore
+    // 
     app.engine('html', ejs.__express)
     app.set('view engine', 'html')
     
@@ -38,7 +38,6 @@ module.exports = (DEBUG = true) => {
 
     /// //////////////////
     // set server routes
-    // router.get('/calendar/:userId', controllers.calendar.bind(controllers));
     router.get('/calendar/:type/:userId', controllers.calendar.bind(controllers))
     router.get('/database/:collection', controllers.database.bind(controllers))
 
@@ -50,7 +49,7 @@ module.exports = (DEBUG = true) => {
 
     /// //////////////////
     // handle errors
-    // @ts-ignore
+
     app.use(function (error, req, res, next) {
         res.status(500).json({ error: error.toString(), ...messageCodes[500] })
     })
@@ -61,9 +60,8 @@ module.exports = (DEBUG = true) => {
     // Initialize server
 
     const server = app.listen(config.port, function () {
-        // @ts-ignore
+
         const host = (server.address().address || '').replace(/::/, 'localhost')
-        // @ts-ignore
         const port = server.address().port
         notify(`server running on http://${host}:${port}`)
     })

@@ -7,7 +7,7 @@ npm-debug.log
 .DS_Store
 dist
 assets
-
+samples
 info.md
 ### ignore icals
 #libs/ics/ical_event_files

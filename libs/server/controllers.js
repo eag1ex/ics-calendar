@@ -3,14 +3,24 @@
 module.exports = function (expressApp) {
     const { isNumber, notify, objectSize, copy } = require('x-units')
     const messageCodes = require('../status-handler/message.codes')
+
+    const ICS = require('../ics/ics.module')()
+    const XDB = require('../xdb/xdb.api.module')()
+    
     return class ServerController {
         constructor(debug) {
 
             this.debug = debug || null
             this.serverError = null
             try {
-                const ICS = require('../ics/ics.module')()
-                this.ics = new ICS({}, this.debug)
+               
+                const xdb = new XDB({
+                    members: `./members.db.json`,
+                    absences: `./absences.db.json`
+                }, this.debug) // initialize database
+
+                this.ics = new ICS({ XDB: xdb }, this.debug)
+
             } catch (error) {
                 notify({ error }, 1)
                 this.serverError = error

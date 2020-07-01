@@ -16,7 +16,7 @@ const ical = new ICSical({}, DEBUG)
 describe('Check (.ics) creates valid ical events for [sickness,vacation]', function () {
 
     const genResults = (absenceList, toFail = null) => {
-        const calEvents = ical.createICalEvents(absenceList)
+        const calEvents = ical.createICalEventList(absenceList)
         return ical.populateICalEvents(calEvents).then(z => {
 
             const resp = z.map(el => {
