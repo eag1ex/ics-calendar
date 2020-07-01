@@ -55,7 +55,7 @@ All tests located in `./tests/{*,/*}.spec.js`
 #### Stack
 Application uses own-build external/utilities `x-utils, simple-q`, can be found at (https://bitbucket.org/eag1ex), as well as vendor npm packages.
 
-* Full list `Express.js, ics/ical/v2, lodash, moment.js, uuid, Node.js, Javascript, ES6, Error handling, micro-services: (xdb, ics, server), x-utils, simple-q, Lint, Chai, Mocha, Istanbul/nyc`
+* Full list `Express.js, ics/ical/v2, lodash, moment.js, uuid, Node.js, Javascript, ES6, Error handling, micro-services: (xdb, ics, server), x-utils, simple-q, Lint, Chai, Mocha, Istanbul/nyc, TDD`
 
 
 
