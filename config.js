@@ -1,6 +1,5 @@
-const port = process.env.PORT || (process.argv[2] || 5000)
+const port = process.env.PORT || 8000 || 5000 //process.env.PORT || (process.argv[2] || 5000)
 const path = require('path')
-
 
 /** 
  * ics-calendar app config file
@@ -17,5 +16,5 @@ module.exports = {
     deleteOlderThen: '1m', // delete `ical_event_files` older then the time provided
     // 'PUBLIC': "./views",
     //  'secret': 'disabled',
-    port: (typeof port === "number") ? port : 5000
+    port
 }
