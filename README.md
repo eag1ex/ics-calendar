@@ -17,7 +17,8 @@
 * Linted code, well scaled with comments, and debug features
 * Includes tests with Mocha/Chai
 * Includes error/response codes
-* Bonus/implemented Istanbul/nyc coverage
+* Implemented Istanbul/nyc coverage
+* Demo deployed on Heroku
 
 
 #### Why use it
@@ -86,9 +87,16 @@ port: 5000
 - Generated test file for download, available at: (http://localhost:5000/download/test_2351_event.ics) 
 - **A reminder**, there is an expiry time enabled to delete all generated files after `config.deleteOlderThen`, you need to change that, or disable it: `server>auth>deleteICSfilesIfOlderThen(false)`
 
+
+#### Heroku demo
+* you can view ICS Calendar App in action at: _(https://boxing-parliament-26094.herokuapp.com)_ following same rest api end points
+
+
 #### Rest API
 
 End/points explained:
+
+* Just replace `localhost:5000` with `boxing-parliament-26094.herokuapp.com` to do live tests on Heroku
 
 * Welcome page : `http://localhost:5000/` : You can see list of available routes
 
@@ -144,6 +152,11 @@ http://localhost:5000/database/members?userId=644
 
 ```
  
+
+
+
+
+
 #### Developer comments
 - Issues with node.js version? Try `nvm install 11.0.0`
 
