@@ -15,7 +15,7 @@
 * Structured with 3 micro services: `server => ics <= xdb`, and middleware :`StatusHandler`
 * Build in ES6 with good functional programming.
 * Linted code, well scaled with comments, and debug features
-* Includes tests with Mocha/Chai
+* Includes TDD. Tests with Mocha/Chai
 * Includes error/response codes
 * Implemented Istanbul/nyc coverage
 * Demo deployed on Heroku
