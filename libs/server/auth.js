@@ -4,13 +4,41 @@
  * - ServerAuth extension
  */
 module.exports = function (expressApp) {
+    const config = require('../../config')
     const { notify } = require('x-units')
+    const del = require('delete');
+    const fs = require('fs')
+    const path = require('path')
+    const olderThen = require('file-older-than')
     return class ServerAuth {
         constructor(debug) {
             this.debug = debug
         }
 
+        /** 
+         * not to over throw Heroku memory, remove files `config.deleteOlderThen` 
+        */
+        deleteICSfilesIfOlderThen(enable = null) {
+            if (!enable) return false
+            fs.readdir(config.ics.filePath, (err, files) => {
+                files.forEach(async (file) => {
+                    if (file.indexOf('.ics') === -1) return
+                    const f = path.join(config.ics.filePath, file)
+                    if (olderThen(f, config.deleteOlderThen)) {
+                        try {
+                            await del.promise([f], { force: true })
+                            notify(`file deleted, file:${file}`)
+                        } catch (err) {
+                            console.log('error deleting file: ', file)
+                        }
+                    }
+                });
+            });
+        }
+
         authCheck(req, res, next) {
+
+            this.deleteICSfilesIfOlderThen(true)
 
             res.header('Access-Control-Allow-Origin', '*')
             res.header('Access-Control-Allow-Methods', 'GET')
