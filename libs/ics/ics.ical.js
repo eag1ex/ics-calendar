@@ -7,13 +7,19 @@
 module.exports = (ICSmodule = null) => {
   const config = require("../../config");
   if (!ICSmodule) ICSmodule = function () {}; // so we can do independent test runs
-  const { log, isObject, isFalsy, head, isArray } = require("x-utils-es/umd");
+  const {
+    log,
+    isObject,
+    isFalsy,
+    head,
+    isArray,
+    sq,
+  } = require("x-utils-es/umd");
   const uuidv4 = require("uuid").v4;
   const ics = require("ics");
   const fs = require("fs");
   const path = require("path");
   const { pickBy, identity } = require("lodash");
-  const sq = require("simple-q");
   const moment = require("moment");
 
   return class ICSical extends ICSmodule {
@@ -47,7 +53,7 @@ module.exports = (ICSmodule = null) => {
           );
         });
 
-        return defer.promise();
+        return defer.promise;
       }
 
       const generatedResults = [];

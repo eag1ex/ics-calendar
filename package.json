@@ -40,7 +40,6 @@
     "lodash": "^4.17.15",
     "moment": "^2.27.0",
     "morgan": "^1.10.0",
-    "simple-q": "https://github.com/eag1ex/simple-q.git",
     "uuid": "^8.2.0",
     "x-utils-es": "^2.4.0"
   }
