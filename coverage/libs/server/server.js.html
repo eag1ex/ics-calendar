@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.5% </span>
+                <span class="strong">95% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>39/40</span>
+                <span class='fraction'>38/40</span>
             </div>
         
             
@@ -126,7 +126,15 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -172,7 +180,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,82 +205,89 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">`use strict`
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">`use strict`;
 &nbsp;
 module.exports = (DEBUG = <span class="branch-0 cbranch-no" title="branch not covered" >true)</span> =&gt; {
-    const { notify } = require('x-units')
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (DEBUG) notify(`[ics-calendar-server] running in DEBUG mode`)
-    const { listRoutes } = require('../utils')()
-    // 
-    const express = require('express')
-    const app = express()
-    const router = express.Router()
-    const morgan = require('morgan')
-    const bodyParser = require('body-parser')
-    const config = require('../../config')
-    const ServerAuth = require('./auth')(app)
-    const ServerCtrs = require('./controllers')(app)
-    const cors = require('cors')
-    const ejs = require('ejs')
-    const messageCodes = require('../status-handler/message.codes')
-    app.set('trust proxy', 1) // trust first proxy
-    app.use(morgan('dev'))
-    app.use(bodyParser.urlencoded({ extended: false }))
-    app.use(bodyParser.json())
-    app.use(cors())
+  const { log } = require("x-utils-es/umd");
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (DEBUG) <span class="cstat-no" title="statement not covered" >log(`[ics-calendar-server] running in DEBUG mode`);</span>
+  const { listRoutes } = require("../utils")();
+  //
+  const express = require("express");
+  const app = express();
+  const router = express.Router();
+  const morgan = require("morgan");
+  const bodyParser = require("body-parser");
+  const config = require("../../config");
+  const ServerAuth = require("./auth")(app);
+  const ServerCtrs = require("./controllers")(app);
+  const cors = require("cors");
+  const ejs = require("ejs");
+  const messageCodes = require("../status-handler/message.codes");
+  app.set("trust proxy", 1); // trust first proxy
+  app.use(morgan("dev"));
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
+  app.use(cors());
 &nbsp;
-    // for rendering html
-    // 
-    app.engine('html', ejs.__express)
-    app.set('view engine', 'html')
-    
-    // static path to ical generated files 
-    app.use('/download', express.static(config.ics.filePath))
+  // for rendering html
+  //
+  app.engine("html", ejs.__express);
+  app.set("view engine", "html");
 &nbsp;
-    /// ///////////////////
-    // Initialize server controllers
-    new ServerAuth(DEBUG).AppUseAuth()
-    // Our SimpleOrder application is initialized from `ServerCtrs`
-    const controllers = new ServerCtrs(DEBUG)
+  // static path to ical generated files
+  app.use("/download", express.static(config.ics.filePath));
 &nbsp;
-    /// //////////////////
-    // set server routes
-    router.get('/calendar/:type/:userId', controllers.calendar.bind(controllers))
-    router.get('/database/:collection', controllers.database.bind(controllers))
+  /// ///////////////////
+  // Initialize server controllers
+  new ServerAuth(DEBUG).AppUseAuth();
+  // Our SimpleOrder application is initialized from `ServerCtrs`
+  const controllers = new ServerCtrs(DEBUG);
 &nbsp;
-    // catch all other calls
-    router.all('*', function (req, res) {
-        const routes = [].concat(listRoutes(router.stack), { route: '/download/:fileName' })
-        return res.status(200).json({ message: 'welcome to ics-calendar', url: req.url, available_routes: routes, status: 200 })
-    })
+  /// //////////////////
+  // set server routes
+  router.get("/calendar/:type/:userId", controllers.calendar.bind(controllers));
+  router.get("/database/:collection", controllers.database.bind(controllers));
 &nbsp;
-    /// //////////////////
-    // handle errors
+  // catch all other calls
+  router.all("*", function (req, res) {
+    const routes = [].concat(listRoutes(router.stack), {
+      route: "/download/:fileName",
+    });
+    return res
+      .status(200)
+      .json({
+        message: "welcome to ics-calendar",
+        url: req.url,
+        available_routes: routes,
+        status: 200,
+      });
+  });
 &nbsp;
-    app.use(<span class="fstat-no" title="function not covered" >fu</span>nction (error, req, res, next) {
-<span class="cstat-no" title="statement not covered" >        res.status(500).json({ error: error.toString(), ...messageCodes[500] })</span>
-    })
+  /// //////////////////
+  // handle errors
 &nbsp;
-    app.use('/', router)
+  app.use(<span class="fstat-no" title="function not covered" >fu</span>nction (error, req, res, next) {
+<span class="cstat-no" title="statement not covered" >    res.status(500).json({ error: error.toString(), ...messageCodes[500] });</span>
+  });
 &nbsp;
-    /// //////////////////
-    // Initialize server
+  app.use("/", router);
 &nbsp;
-    const server = app.listen(config.port, function () {
+  /// //////////////////
+  // Initialize server
 &nbsp;
-        const host = (server.address().address || <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>.replace(/::/, 'localhost')
-        const port = server.address().port
-        notify(`server running on http://${host}:${port}`)
-    })
-    return server
-}
+  const server = app.listen(config.port, function () {
+    const host = (server.address().address || <span class="branch-1 cbranch-no" title="branch not covered" >"")</span>.replace(/::/, "localhost");
+    const port = server.address().port;
+    log(`server running on http://${host}:${port}`);
+  });
+  return server;
+};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -271,7 +295,7 @@ module.exports = (DEBUG = <span class="branch-0 cbranch-no" title="branch not co
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jul 01 2020 16:00:23 GMT+0700 (Novosibirsk Standard Time)
+                at Sat Jan 20 2024 19:57:48 GMT+0700 (Indochina Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">94.12% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/17</span>
+                <span class='fraction'>16/17</span>
             </div>
         
             
@@ -99,7 +99,8 @@
 <a name='L40'></a><a href='#L40'>40</a>
 <a name='L41'></a><a href='#L41'>41</a>
 <a name='L42'></a><a href='#L42'>42</a>
-<a name='L43'></a><a href='#L43'>43</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -107,10 +108,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -127,6 +127,7 @@
 <span class="cline-any cline-yes">238x</span>
 <span class="cline-any cline-yes">236x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,53 +137,55 @@
 <span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">`use strict`
-/** 
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">`use strict`;
+/**
  * @XDB database mock
  * -  NOTE independent tests available thru `./tests/ics.module.spec.js`
  * - available databases: [members,absences]
- * - 
-*/
+ * -
+ */
 module.exports = () =&gt; {
-    const { notify } = require('x-units')
-    const { dataAsync } = require('../utils')()
-    return class XDB {
-        // 
-        constructor(opts = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> debug) {
-            
-            this.debug = debug
-            this.dataPath = {
-                members: opts.members || <span class="branch-1 cbranch-no" title="branch not covered" >`./members.db.json`,</span>
-                absences: opts.absences || <span class="branch-1 cbranch-no" title="branch not covered" >`./absences.db.json`</span>
-            }
+  const { log } = require("x-utils-es/umd");
+  const { dataAsync } = require("../utils")();
+  return class XDB {
+    //
+    constructor(opts = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> debug) {
+      this.debug = debug;
+      this.dataPath = {
+        members: opts.members || <span class="branch-1 cbranch-no" title="branch not covered" >`./members.db.json`,</span>
+        absences: opts.absences || <span class="branch-1 cbranch-no" title="branch not covered" >`./absences.db.json`,</span>
+      };
 &nbsp;
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (this.debug) notify({ XDB: { dataPath: this.dataPath } })
-        }
-&nbsp;
-        membersDB() {
-            try {
-                return dataAsync(require(this.dataPath.members))
-                    .then((data) =&gt; data.payload)
-            } catch (err) {
-                return Promise.reject('dataPath for XDB.members.db not found')
-            }
-        }
-&nbsp;
-        absencesDB() {
-            try {
-                return dataAsync(require(this.dataPath.absences))
-                    .then((data) =&gt; data.payload)
-            } catch (err) {
-                return Promise.reject('dataPath for XDB.absences.db not found')
-            }
-        }
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (this.debug) <span class="cstat-no" title="statement not covered" >log({ XDB: { dataPath: this.dataPath } });</span>
     }
-}
+&nbsp;
+    membersDB() {
+      try {
+        return dataAsync(require(this.dataPath.members)).then(
+          (data) =&gt; data.payload
+        );
+      } catch (err) {
+        return Promise.reject("dataPath for XDB.members.db not found");
+      }
+    }
+&nbsp;
+    absencesDB() {
+      try {
+        return dataAsync(require(this.dataPath.absences)).then(
+          (data) =&gt; data.payload
+        );
+      } catch (err) {
+        return Promise.reject("dataPath for XDB.absences.db not found");
+      }
+    }
+  };
+};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -190,7 +193,7 @@ module.exports = () =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jul 01 2020 16:00:23 GMT+0700 (Novosibirsk Standard Time)
+                at Sat Jan 20 2024 19:57:48 GMT+0700 (Indochina Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

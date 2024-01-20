@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.82% </span>
+                <span class="strong">84.85% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>27/33</span>
+                <span class='fraction'>28/33</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.45% </span>
+                <span class="strong">54.55% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>5/11</span>
+                <span class='fraction'>6/11</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.21% </span>
+                <span class="strong">93.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/29</span>
+                <span class='fraction'>28/30</span>
             </div>
         
             
@@ -143,7 +143,9 @@
 <a name='L84'></a><a href='#L84'>84</a>
 <a name='L85'></a><a href='#L85'>85</a>
 <a name='L86'></a><a href='#L86'>86</a>
-<a name='L87'></a><a href='#L87'>87</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,17 +168,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">56x</span>
-<span class="cline-any cline-yes">56x</span>
-<span class="cline-any cline-yes">56x</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-yes">65x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -190,9 +192,11 @@
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -229,92 +233,94 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">`use strict`
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">`use strict`;
 &nbsp;
 /**
  * - ServerAuth extension
  */
 module.exports = function (expressApp) {
-    const config = require('../../config')
-    const { notify } = require('x-units')
-    const del = require('delete');
-    const fs = require('fs')
-    const path = require('path')
-    const olderThen = require('file-older-than')
-    return class ServerAuth {
-        constructor(debug) {
-            this.debug = debug
-        }
-&nbsp;
-        /** 
-         * not to over throw Heroku memory, remove files `config.deleteOlderThen` 
-        */
-        deleteICSfilesIfOlderThen(enable = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (!enable) <span class="cstat-no" title="statement not covered" >return false</span>
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (config.debug) notify({ deleteICSfilesIfOlderThen: config.deleteOlderThen })
-            fs.readdir(config.ics.filePath, (err, files) =&gt; {
-                files.forEach(async (file) =&gt; {
-                    <span class="missing-if-branch" title="if path not taken" >I</span>if (file.indexOf('.ics') === -1) <span class="cstat-no" title="statement not covered" >return</span>
-                    const f = path.join(config.ics.filePath, file)
-                    <span class="missing-if-branch" title="if path not taken" >I</span>if (olderThen(f, config.deleteOlderThen)) {
-<span class="cstat-no" title="statement not covered" >                        try {</span>
-<span class="cstat-no" title="statement not covered" >                            await del.promise([f], { force: true })</span>
-<span class="cstat-no" title="statement not covered" >                            notify(`file deleted, file:${file}`)</span>
-                        } catch (err) {
-<span class="cstat-no" title="statement not covered" >                            console.log('error deleting file: ', file)</span>
-                        }
-                    }
-                });
-            });
-        }
-&nbsp;
-        authCheck(req, res, next) {
-            
-            this.deleteICSfilesIfOlderThen(true)
-&nbsp;
-            res.header('Access-Control-Allow-Origin', '*')
-            res.header('Access-Control-Allow-Methods', 'GET')
-            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, token-expiry')
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (this.debug) notify(`-- calling url: ${req.url}`)
-            return next()
-&nbsp;
-            // providing no restrictions apart from the header
-            // return res.status(400).send({ error: true, msg: 'No token provided, or session expired' });
-&nbsp;
-        }
-&nbsp;
-        AppUseAuth() {
-            expressApp.use(this.authCheck.bind(this))
-        }
-&nbsp;
-        // SECTION disabled, not in play
-        // verifyAccess(req, token, cb){
-        //     jwt.verify(token, config.secret, function (err, decoded) {
-        //         if (err) {
-        //             console.log('There was an error with the authentication');
-        //             cb(false)
-        //         } else {
-        //             req.token = decoded //[1]
-        //             cb(true)
-        //         }
-        //     })
-        // }
-        // getToken(headers) {
-        //     if (headers &amp;&amp; headers.authorization) {
-        //         var parted = headers.authorization.split(' ');
-        //         if (parted.length === 2) {
-        //             return parted[1];
-        //         } else {
-        //             return null;
-        //         }
-        //     } else {
-        //         return null;
-        //     }
-        // };
-        // !SECTION 
+  const config = require("../../config");
+  const { log } = require("x-utils-es/umd");
+  const del = require("delete");
+  const fs = require("fs");
+  const path = require("path");
+  const olderThen = require("file-older-than");
+  return class ServerAuth {
+    constructor(debug) {
+      this.debug = debug;
     }
-}
+&nbsp;
+    /**
+     * not to over throw Heroku memory, remove files `config.deleteOlderThen`
+     */
+    deleteICSfilesIfOlderThen(enable = <span class="branch-0 cbranch-no" title="branch not covered" >null)</span> {
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (!enable) <span class="cstat-no" title="statement not covered" >return false;</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (config.debug)
+<span class="cstat-no" title="statement not covered" >        log({ deleteICSfilesIfOlderThen: config.deleteOlderThen });</span>
+      fs.readdir(config.ics.filePath, (err, files) =&gt; {
+        files.forEach(async (file) =&gt; {
+          <span class="missing-if-branch" title="if path not taken" >I</span>if (file.indexOf(".ics") === -1) <span class="cstat-no" title="statement not covered" >return;</span>
+          const f = path.join(config.ics.filePath, file);
+          if (olderThen(f, config.deleteOlderThen)) {
+            try {
+              await del.promise([f], { force: true });
+              log(`file deleted, file:${file}`);
+            } catch (err) {
+<span class="cstat-no" title="statement not covered" >              console.log("error deleting file: ", file);</span>
+            }
+          }
+        });
+      });
+    }
+&nbsp;
+    authCheck(req, res, next) {
+      this.deleteICSfilesIfOlderThen(true);
+&nbsp;
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Methods", "GET");
+      res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+      res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization, token-expiry"
+      );
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (this.debug) <span class="cstat-no" title="statement not covered" >log(`-- calling url: ${req.url}`);</span>
+      return next();
+&nbsp;
+      // providing no restrictions apart from the header
+      // return res.status(400).send({ error: true, msg: 'No token provided, or session expired' });
+    }
+&nbsp;
+    AppUseAuth() {
+      expressApp.use(this.authCheck.bind(this));
+    }
+&nbsp;
+    // SECTION disabled, not in play
+    // verifyAccess(req, token, cb){
+    //     jwt.verify(token, config.secret, function (err, decoded) {
+    //         if (err) {
+    //             console.log('There was an error with the authentication');
+    //             cb(false)
+    //         } else {
+    //             req.token = decoded //[1]
+    //             cb(true)
+    //         }
+    //     })
+    // }
+    // getToken(headers) {
+    //     if (headers &amp;&amp; headers.authorization) {
+    //         var parted = headers.authorization.split(' ');
+    //         if (parted.length === 2) {
+    //             return parted[1];
+    //         } else {
+    //             return null;
+    //         }
+    //     } else {
+    //         return null;
+    //     }
+    // };
+    // !SECTION
+  };
+};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -322,7 +328,7 @@ module.exports = function (expressApp) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jul 01 2020 16:00:23 GMT+0700 (Novosibirsk Standard Time)
+                at Sat Jan 20 2024 19:57:48 GMT+0700 (Indochina Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
